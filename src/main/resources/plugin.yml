@@ -1,0 +1,21 @@
+name: LaserGame
+version: '1.0'
+main: me.tyalternative.laserGame.LaserGame
+api-version: '1.21'
+authors: [ TyAlternative ]
+description: A LaserGame plugin
+
+commands:
+  laser:
+    description: Commande principale du plugin LaserGame
+    usage: /laser <join|leave|list|create> [arène]
+    permission: lasergame.play
+    permission-message: "§cTu n'as pas la permission d'utiliser cette commande."
+
+permissions:
+  lasergame.play:
+    description: Autorise à rejoindre une partie
+    default: true
+  lasergame.admin:
+    description: Autorise la création/gestion d'arènes
+    default: op
