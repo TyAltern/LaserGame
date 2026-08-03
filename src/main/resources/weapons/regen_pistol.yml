@@ -1,0 +1,16 @@
+id: regen_pistol
+display-name: "&aPistolet Auto-Rechargeant"
+rarity: UNIQUE
+price: 50
+
+material: WOODEN_HOE
+max-ammo: 10
+shot-cooldown-ticks: 12
+reload-cooldown-ticks: 40
+range: 9.0
+hit-radius: 0.2
+
+lives-per-hit: 1
+movement-speed-modifier: 0.0
+
+special-ability: passive_ammo_regen

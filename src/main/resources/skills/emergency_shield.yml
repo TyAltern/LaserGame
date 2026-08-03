@@ -1,0 +1,6 @@
+id: emergency_shield
+display-name: "&bBouclier d'urgence"
+rarity: RARE
+price: 40
+cooldown-ticks: 500
+effect-id: emergency_shield

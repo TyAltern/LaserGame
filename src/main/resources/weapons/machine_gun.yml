@@ -1,0 +1,16 @@
+id: machine_gun
+display-name: "&eMitraillette"
+rarity: LEGENDARY
+price: 85
+
+material: IRON_HOE
+max-ammo: 20
+shot-cooldown-ticks: 3
+reload-cooldown-ticks: 30
+range: 25.0
+hit-radius: 0.35
+
+lives-per-hit: 1
+movement-speed-modifier: 0.0
+
+special-ability: massive_magazine

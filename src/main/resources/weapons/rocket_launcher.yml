@@ -1,0 +1,13 @@
+id: rocket_launcher
+display-name: "&cLance Roquette"
+
+material: TNT
+max-ammo: 2
+shot-cooldown-ticks: 40
+reload-cooldown-ticks: 200
+range: 6.0
+hit-radius: 3
+
+lives-per-hit: 2
+
+movement-speed-modifier: 0

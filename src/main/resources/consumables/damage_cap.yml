@@ -1,0 +1,6 @@
+id: damage_cap
+display-name: "&bBouclier d'absorption"
+category: DEFENSE
+rarity: COMMON
+price: 15
+effect-id: damage_cap_next_hit

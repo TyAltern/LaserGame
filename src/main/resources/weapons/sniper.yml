@@ -1,0 +1,17 @@
+id: sniper
+display-name: "&cSniper"
+rarity: LEGENDARY
+price: 90
+
+material: STICK
+max-ammo: 1
+shot-cooldown-ticks: 20
+reload-cooldown-ticks: 100
+range: 100.0
+hit-radius: 0.2
+
+lives-per-hit: 2
+
+movement-speed-modifier: 0
+
+special-ability: streak_bonus_damage

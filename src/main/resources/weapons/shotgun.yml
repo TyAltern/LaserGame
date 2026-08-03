@@ -1,0 +1,14 @@
+id: shotgun
+display-name: "&bFusil à Pompe"
+default: true
+
+material: STICK
+max-ammo: 10
+shot-cooldown-ticks: 15
+reload-cooldown-ticks: 60
+range: 20.0
+hit-radius: 0.6
+
+lives-per-hit: 1
+
+movement-speed-modifier: 0

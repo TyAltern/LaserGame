@@ -1,0 +1,5 @@
+id: speed_boost_permanent
+display-name: "&aJambes d'Acier"
+rarity: COMMON
+price: 40
+effect-id: speed_boost_permanent

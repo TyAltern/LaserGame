@@ -1,0 +1,52 @@
+# LASER GAME
+
+weapon:
+  hud-interval-ticks: 2
+  refill-ammo-on-respawn: true
+
+game:
+  starting-lives: 3
+  respawn-delay-ticks: 60
+  countdown-seconds: 10
+  min-players-fallback: 2
+  rounds-to-win: 5
+
+economy:
+  passive-per-round: 10
+  shot-hit-reward: 5
+  elimination-reward: 15
+  round-win-reward: 30
+
+shop:
+  # SEPARATE_SLOT / BLOCK_PURCHASE
+  duplicate-policy: SEPARATE_SLOT
+  base-item-slots: 5 # Inventaire
+  consumable-slots: 5 # Offre
+  phase-duration-seconds: 20
+
+  reroll-base-cost: 5
+  reroll-cost-increment: 3
+
+  pity-weight-shift-per-reroll: 2
+
+  rarity-weights:
+    COMMON: 60
+    UNIQUE: 25
+    RARE: 12
+    LEGENDARY: 3
+
+trail:
+  # CUBES / LINE
+  mode: LINE
+  block-material: RED_STAINED_GLASS
+  step: 0.5
+  thickness: 0.15
+  lifetime-ticks: 6
+
+lobby:
+  world: world
+  x: 965.5
+  y: 107.0
+  z: 1025.5
+  yaw: 180.0
+  pitch: 0.0

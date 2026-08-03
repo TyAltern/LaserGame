@@ -1,0 +1,6 @@
+id: bonus_damage
+display-name: "&cBoost de Dégâts"
+category: OFFENSE
+rarity: COMMON
+price: 15
+effect-id: bonus_damage_next_shot

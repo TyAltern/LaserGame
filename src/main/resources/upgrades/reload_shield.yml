@@ -1,0 +1,5 @@
+id: reload_shield
+display-name: "&6Blindage de Rechargement"
+rarity: RARE
+price: 75
+effect-id: reload_shield

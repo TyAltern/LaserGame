@@ -1,0 +1,6 @@
+id: speed_burst
+display-name: "&bSprint explosif"
+rarity: COMMON
+price: 25
+cooldown-ticks: 160
+effect-id: speed_burst

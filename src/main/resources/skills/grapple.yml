@@ -1,0 +1,6 @@
+id: grapple
+display-name: "&bGrappin"
+rarity: UNIQUE
+price: 30
+cooldown-ticks: 240
+effect-id: grapple

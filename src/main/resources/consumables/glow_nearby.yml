@@ -1,0 +1,6 @@
+id: glow_nearby
+display-name: "&dPulse de détection"
+category: DISPLAY
+rarity: UNIQUE
+price: 25
+effect-id: glow_nearby

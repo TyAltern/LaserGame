@@ -1,0 +1,13 @@
+id: knife
+display-name: "&cCouteau"
+
+material: IRON_DAGGER
+max-ammo: 200
+shot-cooldown-ticks: 1
+reload-cooldown-ticks: 120
+range: 4.0
+hit-radius: 4.0
+
+lives-per-hit: 1
+
+movement-speed-modifier: 0.35

@@ -1,0 +1,6 @@
+id: instant_reload
+display-name: "&eChargeur de secours"
+category: WEAPON_AMMO
+rarity: COMMON
+price: 20
+effect-id: instant_reload

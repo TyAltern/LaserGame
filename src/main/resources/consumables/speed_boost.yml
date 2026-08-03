@@ -1,0 +1,6 @@
+id: speed_boost
+display-name: "&aBottes légères"
+category: MOBILITY
+rarity: COMMON
+price: 20
+effect-id: speed_boost
