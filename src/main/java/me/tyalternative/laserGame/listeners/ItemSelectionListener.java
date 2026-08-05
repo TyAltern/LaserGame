@@ -1,5 +1,8 @@
 package me.tyalternative.laserGame.listeners;
 
+import me.tyalternative.laserGame.UI.shop.HologramElement;
+import me.tyalternative.laserGame.UI.shop.HologramHoverListener;
+import me.tyalternative.laserGame.UI.shop.HologramScrollType;
 import me.tyalternative.laserGame.game.GameManager;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
@@ -25,15 +28,24 @@ public class ItemSelectionListener implements Listener {
 
         int diff = event.getNewSlot() - event.getPreviousSlot();
         Boolean scrollDown;
-        if (diff == 1 || diff == -8) {
+        if ((diff >= 1 && diff < 6) || diff == -8) {
             scrollDown = true;
-        } else if (diff == -1 || diff == 8) {
+        } else if ((diff <= -1 && diff > -8) || diff == 8) {
             scrollDown = false;
         } else {
             scrollDown = null;
         }
+        player.sendMessage("scroll -> " + diff);
 
         if (scrollDown == null) return;
+
+        HologramElement hovered = HologramHoverListener.getCurrentHover(player);
+        if (hovered != null) {
+
+            event.setCancelled(true);
+            hovered.executeScrollActions(player, scrollDown ? HologramScrollType.DOWN : HologramScrollType.UP);
+            return;
+        }
 
         Optional<Match> matchOpt = gameManager.getGame(player);
         if (matchOpt.isEmpty()) return;

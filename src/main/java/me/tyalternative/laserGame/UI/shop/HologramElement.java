@@ -20,7 +20,7 @@ public class HologramElement {
 
     private static final Map<UUID, HologramElement> INTERACTION_REGISTRY = new HashMap<>();
 
-    private static final int HIDDEN_LAYER_OFFSET = -5;
+    private static final int HIDDEN_LAYER_OFFSET = -50;
 
     public enum State {
         IDLE,
@@ -37,6 +37,7 @@ public class HologramElement {
     private final int sizeX;
     private final int sizeY;
     private final int layer;
+    private final boolean absolutePosition;
 
     private String text;
     private String hoverText;
@@ -45,29 +46,37 @@ public class HologramElement {
     private final boolean bubbleFocusToParent;
     private State state = State.IDLE;
     private boolean hidden = false;
+    private boolean selfVisible = true;
     private boolean disabled = false;
 
     private TextDisplay textDisplay;
     private Interaction interaction;
 
     private final List<HologramAction> actions = new ArrayList<>();
+    private final List<HologramScrollAction> scrollActions = new ArrayList<>();
+    private final List<HologramHoverAction> hoverEnterActions = new ArrayList<>();
+    private final List<HologramHoverAction> hoverExitActions = new ArrayList<>();
     private long cooldownMillis;
     private final Map<UUID, Long> lastClickTimestamps = new HashMap<>();
 
     private HologramElement(Builder builder) {
         this.id = builder.id;
-        this.rootAnchor =           builder.parent == null ? builder.anchor.clone() : null;
-        this.parent =               builder.parent;
-        this.positionX =            builder.positionX;
-        this.positionY =            builder.positionY;
-        this.sizeX =                builder.sizeX;
-        this.sizeY =                builder.sizeY;
-        this.layer =                builder.layer;
-        this.text =                 builder.text;
-        this.hoverText =            builder.hoverText;
-        this.bubbleFocusToParent =  builder.bubbleFocusToParent;
-        this.cooldownMillis =       builder.cooldownMillis;
-        this.actions.addAll(     builder.actions);
+        this.rootAnchor =                builder.parent == null ? builder.anchor.clone() : null;
+        this.parent =                    builder.parent;
+        this.positionX =                 builder.positionX;
+        this.positionY =                 builder.positionY;
+        this.sizeX =                     builder.sizeX;
+        this.sizeY =                     builder.sizeY;
+        this.layer =                     builder.layer;
+        this.absolutePosition =          builder.absolutePosition;
+        this.text =                      builder.text;
+        this.hoverText =                 builder.hoverText;
+        this.bubbleFocusToParent =       builder.bubbleFocusToParent;
+        this.cooldownMillis =            builder.cooldownMillis;
+        this.actions.addAll(          builder.actions);
+        this.scrollActions.addAll(    builder.scrollActions);
+        this.hoverEnterActions.addAll(builder.hoverEnterActions);
+        this.hoverExitActions.addAll( builder.hoverExitActions);
 
         this.font = builder.font != null ? builder.font : resolveInheritedFontFromParent();
 
@@ -75,6 +84,7 @@ public class HologramElement {
 
         if (builder.isButton) setButton();
         if (parent != null) parent.children.add(this);
+        setVisible(!builder.hideByDefault);
     }
 
     public static class Builder {
@@ -87,14 +97,19 @@ public class HologramElement {
         private int sizeX = 1;
         private int sizeY = 1;
         private int layer = 0;
+        private boolean absolutePosition = true;
 
         private String text = "";
         private String hoverText = null;
         private NamespacedKey font;
         private boolean isButton = false;
         private boolean bubbleFocusToParent = false;
+        private boolean hideByDefault = false;
 
         private final List<HologramAction> actions = new ArrayList<>();
+        private final List<HologramScrollAction> scrollActions = new ArrayList<>();
+        private final List<HologramHoverAction> hoverEnterActions = new ArrayList<>();
+        private final List<HologramHoverAction> hoverExitActions = new ArrayList<>();
         private long cooldownMillis = 150L;
 
         /** Element racine : anchor = position monde de base du Hologram. */
@@ -114,20 +129,32 @@ public class HologramElement {
         public Builder position(int x, int y)             { this.positionX = x; this.positionY = y; return this; }
         public Builder size(int x, int y)                 { this.sizeX = x; this.sizeY = y; return this; }
         public Builder layer(int layer)                   { this.layer = layer; return this; }
+        public Builder absolutePosition(boolean absolute) { this.absolutePosition = absolute; return this; }
         public Builder text(String text)                  { this.text = text; return this; }
         public Builder hoverText(String hoverText)        { this.hoverText = hoverText; return this; }
         public Builder font(NamespacedKey font)           { this.font = font; return this; }
         public Builder button()                           { this.isButton = true; return this; }
         public Builder bubbleFocusToParent(boolean value) { this.bubbleFocusToParent = value; return this; }
+        public Builder hideByDefault(boolean value)       { this.hideByDefault = value; return this; }
 
         public Builder onClick(HologramAction action)     { this.actions.add(action); return this; }
 
         public Builder onClick(HologramClickType type, HologramAction action) {
             this.actions.add((player, source, clickType) -> {
-                if (clickType == type) action.execute(player, source, clickType);
+                if (type == HologramClickType.BOTH || clickType == type) action.execute(player, source, clickType);
             });
             return this;
         }
+
+        public Builder onScroll(HologramScrollType type, HologramScrollAction action) {
+            this.scrollActions.add((player, source, scrollType) -> {
+                if (type == HologramScrollType.BOTH || scrollType == type) action.execute(player, source, scrollType);
+            });
+            return this;
+        }
+
+        public Builder onHoverEnter(HologramHoverAction action) { this.hoverEnterActions.add(action); return this; }
+        public Builder onHoverExit(HologramHoverAction action) { this.hoverExitActions.add(action); return this; }
 
         public Builder cooldown(long millis) { this.cooldownMillis = millis; return this; }
 
@@ -150,15 +177,17 @@ public class HologramElement {
     }
 
     private int resolveAbsolutePositionX() {
+        if (absolutePosition) return positionX;
         return parent == null ? positionX : positionX + parent.resolveAbsolutePositionX();
     }
 
     private int resolveAbsolutePositionY() {
+        if (absolutePosition) return positionY;
         return parent == null ? positionY : positionY + parent.resolveAbsolutePositionY();
     }
 
     private int resolveAbsoluteLayer() {
-        return parent == null ? layer : layer + resolveAbsoluteLayer();
+        return parent == null ? layer : layer + parent.resolveAbsoluteLayer();
     }
 
     private NamespacedKey resolveInheritedFontFromParent() {
@@ -167,9 +196,11 @@ public class HologramElement {
     }
 
     private Location resoleTextDisplayLocation() {
-        double offset = sizeX % 2 == 0 ? 0.0125 : 0;
+//        double offset = sizeX % 2 == 0 ? 0.0125 : 0;
+        double offset = 0;
         int absX = resolveAbsolutePositionX();
-        int absY = resolveAbsolutePositionY();
+        int absY = sizeY - 1;
+        if (parent != null) absY = resolveAbsolutePositionY();
         int absLayer = resolveAbsoluteLayer();
 
         return getRootAnchor().clone().add(
@@ -180,7 +211,8 @@ public class HologramElement {
     }
 
     private Location resolveInteractionLocation() {
-        double offset = sizeX % 2 == 0 ? 0.0125 : 0;
+//        double offset = sizeX % 2 == 0 ? 0.0125 : 0;
+        double offset = 0.0125;
         double hiddenDeltaZ = hidden ? HIDDEN_LAYER_OFFSET * 0.005 : 0;
 
         return resoleTextDisplayLocation()
@@ -199,8 +231,7 @@ public class HologramElement {
                 entity.setBillboard(Display.Billboard.FIXED);
                 entity.setPersistent(false);
 
-                entity.customName(Component.text(id));
-                entity.setCustomNameVisible(false);
+                entity.addScoreboardTag("hologram_element:" + id);
             });
         } catch (Exception e) {
             throw new RuntimeException("Failed to create TextDisplay for element " + id, e);
@@ -220,8 +251,7 @@ public class HologramElement {
             interaction = spawnLoc.getWorld().spawn(spawnLoc, Interaction.class, entity -> {
                 entity.setInteractionWidth(sizeX * 0.025f);
                 entity.setInteractionHeight(sizeY * 0.025f);
-                entity.customName(Component.text(id + "_button"));
-                entity.setCustomNameVisible(false);
+                entity.addScoreboardTag("hologram_button:" + id);
                 entity.setPersistent(false);
             });
             INTERACTION_REGISTRY.put(interaction.getUniqueId(), this);
@@ -246,19 +276,54 @@ public class HologramElement {
 
     public void setText(String newText) {
         this.text = newText;
-        if (state == State.IDLE) {
+        boolean showingHoverOverlay = (state == State.HOVER && hoverText != null);
+        if (!showingHoverOverlay) {
             applyDisplayText(newText);
         }
     }
 
     public String getText() { return text; }
 
+    public void setHoverText(String newText) {
+        this.hoverText = newText;
+        boolean showingHoverOverlay = (state == State.HOVER && hoverText != null);
+        if (showingHoverOverlay) {
+            applyDisplayText(newText);
+        }
+    }
+
+    public String getHoverText() { return hoverText; }
+
     public void onHoverEnter(Player player) {
         if (state == State.HOVER) return;
         state = State.HOVER;
         if (hoverText != null) applyDisplayText(hoverText);
+        for (HologramHoverAction action : hoverEnterActions) {
+            action.execute(player, this);
+        }
         if (bubbleFocusToParent && player != null) parent.onHoverEnter(player);
     }
+
+    public void onHoverExit(Player player) {
+        if (state == State.IDLE) return;
+        state = State.IDLE;
+        if (hoverText != null) applyDisplayText(text);
+        for (HologramHoverAction action : hoverExitActions) {
+            action.execute(player, this);
+        }
+        if (bubbleFocusToParent && player != null) parent.onHoverExit(player);
+    }
+
+    public void onClick(HologramClickType type, HologramAction action) {
+        this.actions.add((player, source, clickType) -> {
+            if (type == HologramClickType.BOTH || clickType == type) action.execute(player, source, clickType);
+        });
+    }
+
+    public void onClick(HologramAction action) {
+        this.actions.add(action);
+    }
+
 
     public State getState() { return state; }
 
@@ -280,6 +345,11 @@ public class HologramElement {
         }
     }
 
+    public void executeScrollActions(Player player, HologramScrollType type) {
+        for (HologramScrollAction action : scrollActions) {
+            action.execute(player, this, type);
+        }
+    }
     public HologramElement getParent() { return parent; }
     public HologramElement getRootElement() { return parent == null ? this : parent.getRootElement(); }
     public List<HologramElement> getChildren() { return List.copyOf(children);}
@@ -301,13 +371,20 @@ public class HologramElement {
     }
 
     public void setVisible(boolean visible) {
-        this.hidden = !visible;
+        this.selfVisible = visible;
+        boolean ancestorsVisible = parent == null || !parent.hidden;
+        applyEffectVisibility(ancestorsVisible);
+    }
 
-        if (textDisplay != null) textDisplay.setViewRange(visible ? 1.0f : 0f);
+    private void applyEffectVisibility(boolean ancestorsVisible) {
+        boolean effective = ancestorsVisible && selfVisible;
+        this.hidden = !effective;
+
+        if (textDisplay != null) textDisplay.setViewRange(effective ? 1.0f : 0f);
         if (interaction != null) interaction.teleport(resolveInteractionLocation());
 
         for (HologramElement child : children) {
-            child.setVisible(visible);
+            child.applyEffectVisibility(effective);
         }
     }
 

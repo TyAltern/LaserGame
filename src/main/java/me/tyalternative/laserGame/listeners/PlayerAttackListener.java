@@ -7,12 +7,15 @@ import me.tyalternative.laserGame.game.MatchState;
 import me.tyalternative.laserGame.weapon.EffectiveWeaponStats;
 import me.tyalternative.laserGame.weapon.ShotTrailRenderer;
 import me.tyalternative.laserGame.weapon.WeaponManager;
+import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerAnimationEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
@@ -20,17 +23,19 @@ import java.util.Optional;
 
 public class PlayerAttackListener implements Listener {
 
+    private final Plugin plugin;
     private final WeaponManager weaponManager;
     private final GameManager gameManager;
     private final ShotTrailRenderer trailRenderer;
 
-    public PlayerAttackListener(WeaponManager weaponManager, GameManager gameManager, ShotTrailRenderer trailRenderer) {
+    public PlayerAttackListener(Plugin plugin, WeaponManager weaponManager, GameManager gameManager, ShotTrailRenderer trailRenderer) {
+        this.plugin = plugin;
         this.weaponManager = weaponManager;
         this.gameManager = gameManager;
         this.trailRenderer = trailRenderer;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void onSwing(PlayerAnimationEvent event) {
         Player player = event.getPlayer();
         if (weaponManager.resolve(player.getInventory().getItemInMainHand()).isEmpty()) return;
@@ -44,9 +49,13 @@ public class PlayerAttackListener implements Listener {
         if (gpOpt.isEmpty() || gpOpt.get().isSpectator()) return;
         GamePlayer shooter = gpOpt.get();
 
-        if (!shooter.getWeapon().tryShoot()) return;
+        int swingTick = Bukkit.getCurrentTick();
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (shooter.consumeSuppressedSwingTick(swingTick)) return; // faux swing (touche Q), pas un vrai tir
 
-        performShot(match, shooter, player);
+            if (!shooter.getWeapon().tryShoot()) return;
+            performShot(match, shooter, player);
+        });
     }
 
     private void performShot(Match match, GamePlayer shooter, Player player) {

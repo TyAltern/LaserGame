@@ -1,7 +1,7 @@
 package me.tyalternative.laserGame.UI.shop;
 
-public enum HologramClickType {
-    LEFT,
-    RIGHT,
+public enum HologramScrollType {
+    UP,
+    DOWN,
     BOTH
 }

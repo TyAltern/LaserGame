@@ -1,5 +1,6 @@
 package me.tyalternative.laserGame;
 
+import me.tyalternative.laserGame.UI.shop.*;
 import me.tyalternative.laserGame.archetype.ArchetypeManager;
 import me.tyalternative.laserGame.arena.ArenaManager;
 import me.tyalternative.laserGame.command.LaserCommand;
@@ -19,6 +20,9 @@ import me.tyalternative.laserGame.upgrade.PermanentUpgradeManager;
 import me.tyalternative.laserGame.weapon.ShotTrailRenderer;
 import me.tyalternative.laserGame.weapon.WeaponAbilityManager;
 import me.tyalternative.laserGame.weapon.WeaponManager;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -87,7 +91,7 @@ public final class LaserGame extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new PlayerInteractListener(weaponManager, gameManager), this);
         getServer().getPluginManager().registerEvents(
-                new PlayerAttackListener(weaponManager, gameManager, trailRenderer), this);
+                new PlayerAttackListener(this, weaponManager, gameManager, trailRenderer), this);
         getServer().getPluginManager().registerEvents(
                 new PlayerDamageListener(gameManager), this);
         getServer().getPluginManager().registerEvents(
@@ -99,7 +103,7 @@ public final class LaserGame extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new SkillUseListener(gameManager, skillManager), this);
 
-        var laserCommand = new LaserCommand(gameManager, arenaManager, weaponManager, consumableManager,
+        var laserCommand = new LaserCommand(this,gameManager, arenaManager, weaponManager, consumableManager,
                 skillManager, archetypeManager, upgradeManager, shopManager);
         getCommand("laser").setExecutor(laserCommand);
 
@@ -114,17 +118,13 @@ public final class LaserGame extends JavaPlugin {
                 + archetypeManager.getAllDefinitions().size() + " archétype(s), "
                 + upgradeManager.getAllDefinitions().size() + " amélioration(s) chargée(s).");
 
-//        Location locationTest = new Location(Bukkit.getWorld("world"), 961.5, 107.5, 1025.5);
-//        Hologram hologram = new Hologram(locationTest, "shop", 212,138, "\uE001", new NamespacedKey("hud","shop"), getLogger());
-//        hologram.addButton("consumable", 17, 48, 86, 14, 1, "\uE011",new NamespacedKey("hud","shop"));
-//        hologram.addButton("special_items", 109, 48, 86, 14, 1, "\uE020",new NamespacedKey("hud","shop"));
-//        hologram.addButton("slot_1", 81, 88, 30, 36, 1, "\uE032",new NamespacedKey("hud","shop"));
-//        hologram.addButton("slot_2", 111, 88, 30, 36, 1, "\uE030",new NamespacedKey("hud","shop"));
-//        hologram.addButton("slot_3", 141, 88, 30, 36, 1, "\uE031",new NamespacedKey("hud","shop"));
+        new HologramClickListener(this);
+        new HologramHoverListener(this);
     }
 
     @Override
     public void onDisable() {
+        HologramHoverListener.shutdown();
         getLogger().info("LaserGame désactivé.");
     }
 

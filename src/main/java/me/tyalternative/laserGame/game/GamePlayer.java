@@ -180,6 +180,7 @@ public class GamePlayer {
     public boolean isSkillReady() {
         return System.currentTimeMillis() >= skillCooldownReadyAtMillis;
     }
+
     public void startSkillCooldown(long cooldownTicks) {
         this.skillCooldownReadyAtMillis = System.currentTimeMillis() + cooldownTicks * 50L;
         this.skillCooldownDurationTicks = cooldownTicks;
@@ -191,6 +192,20 @@ public class GamePlayer {
 
     public long getSkillCooldownRemainingTicks() {
         return Math.max(0, (skillCooldownReadyAtMillis - System.currentTimeMillis()) / 50L);
+    }
+
+    private int suppressedSwingTick = -1;
+
+    public void suppressSwingForTick(int tick) {
+        this.suppressedSwingTick = tick;
+    }
+
+    public boolean consumeSuppressedSwingTick(int tick) {
+        if (suppressedSwingTick == tick) {
+            suppressedSwingTick = -1;
+            return true;
+        }
+        return false;
     }
 
     // ARCHETYPE

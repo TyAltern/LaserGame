@@ -5,8 +5,10 @@ import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
 import me.tyalternative.laserGame.game.MatchState;
 import me.tyalternative.laserGame.skill.SkillManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
@@ -22,13 +24,15 @@ public class SkillUseListener implements Listener {
         this.skillManager = skillManager;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOW)
     public void onDrop(PlayerDropItemEvent event) {
 
         Player player = event.getPlayer();
+        Optional<GamePlayer> anyGpOpt = gameManager.getGamePlayer(player);
+        anyGpOpt.ifPresent(gp -> gp.suppressSwingForTick(Bukkit.getCurrentTick()));
+
         Optional<Match> matchOpt = gameManager.getGame(player);
         if (matchOpt.isEmpty()) return;
-
         Match match = matchOpt.get();
         if (match.getState() != MatchState.ROUND_IN_PROGRESS) return;
 
