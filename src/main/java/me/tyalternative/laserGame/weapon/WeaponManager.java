@@ -113,7 +113,8 @@ public class WeaponManager {
                 yaml.getDouble("movement-speed-modifier", 0.0),
                 yaml.getString("special-ability", null),
                 rarity,
-                yaml.getInt("price", 0)
+                yaml.getInt("price", 0),
+                yaml.getString("glyph", "")
         );
     }
 
@@ -147,6 +148,6 @@ public class WeaponManager {
     private static final WeaponType FALLBACK_WEAPON = new WeaponType(
             "fallback", "&7Arme de secours", Material.BLAZE_ROD,
             20, 4, 40, 50.0, 0.3,
-            1, 0.0, null, Rarity.COMMON, 0
+            1, 0.0, null, Rarity.COMMON, 0, ""
     );
 }

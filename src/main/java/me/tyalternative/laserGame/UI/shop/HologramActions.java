@@ -8,21 +8,26 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+@SuppressWarnings("UnusedReturnValue")
 public final class HologramActions {
     private HologramActions() {}
-
+    public static HologramAction show(HologramElement element) { return show(element.getId()); }
     public static HologramAction show(String elementId) {
         return (player, source, clickType) -> {
             HologramElement target = source.getRootElement().findRecursive(elementId);
             if (target != null) target.setVisible(true);
         };
     }
+
+    public static HologramAction hide(HologramElement element) { return hide(element.getId()); }
     public static HologramAction hide(String elementId) {
         return (player, source, clickType) -> {
             HologramElement target = source.getRootElement().findRecursive(elementId);
             if (target != null) target.setVisible(false);
         };
     }
+
+    public static HologramAction toggle(HologramElement element) { return toggle(element.getId()); }
     public static HologramAction toggle(String elementId) {
         return (player, source, clickType) -> {
             HologramElement target = source.getRootElement().findRecursive(elementId);

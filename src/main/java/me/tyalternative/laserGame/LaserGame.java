@@ -20,15 +20,13 @@ import me.tyalternative.laserGame.upgrade.PermanentUpgradeManager;
 import me.tyalternative.laserGame.weapon.ShotTrailRenderer;
 import me.tyalternative.laserGame.weapon.WeaponAbilityManager;
 import me.tyalternative.laserGame.weapon.WeaponManager;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 
 public final class LaserGame extends JavaPlugin {
 
+    private static LaserGame instance;
     private ConfigManager configManager;
     private ArenaManager arenaManager;
     private WeaponManager weaponManager;
@@ -42,6 +40,7 @@ public final class LaserGame extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        instance = this;
 
         saveDefaultConfig();
         saveResourceIfMissing("arenas/test.yml");
@@ -65,6 +64,7 @@ public final class LaserGame extends JavaPlugin {
         saveResourceIfMissing("upgrades/fast_reload_permanent.yml");
         saveResourceIfMissing("upgrades/extra_slot.yml");
         saveResourceIfMissing("upgrades/reload_shield.yml");
+        saveResourceIfMissing("upgrades/extra_shop_slot.yml");
 
         this.configManager = new ConfigManager(this);
         configManager.load();
@@ -86,7 +86,7 @@ public final class LaserGame extends JavaPlugin {
 
         ShotTrailRenderer trailRenderer = new ShotTrailRenderer(this, configManager);
         this.gameManager = new GameManager(this, configManager, arenaManager, weaponManager, abilityManager,
-                archetypeManager, shopManager);
+                archetypeManager, shopManager, consumableManager, skillManager, upgradeManager);
 
         getServer().getPluginManager().registerEvents(
                 new PlayerInteractListener(weaponManager, gameManager), this);
@@ -103,7 +103,7 @@ public final class LaserGame extends JavaPlugin {
         getServer().getPluginManager().registerEvents(
                 new SkillUseListener(gameManager, skillManager), this);
 
-        var laserCommand = new LaserCommand(this,gameManager, arenaManager, weaponManager, consumableManager,
+        var laserCommand = new LaserCommand(this,configManager, gameManager, arenaManager, weaponManager, consumableManager,
                 skillManager, archetypeManager, upgradeManager, shopManager);
         getCommand("laser").setExecutor(laserCommand);
 
@@ -133,6 +133,8 @@ public final class LaserGame extends JavaPlugin {
         if (!target.exists()) saveResource(resourcePath, false);
     }
 
+
+    public static LaserGame getInstance() { return instance; }
     public ConfigManager getConfigManager() { return configManager; }
     public ArenaManager getArenaManager()   { return arenaManager; }
     public WeaponManager getWeaponManager() { return weaponManager; }

@@ -97,7 +97,8 @@ public class SkillManager {
                 rarity,
                 yaml.getInt("price", 0),
                 yaml.getLong("cooldown-ticks", 100),
-                yaml.getString("effect-id", "")
+                yaml.getString("effect-id", ""),
+                yaml.getString("glyph", "")
         );
     }
 

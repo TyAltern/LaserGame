@@ -107,7 +107,8 @@ public class ConsumableManager {
                 category,
                 rarity,
                 yaml.getInt("price", 0),
-                yaml.getString("effect-id", "")
+                yaml.getString("effect-id", ""),
+                yaml.getString("glyph", "")
         );
     }
 
@@ -141,6 +142,7 @@ public class ConsumableManager {
 
         gp.getConsumables().clear(slot);
         effect.activate(new ActivationContext(gp, player, match, plugin));
+        gp.incrementConsumablesUsed();
         return true;
     }
 }

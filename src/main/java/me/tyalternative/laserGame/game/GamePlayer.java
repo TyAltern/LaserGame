@@ -21,6 +21,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -36,6 +37,7 @@ public class GamePlayer {
     private final List<StatModifier> activeModifiers = new ArrayList<>();
     private final EffectRegistry effects = new EffectRegistry();
     private final ConsumableInventory consumables;
+    private final List<String> consumableStorage = new ArrayList<>();
     private int selectedSlot = 0;
 
     private StatModifier currentAbilityStatModifier;
@@ -46,6 +48,14 @@ public class GamePlayer {
 
     private int roundWins = 0;
     private int currency = 0;
+
+
+    private int shotsFired = 0;
+    private int kills = 0;
+    private int eliminations = 0;
+    private int reloads = 0;
+    private int consumablesUsed = 0;
+    private int totalMoneyEarned = 0;
 
     public GamePlayer(UUID uuid, Plugin plugin, ConfigManager config, WeaponAbilityManager abilityManager,
                       WeaponType defaultWeapon, int baseItemSlots) {
@@ -64,6 +74,7 @@ public class GamePlayer {
     public EffectiveWeaponStats getEffectiveStats() { return effectiveStats; }
 
     public void setWeapon(WeaponType newType) {
+        ownedWeaponIds.add(newType.id());
         if (weapon != null) {
             weapon.stop();
         }
@@ -148,6 +159,7 @@ public class GamePlayer {
         // TODO : Point d'accroche futur pour les modificateurs type "+15% d'argent sur les kills" :
         //  remplacer par currency += modifiers.applyCurrencyBonus(amount, source);
         currency += amount;
+        totalMoneyEarned += amount;
     }
 
     public boolean spendCurrency(int amount) {
@@ -162,6 +174,57 @@ public class GamePlayer {
     public ConsumableInventory getConsumables() { return consumables; }
     public int getSelectedSlot() { return selectedSlot; }
     public void setSelectedSlot(int slot) { this.selectedSlot = slot; }
+
+//
+//
+//
+    public void  learnConsumable(String consumableId) {
+        consumableStorage.add(consumableId);
+    }
+
+
+    public List<String> getConsumableStorage() { return new ArrayList<>(consumableStorage); }
+
+
+    public boolean ownsConsumable(String consumableId) {
+        return consumableStorage.contains(consumableId) || consumables.getSlotIds().contains(consumableId);
+    }
+
+
+    public boolean equipConsumableFromStorage(int storageIndex, int equippedSlotIndex) {
+        if (storageIndex < 0 || storageIndex >= consumableStorage.size()) return false;
+        if (equippedSlotIndex < 0 || equippedSlotIndex >= consumables.size()) return false;
+
+        String incoming = consumableStorage.remove(storageIndex);
+        String outgoing = consumables.get(equippedSlotIndex).orElse(null);
+        consumables.set(equippedSlotIndex, incoming);
+        if (outgoing != null) consumableStorage.add(outgoing); // TODO: test and see if it is ok or if I need to replace to the incoming slot
+        return true;
+    }
+
+
+    public boolean unequipConsumableToStorage(int equippedSlotIndex) {
+        if (equippedSlotIndex < 0 || equippedSlotIndex >= consumables.size()) return false;
+        Optional<String> idOpt = consumables.get(equippedSlotIndex);
+        if (idOpt.isEmpty()) return false;
+
+        consumables.clear(equippedSlotIndex);
+        consumableStorage.add(idOpt.get());
+        return true;
+    }
+
+
+    public boolean swapEquippedConsumables(int slotA, int slotB) {
+        if (slotA < 0 || slotA >= consumables.size()) return false;
+        if (slotB < 0 || slotB >= consumables.size()) return false;
+        if (slotA == slotB) return false;
+
+        String a = consumables.get(slotA).orElse(null);
+        String b = consumables.get(slotB).orElse(null);
+        consumables.set(slotA, b);
+        consumables.set(slotB, a);
+        return true;
+    }
 
     // COMPETENCE
 
@@ -217,6 +280,9 @@ public class GamePlayer {
     public String getEquippedArchetypeId() {return equippedArchetypeId; }
 
     public void setArchetype(String archetypeId, ArchetypeEffect effect) {
+        if (archetypeId != null) {
+            ownedArchetypeIds.add(archetypeId);
+        }
         detachCurrentArchetype();
         this.equippedArchetypeId = archetypeId;
 
@@ -252,6 +318,8 @@ public class GamePlayer {
         return ownedUpgradeIds.contains(upgradeId);
     }
 
+    public Set<String> getOwnedUpgradeIds() { return Set.copyOf(ownedUpgradeIds); }
+
     public boolean addPermanentUpgrade(String upgradeId, PermanentUpgradeEffect effect) {
         if (ownedUpgradeIds.contains(upgradeId)) {
             return false; // TODO : VOIR POUR AJOUTER UNE AMELIORATION QUI PERMET DE STACK LES AMELIORATIONS.
@@ -278,4 +346,51 @@ public class GamePlayer {
     public void setShopSession(ShopSession session) {
         this.currentShopSession = session;
     }
+
+    private final Set<String> ownedWeaponIds = new HashSet<>();
+    private final Set<String> ownedSkillIds = new HashSet<>();
+    private final Set<String> ownedArchetypeIds = new HashSet<>();
+
+    public boolean ownsWeapon(String id) { return ownedWeaponIds.contains(id); }
+    public boolean ownsSkill(String id) { return ownedSkillIds.contains(id); }
+    public boolean ownsArchetype(String id) { return ownedArchetypeIds.contains(id); }
+
+    public Set<String> getOwnedWeaponIds() { return Set.copyOf(ownedWeaponIds); }
+    public Set<String> getOwnedSkillIds() { return Set.copyOf(ownedSkillIds); }
+    public Set<String> getOwnedArchetypeIds() { return Set.copyOf(ownedArchetypeIds); }
+
+    public void learnWeapon(String weaponId) { ownedWeaponIds.add(weaponId); }
+    public void learnSkill(String skillId) { ownedSkillIds.add(skillId); }
+    public void learnArchetype(String archetypeId) { ownedArchetypeIds.add(archetypeId); }
+
+    private int bonusShopSlots = 0;
+
+    public int getBonusShopSlots() { return bonusShopSlots; }
+    public void addBonusShopSlot(int amount) { bonusShopSlots += amount; }
+
+    // READY (phase shop)
+
+    private boolean ready = false;
+
+    public boolean isReady() { return ready; }
+    public void setReady(boolean ready) { this.ready = ready; }
+
+    // STATISTIQUES
+
+    public int getShotsFired() { return shotsFired; }
+    public void incrementShotsFired() { shotsFired++; }
+
+    public int getKills() { return kills; }
+    public void incrementKills() { kills++; }
+
+    public int getEliminations() { return eliminations; }
+    public void incrementEliminations() { eliminations++; }
+
+    public int getReloads() { return reloads; }
+    public void incrementReloads() { reloads++; }
+
+    public int getConsumablesUsed() { return consumablesUsed; }
+    public void incrementConsumablesUsed() { consumablesUsed++; }
+
+    public int getTotalMoneyEarned() { return totalMoneyEarned; }
 }

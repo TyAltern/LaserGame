@@ -91,7 +91,8 @@ public class ArchetypeManager {
                 yaml.getString("display-name", id),
                 rarity,
                 yaml.getInt("price", 0),
-                yaml.getString("effect-id", "")
+                yaml.getString("effect-id", ""),
+                yaml.getString("glyph", "")
         );
     }
 

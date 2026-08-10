@@ -1,5 +1,6 @@
 package me.tyalternative.laserGame.archetype;
 
+import me.tyalternative.laserGame.shop.HasGlyph;
 import me.tyalternative.laserGame.shop.HasRarity;
 import me.tyalternative.laserGame.shop.Rarity;
 
@@ -8,8 +9,9 @@ public record ArchetypeDefinition (
         String displayName,
         Rarity rarity,
         int price,
-        String effectId
-) implements HasRarity {
+        String effectId,
+        String glyph
+) implements HasRarity, HasGlyph {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;
         if (rarity == null) return false;

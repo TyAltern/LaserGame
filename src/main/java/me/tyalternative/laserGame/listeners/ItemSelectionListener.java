@@ -35,7 +35,6 @@ public class ItemSelectionListener implements Listener {
         } else {
             scrollDown = null;
         }
-        player.sendMessage("scroll -> " + diff);
 
         if (scrollDown == null) return;
 

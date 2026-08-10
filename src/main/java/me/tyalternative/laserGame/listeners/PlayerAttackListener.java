@@ -54,6 +54,7 @@ public class PlayerAttackListener implements Listener {
             if (shooter.consumeSuppressedSwingTick(swingTick)) return; // faux swing (touche Q), pas un vrai tir
 
             if (!shooter.getWeapon().tryShoot()) return;
+            shooter.incrementShotsFired();
             performShot(match, shooter, player);
         });
     }

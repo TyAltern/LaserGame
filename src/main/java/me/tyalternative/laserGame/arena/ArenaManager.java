@@ -43,7 +43,7 @@ public class ArenaManager {
                 ArenaConfig config = parseConfig(file);
                 if (config == null) continue;
                 if (!config.isValid()) {
-                    plugin.getLogger().warning("Arène '" + file.getName() + "' invalide (vérifie spawns/spectator-spawn) - ignorée.");
+                    plugin.getLogger().warning("Arène '" + file.getName() + "' invalide (vérifie spawns/spectator-spawn/shop-rooms) -> arène ignorée.");
                     continue;
                 }
                 arenasByName.put(config.name(), new Arena(config));
@@ -92,7 +92,17 @@ public class ArenaManager {
             waitingRoom = spectatorSpawn;
         }
 
-        return new ArenaConfig(name, worldName, minPlayers, maxPlayers, spawns, waitingRoom, spectatorSpawn);
+        List<Location> shopRooms = new ArrayList<>();
+        List<?> rawShopRooms = yaml.getList("shop-rooms");
+        if (rawShopRooms != null) {
+            for (Object rawShopRoom : rawShopRooms) {
+                if (rawShopRoom instanceof Map<?,?> map) {
+                    shopRooms.add(mapToLocation(world, map));
+                }
+            }
+        }
+
+        return new ArenaConfig(name, worldName, minPlayers, maxPlayers, spawns, waitingRoom, spectatorSpawn, shopRooms);
     }
 
     private Location readLocation(World world, ConfigurationSection section) {

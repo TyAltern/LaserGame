@@ -4,3 +4,4 @@ category: DEFENSE
 rarity: COMMON
 price: 15
 effect-id: damage_cap_next_hit
+glyph: "\uA001"

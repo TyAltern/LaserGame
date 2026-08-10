@@ -33,6 +33,8 @@ public class ConfigManager {
     private int shotHitReward;
     private int eliminationReward;
     private int roundWinReward;
+    private int firstBloodReward;
+    private int firstEliminationReward;
 
     // Shop
     private DuplicatePolicy shopDuplicatePolicy;
@@ -78,6 +80,8 @@ public class ConfigManager {
         shotHitReward = cfg.getInt("economy.shot-hit-reward", 5);
         eliminationReward = cfg.getInt("economy.elimination-reward", 15);
         roundWinReward = cfg.getInt("economy.round-win-reward", 30);
+        firstBloodReward = cfg.getInt("economy.first-blood-reward", 10);
+        firstEliminationReward = cfg.getInt("economy.first-elimination-reward", 20);
 
         String policyRaw = cfg.getString("shop.duplicate-policy", "SEPARATE_SLOT");
         try {
@@ -141,6 +145,8 @@ public class ConfigManager {
     public int getShotHitReward() { return shotHitReward; }
     public int getEliminationReward() { return eliminationReward; }
     public int getRoundWinReward() { return roundWinReward; }
+    public int getFirstBloodReward() { return firstBloodReward; }
+    public int getFirstEliminationReward() { return firstEliminationReward; }
 
     public DuplicatePolicy getShopDuplicatePolicy() { return shopDuplicatePolicy; }
     public int getBaseItemSlots() { return baseItemSlots; }

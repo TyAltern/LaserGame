@@ -4,7 +4,6 @@ import me.tyalternative.laserGame.archetype.ArchetypeDefinition;
 import me.tyalternative.laserGame.archetype.ArchetypeEffect;
 import me.tyalternative.laserGame.archetype.ArchetypeManager;
 import me.tyalternative.laserGame.config.ConfigManager;
-import me.tyalternative.laserGame.economy.CurrencySource;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.skill.SkillDefinition;
 import me.tyalternative.laserGame.skill.SkillManager;
@@ -21,6 +20,8 @@ import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ShopManager {
+
+    private static final int MAX_CONSUMABLE_SLOTS = 6;
 
     private final ConfigManager config;
     private final ConsumableManager consumableManager;
@@ -42,15 +43,17 @@ public class ShopManager {
 
     public ShopSession createSession(GamePlayer gp) {
         ShopSession session = new ShopSession();
-        rollConsumableSlots(session,0);
+        rollConsumableSlots(gp, session,0);
         rollSpecialSlots(session);
         return session;
     }
 
-    private void rollConsumableSlots(ShopSession session, int pityLevel) {
+    private void rollConsumableSlots(GamePlayer gp, ShopSession session, int pityLevel) {
+        int slotCount = Math.min(MAX_CONSUMABLE_SLOTS, config.getShopConsumableSlots() + gp.getBonusShopSlots());
+
         List<ConsumableDefinition> pool = consumableManager.getAllDefinitions();
         List<String> ids = new ArrayList<>();
-        for (int i = 0; i < config.getShopConsumableSlots(); i++) {
+        for (int i = 0; i < slotCount; i++) {
             RarityPool.draw(pool, config.getRarityWeights(), pityLevel, config.getPityWeightShiftPerReroll())
                     .ifPresent(def -> ids.add(def.id()));
         }
@@ -95,7 +98,7 @@ public class ShopManager {
             return false;
         }
         session.incrementConsumableRerollCount();
-        rollConsumableSlots(session, session.getConsumableRerollCount());
+        rollConsumableSlots(gp, session, session.getConsumableRerollCount());
         return true;
     }
 
@@ -109,35 +112,44 @@ public class ShopManager {
         if (defOpt.isEmpty()) return false;
         ConsumableDefinition def = defOpt.get();
 
+        if (config.getShopDuplicatePolicy() == DuplicatePolicy.BLOCK_PURCHASE && gp.ownsConsumable(def.id())) return false;
+
         if (!gp.spendCurrency(def.price())) return false;
 
-        boolean added = gp.getConsumables().add(def.id(), config.getShopDuplicatePolicy()); // TODO : MODIFY FOR DUPLICATE UPGRADE
-        if (!added) {
-            gp.addCurrency(def.price(), CurrencySource.REFOUND);
-            return false;
-        }
+        // TODO : MODIFY FOR DUPLICATE UPGRADE
+        gp.learnConsumable(def.id());
+        ids.set(slotIndex, null);
         return true;
     }
+
+
+
 
     public boolean purchaseSpecialSlot(GamePlayer gp, ShopSession session, SpecialSlotType type) {
         String id = session.getSpecialSlotIds().get(type);
         if (id == null) return false;
 
-        return switch (type) {
+        boolean success = switch (type) {
             case WEAPON -> purchaseWeapon(gp, id);
             case UPGRADE -> purchaseUpgrade(gp, id);
             case SKILL -> purchaseSkill(gp, id);
             case ARCHETYPE -> purchaseArchetype(gp, id);
         };
+
+        if (success) {
+            session.getSpecialSlotIds().put(type,null);
+        }
+        return success;
     }
 
     private boolean purchaseWeapon(GamePlayer gp, String id) {
+        if (gp.ownsWeapon(id)) return false;
         Optional<WeaponType> typeOpt = weaponManager.getWeapon(id);
         if (typeOpt.isEmpty()) return false;
         WeaponType type = typeOpt.get();
 
         if (!gp.spendCurrency(type.price())) return false;
-        gp.setWeapon(type);
+        gp.learnWeapon(type.id());
         return true;
     }
 
@@ -154,23 +166,52 @@ public class ShopManager {
     }
 
     private boolean purchaseSkill(GamePlayer gp, String id) {
+        if (gp.ownsSkill(id)) return false;
         Optional<SkillDefinition> defOpt = skillManager.getDefinition(id);
         if (defOpt.isEmpty()) return false;
         SkillDefinition def = defOpt.get();
 
         if (!gp.spendCurrency(def.price())) return false;
-        gp.setEquippedSkillId(def.id());
+        gp.learnSkill(def.id());
         return true;
     }
 
     private boolean purchaseArchetype(GamePlayer gp, String id) {
+        if (gp.ownsArchetype(id)) return false;
         Optional<ArchetypeDefinition> defOpt = archetypeManager.getDefinition(id);
         if (defOpt.isEmpty()) return false;
         ArchetypeDefinition def = defOpt.get();
 
         if (!gp.spendCurrency(def.price())) return false;
-        ArchetypeEffect effect = archetypeManager.getEffect(def.effectId()).orElse(null);
-        gp.setArchetype(def.id(), effect);
+        gp.learnArchetype(def.id());
+        return true;
+    }
+
+    public boolean equipWeapon(GamePlayer gp, String weaponId) {
+        if (weaponId == null || !gp.ownsWeapon(weaponId)) return false;
+        Optional<WeaponType> typeOpt = weaponManager.getWeapon(weaponId);
+        if (typeOpt.isEmpty()) return false;
+        gp.setWeapon(typeOpt.get());
+        return true;
+    }
+
+    public boolean equipSkill(GamePlayer gp, String skillId) {
+        if (skillId != null && !gp.ownsSkill(skillId)) return false;
+        gp.setEquippedSkillId(skillId);
+        return true;
+    }
+
+    public boolean equipArchetype(GamePlayer gp, String archetypeId) {
+        if (archetypeId == null) {
+            gp.setArchetype(null, null);
+            return true;
+        }
+        if (!gp.ownsArchetype(archetypeId)) return false;
+
+        Optional<ArchetypeDefinition> defOpt = archetypeManager.getDefinition(archetypeId);
+        if (defOpt.isEmpty()) return false;
+        ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get().effectId()).orElse(null);
+        gp.setArchetype(defOpt.get().id(), effect);
         return true;
     }
 }

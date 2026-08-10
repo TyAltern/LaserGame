@@ -4,3 +4,4 @@ category: WEAPON_AMMO
 rarity: COMMON
 price: 20
 effect-id: instant_reload
+glyph: "\uA003"

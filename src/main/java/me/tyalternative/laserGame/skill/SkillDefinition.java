@@ -1,5 +1,6 @@
 package me.tyalternative.laserGame.skill;
 
+import me.tyalternative.laserGame.shop.HasGlyph;
 import me.tyalternative.laserGame.shop.HasRarity;
 import me.tyalternative.laserGame.shop.Rarity;
 
@@ -9,8 +10,9 @@ public record SkillDefinition(
         Rarity rarity,
         int price,
         long cooldownTicks,
-        String effectId
-) implements HasRarity {
+        String effectId,
+        String glyph
+) implements HasRarity, HasGlyph {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;
         if (rarity == null) return false;

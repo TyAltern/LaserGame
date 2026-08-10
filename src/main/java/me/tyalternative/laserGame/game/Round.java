@@ -115,6 +115,7 @@ public class Round {
         shooter.getEffects().fireShotHit(ctx);
         shooter.getEffects().fireDamageTaken(ctx);
 
+        shooter.incrementKills();
         boolean eliminated = target.removeLife(ctx.livesToRemove);
         Player targetPlayer = target.getPlayer();
 
@@ -123,6 +124,7 @@ public class Round {
                 eliminated ? CurrencySource.ELIMINATION : CurrencySource.SHOT_HIT);
 
         if (eliminated) {
+            shooter.incrementEliminations();
             target.setSpectator(true);
             target.getWeapon().stop();
             occupiedSpawns.remove(target.getUuid());

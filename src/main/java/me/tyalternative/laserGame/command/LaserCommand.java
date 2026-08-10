@@ -2,12 +2,12 @@ package me.tyalternative.laserGame.command;
 
 import me.tyalternative.laserGame.UI.shop.*;
 import me.tyalternative.laserGame.UI.shop.impl.LaserGameMenu;
-import me.tyalternative.laserGame.UI.shop.impl.ShopScreenMenu;
 import me.tyalternative.laserGame.archetype.ArchetypeDefinition;
 import me.tyalternative.laserGame.archetype.ArchetypeEffect;
 import me.tyalternative.laserGame.archetype.ArchetypeManager;
 import me.tyalternative.laserGame.arena.Arena;
 import me.tyalternative.laserGame.arena.ArenaManager;
+import me.tyalternative.laserGame.config.ConfigManager;
 import me.tyalternative.laserGame.game.GameManager;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
@@ -31,13 +31,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 /**
@@ -61,6 +57,7 @@ import java.util.stream.Collectors;
 public class LaserCommand implements CommandExecutor {
 
     private final JavaPlugin plugin;
+    private final ConfigManager configManager;
     private final GameManager gameManager;
     private final ArenaManager arenaManager;
     private final WeaponManager weaponManager;
@@ -70,11 +67,12 @@ public class LaserCommand implements CommandExecutor {
     private final PermanentUpgradeManager upgradeManager;
     private final ShopManager shopManager;
 
-    public LaserCommand(JavaPlugin plugin, GameManager gameManager, ArenaManager arenaManager, WeaponManager weaponManager,
+    public LaserCommand(JavaPlugin plugin, ConfigManager configManager, GameManager gameManager, ArenaManager arenaManager, WeaponManager weaponManager,
                         ConsumableManager consumableManager, SkillManager skillManager,
                         ArchetypeManager archetypeManager, PermanentUpgradeManager upgradeManager,
                         ShopManager shopManager) {
         this.plugin = plugin;
+        this.configManager = configManager;
         this.gameManager = gameManager;
         this.arenaManager = arenaManager;
         this.weaponManager = weaponManager;
@@ -110,22 +108,6 @@ public class LaserCommand implements CommandExecutor {
             case "buy" -> handleBuy(sender, args);
             case "give" -> handleGive(sender, args);
             case "reload" -> handleReload(sender);
-            case "test" -> {
-                if (!(sender instanceof Player player)) return true;
-
-
-                Location locationTest = new Location(Bukkit.getWorld("world"), 961.5, 107.5, 1025.5);
-                LaserGameMenu menu = new LaserGameMenu(locationTest, player);
-                HologramHoverListener.open(player, menu.getHologram());
-            }
-            case "close" -> {
-                if (!(sender instanceof Player player)) return true;
-                HologramElement hovered = HologramHoverListener.getCurrentHover(player);
-                if (hovered != null) {
-                    HologramHoverListener.close(player);
-                    hovered.getRootElement().remove();
-                }
-            }
             default -> sender.sendMessage("§eUsage: /laser <join|leave|list|weapon|weapons|skill|skills|archetype|archetypes|upgrades|shop|shopreroll|buy|give|reload> [argument]");
         }
         return true;
@@ -500,6 +482,7 @@ public class LaserCommand implements CommandExecutor {
             sender.sendMessage("§cTu n'as pas la permission.");
             return;
         }
+        configManager.load();
         arenaManager.loadAll();
         weaponManager.loadAll();
         consumableManager.loadAll();

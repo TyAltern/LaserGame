@@ -4,7 +4,11 @@ import me.tyalternative.laserGame.archetype.ArchetypeManager;
 import me.tyalternative.laserGame.arena.Arena;
 import me.tyalternative.laserGame.arena.ArenaManager;
 import me.tyalternative.laserGame.config.ConfigManager;
+import me.tyalternative.laserGame.shop.ConsumableManager;
+import me.tyalternative.laserGame.shop.ShopContext;
 import me.tyalternative.laserGame.shop.ShopManager;
+import me.tyalternative.laserGame.skill.SkillManager;
+import me.tyalternative.laserGame.upgrade.PermanentUpgradeManager;
 import me.tyalternative.laserGame.weapon.WeaponAbilityManager;
 import me.tyalternative.laserGame.weapon.WeaponAttributeKeys;
 import me.tyalternative.laserGame.weapon.WeaponManager;
@@ -30,12 +34,14 @@ public class GameManager {
     private final WeaponAbilityManager abilityManager;
     private final ArchetypeManager archetypeManager;
     private final ShopManager shopManager;
+    private final ShopContext shopContext;
 
     private final Map<UUID, Match> matchesByArenaId = new HashMap<>();
     private final Map<UUID, Match> matchByPlayer = new HashMap<>();
 
     public GameManager(Plugin plugin, ConfigManager config, ArenaManager arenaManager, WeaponManager weaponManager,
-                       WeaponAbilityManager abilityManager, ArchetypeManager archetypeManager, ShopManager shopManager) {
+                       WeaponAbilityManager abilityManager, ArchetypeManager archetypeManager, ShopManager shopManager,
+                       ConsumableManager consumableManager, SkillManager skillManager, PermanentUpgradeManager upgradeManager) {
         this.plugin = plugin;
         this.config = config;
         this.arenaManager = arenaManager;
@@ -43,7 +49,9 @@ public class GameManager {
         this.abilityManager = abilityManager;
         this.archetypeManager = archetypeManager;
         this.shopManager = shopManager;
+        this.shopContext = new ShopContext(shopManager, consumableManager, weaponManager, archetypeManager, skillManager, upgradeManager);
     }
+
 
     public boolean joinGame(Player player, String arenaName) {
         if (matchByPlayer.containsKey(player.getUniqueId())) {
@@ -60,7 +68,7 @@ public class GameManager {
 
         Match match = matchesByArenaId.get(arena.getId());
         if (match == null || match.getState() == MatchState.ENDING) {
-            match = new Match(plugin, config, weaponManager, abilityManager, archetypeManager, shopManager, arena, this::onGameEnded);
+            match = new Match(plugin, config, weaponManager, abilityManager, archetypeManager, shopManager, shopContext, arena, this::onGameEnded);
             matchesByArenaId.put(arena.getId(), match);
         }
 

@@ -16,6 +16,8 @@ economy:
   shot-hit-reward: 5
   elimination-reward: 15
   round-win-reward: 30
+  first-blood-reward: 10
+  first-elimination-reward: 20
 
 shop:
   # SEPARATE_SLOT / BLOCK_PURCHASE
@@ -37,7 +39,7 @@ shop:
 
 trail:
   # CUBES / LINE
-  mode: LINE
+  mode: CUBES
   block-material: RED_STAINED_GLASS
   step: 0.5
   thickness: 0.15

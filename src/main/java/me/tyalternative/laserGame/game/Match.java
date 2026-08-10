@@ -1,11 +1,14 @@
 package me.tyalternative.laserGame.game;
 
+import me.tyalternative.laserGame.UI.shop.HologramHoverListener;
+import me.tyalternative.laserGame.UI.shop.impl.LaserGameMenu;
 import me.tyalternative.laserGame.archetype.ArchetypeDefinition;
 import me.tyalternative.laserGame.archetype.ArchetypeEffect;
 import me.tyalternative.laserGame.archetype.ArchetypeManager;
 import me.tyalternative.laserGame.arena.Arena;
 import me.tyalternative.laserGame.config.ConfigManager;
 import me.tyalternative.laserGame.economy.CurrencySource;
+import me.tyalternative.laserGame.shop.ShopContext;
 import me.tyalternative.laserGame.shop.ShopManager;
 import me.tyalternative.laserGame.weapon.WeaponAbilityManager;
 import me.tyalternative.laserGame.weapon.WeaponManager;
@@ -13,10 +16,12 @@ import me.tyalternative.laserGame.weapon.WeaponType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +36,16 @@ public class Match {
     private final WeaponAbilityManager abilityManager;
     private final ArchetypeManager archetypeManager;
     private final ShopManager shopManager;
+    private final ShopContext shopContext;
     private final Arena arena;
     private final MatchEndCallback endCallback;
 
     private final Map<UUID,GamePlayer> players = new LinkedHashMap<>();
+    private final Map<UUID, LaserGameMenu> openShopMenus = new LinkedHashMap<>();
 
     private MatchState state = MatchState.WAITING;
     private BukkitTask scheduleTask;
+    private BukkitTask shopTimerTickTask;
     private int countdownRemaining;
     private Round currentRound;
 
@@ -46,13 +54,15 @@ public class Match {
     }
 
     public Match(Plugin plugin, ConfigManager config, WeaponManager weaponManager, WeaponAbilityManager abilityManager,
-                 ArchetypeManager archetypeManager, ShopManager shopManager, Arena arena, MatchEndCallback endCallback) {
+                 ArchetypeManager archetypeManager, ShopManager shopManager, ShopContext shopContext, Arena arena,
+                 MatchEndCallback endCallback) {
         this.plugin = plugin;
         this.config = config;
         this.weaponManager = weaponManager;
         this.abilityManager = abilityManager;
         this.archetypeManager = archetypeManager;
         this.shopManager = shopManager;
+        this.shopContext = shopContext;
         this.arena = arena;
         this.endCallback = endCallback;
     }
@@ -82,9 +92,11 @@ public class Match {
         if (gp == null) return;
 
         gp.getWeapon().stop();
+        closeShopMenu(player);
 
         if (state == MatchState.STARTING && players.size() < effectiveMinPlayers()) cancelCountdown();
         if (state == MatchState.ROUND_IN_PROGRESS && currentRound != null) currentRound.onPlayerRemoved(gp);
+        if (state == MatchState.SHOP) maybeEndShopPhaseEarly();
     }
 
     public boolean setWeaponChoice(Player player, String weaponId) { // TODO : ADD SHOP COMPATIBILITY (CURRENTLY CHOSEN BY COMMAND AND NOT BY SHOP)
@@ -124,6 +136,28 @@ public class Match {
         gp.setArchetype(defOpt.get().id(), effect);
         player.sendMessage("§aArchétype équipé : §f" + defOpt.get().displayName());
         return true;
+    }
+
+    public void setPlayerReady(Player player, boolean ready) {
+        if (state != MatchState.SHOP) return;
+        GamePlayer gp = players.get(player.getUniqueId());
+        if (gp == null) return;
+
+        gp.setReady(ready);
+
+        if (ready) maybeEndShopPhaseEarly();
+    }
+
+    private void maybeEndShopPhaseEarly() {
+        if (state != MatchState.SHOP) return;
+        if (players.isEmpty()) return;
+
+        for (GamePlayer gp : players.values()) {
+            Player p = gp.getPlayer();
+            if (p != null && !gp.isReady()) return;
+        }
+
+        endShopPhaseAndStartRound(); // TODO: Préparation phase
     }
 
     private int effectiveMinPlayers() {
@@ -174,7 +208,12 @@ public class Match {
         state = MatchState.ROUND_IN_PROGRESS;
         for (GamePlayer gp : players.values()) {
             gp.setShopSession(null);
+            gp.setReady(false);
+            Player p = gp.getPlayer();
+            if (p != null) closeShopMenu(p);
         }
+        openShopMenus.clear();
+
         currentRound = new Round(plugin, config, arena, players, this::onRoundEnded);
         currentRound.start();
     }
@@ -194,27 +233,69 @@ public class Match {
 
     private void startShopPhase() {
         state = MatchState.SHOP;
-        broadcast("§ePhase shop : prochain round dans " + config.getShopPhaseSeconds() + "s.");
+        int totalSeconds = config.getShopPhaseSeconds();
+        broadcast("§ePhase shop : prochain round dans " + totalSeconds + "s.");
 
+        List<GamePlayer> matchPlayers = List.copyOf(players.values());
+
+        int playerIndex = 0;
         for (GamePlayer gp : players.values()) {
             gp.setShopSession(shopManager.createSession(gp));
+            gp.setReady(false);
 
             Player p = gp.getPlayer();
             if (p != null) {
+                p.getInventory().clear();
                 p.setGameMode(GameMode.ADVENTURE);
-                p.teleport(arena.getConfig().waitingRoom()); // TODO : FIXE TELEPORT LOCATION
-                p.sendMessage("§eLe shop est ouvert (§f/laser shop§e pour voir les offres)."); // TODO : à REMOVE c'est du debug
+
+                Location shopRoom = arena.getConfig().shopRoomFor(playerIndex);
+                p.teleport(shopRoom);
+
+                LaserGameMenu menu = new LaserGameMenu(shopRoom.clone().add(0, -0.5, -3.4).setRotation(0,0), gp, shopContext,
+                        totalSeconds, matchPlayers, ready -> setPlayerReady(p, ready));
+                openShopMenus.put(p.getUniqueId(), menu);
+                HologramHoverListener.open(p, menu.getHologram());
             }
+            playerIndex++;
+        }
+        scheduleTask = Bukkit.getScheduler().runTaskLater(plugin, this::endShopPhaseAndStartRound, totalSeconds * 20L);
+
+
+        int[] remaining = {totalSeconds};
+        shopTimerTickTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            remaining[0]--;
+            for (LaserGameMenu menu : openShopMenus.values()) {
+                menu.setRemainingSeconds(Math.max(0, remaining[0]));
+            }
+            if (remaining[0] <= 0 && shopTimerTickTask != null) {
+                shopTimerTickTask.cancel();
+                shopTimerTickTask = null;
+            }
+        }, 20L, 20L);
+    }
+
+    private void endShopPhaseAndStartRound() {
+        if (state != MatchState.SHOP) return;
+
+        if (scheduleTask != null) {
+            scheduleTask.cancel();
+            scheduleTask = null;
+        }
+        if (shopTimerTickTask != null) {
+            shopTimerTickTask.cancel();
+            shopTimerTickTask = null;
         }
 
-        // TODO : OPEN SHOP GUI TO ALL PLAYERS
+        for (GamePlayer gp : players.values()) {
+            gp.resetForNewRound(config.getStartingLives());
+        }
+        beginRound();
+    }
 
-        scheduleTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            for (GamePlayer gp : players.values()) {
-                gp.resetForNewRound(config.getStartingLives());
-            }
-            beginRound();
-        }, config.getShopPhaseSeconds() * 20L);
+    private void closeShopMenu(Player player) {
+        HologramHoverListener.close(player);
+        LaserGameMenu menu = openShopMenus.remove(player.getUniqueId());
+        if (menu != null) menu.getHologram().clearHologram();
     }
 
     private void endMatch(GamePlayer winner) {
@@ -225,7 +306,10 @@ public class Match {
 
         for (GamePlayer gp : players.values()) {
             gp.getWeapon().stop();
+            Player gpPlayer = gp.getPlayer();
+            if (gpPlayer != null) closeShopMenu(gpPlayer);
         }
+        openShopMenus.clear();
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> endCallback.onMatchEnded(this), 60L);
     }

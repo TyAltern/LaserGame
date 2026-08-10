@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.RayTraceResult;
@@ -25,6 +26,7 @@ public class HologramHoverListener implements Listener {
 
     private static final Map<UUID, Hologram> OPEN_HOLOGRAMS = new HashMap<>();
     private static final Map<UUID, HologramElement> CURRENT_HOVER  = new HashMap<>();
+    private final Map<UUID,Boolean> isSneaking = new HashMap<>();
 
     private static BukkitTask scanTask;
 
@@ -76,6 +78,10 @@ public class HologramHoverListener implements Listener {
     }
 
     private static void scan(Player player) {
+
+        if (OPEN_HOLOGRAMS.get(player.getUniqueId()) == null) return;
+        Hologram hologram = OPEN_HOLOGRAMS.get(player.getUniqueId());
+
         Location eye = player.getEyeLocation();
 
         RayTraceResult result = player.getWorld().rayTrace(
@@ -96,9 +102,34 @@ public class HologramHoverListener implements Listener {
         HologramElement previous = CURRENT_HOVER.get(player.getUniqueId());
         if (hovered == previous) return;
 
-        if (previous != null) previous.onHoverExit(player);
-        if (hovered != null) hovered.onHoverEnter(player);
+        if (previous != null) {
+            if (player.isSneaking()) hologram.hideHintPanel();
+            previous.onHoverExit(player);
+        }
+        if (hovered != null) {
+            if (player.isSneaking() && hovered.hasHint()) hologram.showHintPanel(hovered);
+            hovered.onHoverEnter(player);
+        }
 
         CURRENT_HOVER.put(player.getUniqueId(), hovered);
+    }
+
+    @EventHandler
+    public void onPlayerSneakToggle(PlayerToggleSneakEvent event) {
+        if (OPEN_HOLOGRAMS.get(event.getPlayer().getUniqueId()) == null) return;
+        Hologram hologram = OPEN_HOLOGRAMS.get(event.getPlayer().getUniqueId());
+        HologramElement hovered = CURRENT_HOVER.get(event.getPlayer().getUniqueId());
+
+        if (hovered == null || hologram == null) return;
+        if (!hovered.hasHint()) return;
+
+        if (event.isSneaking()) {
+            event.getPlayer().sendMessage("sneak");
+            hologram.showHintPanel(hovered);
+        }
+        else {
+            event.getPlayer().sendMessage("unsneak");
+            hologram.hideHintPanel();
+        }
     }
 }

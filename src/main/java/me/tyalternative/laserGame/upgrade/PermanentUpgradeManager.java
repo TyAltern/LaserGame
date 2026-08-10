@@ -28,6 +28,7 @@ public class PermanentUpgradeManager {
         effectRegistry.put("speed_boost_permanent", new PermanentSpeedBoostEffect());
         effectRegistry.put("fast_reload_permanent", new FastReloadUpgradeEffect());
         effectRegistry.put("extra_slot", new ExtraSlotUpgradeEffect());
+        effectRegistry.put("extra_shop_slot", new ExtraShopSlotUpgradeEffect());
         effectRegistry.put("reload_shield", new ReloadShieldUpgradeEffect());
     }
 
@@ -92,7 +93,8 @@ public class PermanentUpgradeManager {
                 yaml.getString("display-name", id),
                 rarity,
                 yaml.getInt("price", 0),
-                yaml.getString("effect-id", "")
+                yaml.getString("effect-id", ""),
+                yaml.getString("glyph", "")
         );
     }
 

@@ -42,7 +42,18 @@ public class ConsumableInventory {
         }
     }
 
+
+    public void set(int index, String consumableId) {
+        if (index >= 0 && index < slots.size()) {
+            slots.set(index, consumableId);
+        }
+    }
+
     public int size() {
         return slots.size();
+    }
+
+    public List<String> getSlotIds() {
+        return new ArrayList<>(slots);
     }
 }

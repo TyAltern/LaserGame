@@ -101,6 +101,7 @@ public class LaserWeapon {
             reloadProgressTicks += config.getHudIntervalTicks();
             if (reloadProgressTicks >= stats.getReloadCooldownTicks()) {
                 ammo = stats.getMaxAmmo();
+
                 reloading = false;
                 sendActionBar(player, "§aArme rechargée !");
             } else {

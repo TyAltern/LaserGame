@@ -6,8 +6,9 @@ public record ConsumableDefinition(
         ConsumableCategory category,
         Rarity rarity,
         int price,
-        String effectId
-) implements HasRarity {
+        String effectId,
+        String glyph
+) implements HasRarity, HasGlyph {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;
         if (category == null || rarity == null) return false;

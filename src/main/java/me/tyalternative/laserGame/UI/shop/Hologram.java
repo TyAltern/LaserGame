@@ -1,6 +1,7 @@
 package me.tyalternative.laserGame.UI.shop;
 
 import me.tyalternative.laserGame.LaserGame;
+import me.tyalternative.laserGame.UI.shop.impl.ItemHintPanel;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 
@@ -14,6 +15,7 @@ public class Hologram {
     private final int sizeX;
     private final int sizeY;
     private final HologramElement root;
+    private ItemHintPanel itemHintPanel;
 
     public Hologram(Location location, String id, int sizeX, int sizeY, String background, NamespacedKey font) {
         this.id = id;
@@ -36,6 +38,18 @@ public class Hologram {
     public String getId() { return id; }
     public int getSizeX() { return sizeX; }
     public int getSizeY() { return sizeY; }
+
+    public void setItemHintPanel(ItemHintPanel itemHintPanel) { this.itemHintPanel = itemHintPanel; }
+
+    public ItemHintPanel getItemHintPanel() { return itemHintPanel; }
+
+    public void showHintPanel(HologramElement slot) {
+        itemHintPanel.showHint(slot);
+    }
+
+    public void hideHintPanel() {
+        itemHintPanel.hideHint();
+    }
 
     public HologramElement getRoot() { return root; }
 

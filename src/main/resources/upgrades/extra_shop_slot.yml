@@ -1,0 +1,5 @@
+id: extra_shop_slot
+display-name: "&6Client Habitué"
+rarity: RARE
+price: 65
+effect-id: extra_shop_slot

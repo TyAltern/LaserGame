@@ -5,5 +5,8 @@ public enum CurrencySource {
     ELIMINATION,
     ROUND_WIN,
     PASSIVE,
-    REFOUND;
+    REFOUND,
+    FIRST_BLOOD,
+    FIRST_ELIMINATION,
+    BET_PAYOUT;
 }
