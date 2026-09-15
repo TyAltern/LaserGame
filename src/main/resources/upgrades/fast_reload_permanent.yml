@@ -3,3 +3,6 @@ display-name: "&aMains Agiles"
 rarity: COMMON
 price: 40
 effect-id: fast_reload_permanent
+
+icon-material: HONEY_BOTTLE
+glyph: "\uA036"

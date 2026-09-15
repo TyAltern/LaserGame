@@ -1,0 +1,11 @@
+id: bet_win_x4
+display-name: "&2Pari Audacieux"
+category: ECONOMY
+rarity: RARE
+price: 12
+effect-id: bet_win_x4
+
+# Doc d'origine : "le prix d'achat varie entre deux valeurs (ex: 5$-20$)". Simplifié ici à un prix fixe -
+# un système de prix variable par item serait un ajout séparé côté ShopSession/ShopManager.
+icon-material: GOLD_INGOT
+glyph: "\uA02C"

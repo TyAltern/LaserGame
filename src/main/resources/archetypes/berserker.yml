@@ -3,3 +3,6 @@ display-name: "&4Berserker"
 rarity: UNIQUE
 price: 30
 effect-id: berserker
+
+icon-material: DIAMOND_AXE
+glyph: "\uA02F"

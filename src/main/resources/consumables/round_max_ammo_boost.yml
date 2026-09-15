@@ -1,0 +1,9 @@
+id: round_max_ammo_boost
+display-name: "&bMunitions Supplémentaires"
+category: WEAPON_AMMO
+rarity: UNIQUE
+price: 25
+effect-id: round_max_ammo_boost
+
+icon-material: SPECTRAL_ARROW
+glyph: "\uA01F"

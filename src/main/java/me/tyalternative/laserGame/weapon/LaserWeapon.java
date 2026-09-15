@@ -22,6 +22,7 @@ public class LaserWeapon {
     private final EffectRegistry effects;
 
     private int ammo;
+    private int pendingReloadBonusAmount = 0;
     private boolean reloading = false;
     private boolean shotLocked = false;
     private long reloadProgressTicks = 0;
@@ -78,6 +79,12 @@ public class LaserWeapon {
             sendActionBar(player, "§7Munitions déjà pleines.");
             return;
         }
+        double usedFraction = stats.getMaxAmmo() <= 0 ? 1.0 : 1.0 - ((double) ammo / stats.getMaxAmmo());
+        if (usedFraction < stats.getMinAmmoUsedFractionToReload() - 1e-9) {
+            int requiredPercent = (int) Math.round(stats.getMinAmmoUsedFractionToReload() * 100);
+            sendActionBar(player, "§cIl faut avoir utilisé au moins " + requiredPercent + "% du chargeur pour recharger.");
+            return;
+        }
         reloading = true;
         reloadProgressTicks = 0;
     }
@@ -94,15 +101,21 @@ public class LaserWeapon {
 
         if (reloading) {
             if (!player.isBlocking()) {
+                if (stats.isReloadPausable()) {
+                    sendActionBar(player, "§e" + buildReloadBar(stats) + " §7(en pause)");
+                    return; // conserve reloading=true et la progression : reprend dès que le joueur re-bloque
+                }
                 reloading = false;
                 sendActionBar(player, "§cRechargement interrompu !");
                 return;
             }
             reloadProgressTicks += config.getHudIntervalTicks();
             if (reloadProgressTicks >= stats.getReloadCooldownTicks()) {
-                ammo = stats.getMaxAmmo();
+                ammo = stats.getMaxAmmo() + pendingReloadBonusAmount;
+                pendingReloadBonusAmount = 0;
 
                 reloading = false;
+                effects.fireReloadCompleted();
                 sendActionBar(player, "§aArme rechargée !");
             } else {
                 sendActionBar(player, buildReloadBar(stats));
@@ -180,16 +193,26 @@ public class LaserWeapon {
         if (stats.isReloadDisabled()) {
             return false;
         }
-        ammo = statsSupplier.get().getMaxAmmo();
+        ammo = statsSupplier.get().getMaxAmmo() + pendingReloadBonusAmount;
+        pendingReloadBonusAmount = 0;
         reloading = false;
         reloadProgressTicks = 0;
+        effects.fireReloadCompleted();
         return true;
+    }
+
+    public void grantNextReloadBonus(int amount) {
+        pendingReloadBonusAmount += amount;
     }
 
     public void addAmmo(int amount, int maxOverflow) {
         EffectiveWeaponStats stats = statsSupplier.get();
         int cap = stats.getMaxAmmo() + Math.max(0, maxOverflow);
         ammo = Math.min(cap, ammo + amount);
+    }
+
+    public void setAmmo(int amount) {
+        this.ammo = Math.max(0, Math.min(amount, statsSupplier.get().getMaxAmmo()));
     }
 
     public WeaponType getType() { return type; }

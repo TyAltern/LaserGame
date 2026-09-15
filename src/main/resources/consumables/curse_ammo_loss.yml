@@ -1,0 +1,9 @@
+id: curse_ammo_loss
+display-name: "&5Chargeur Percé"
+category: SABOTAGE
+rarity: UNIQUE
+price: 20
+effect-id: curse_ammo_loss
+
+icon-material: FLINT
+glyph: "\uA01D"

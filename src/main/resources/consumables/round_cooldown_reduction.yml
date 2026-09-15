@@ -1,0 +1,9 @@
+id: round_cooldown_reduction
+display-name: "&bGâchette Affûtée"
+category: WEAPON_AMMO
+rarity: RARE
+price: 35
+effect-id: round_cooldown_reduction
+
+icon-material: REDSTONE
+glyph: "\uA021"

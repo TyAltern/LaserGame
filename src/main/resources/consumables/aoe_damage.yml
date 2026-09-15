@@ -1,0 +1,9 @@
+id: aoe_damage
+display-name: "&cOnde de Choc"
+category: OFFENSE
+rarity: RARE
+price: 45
+effect-id: aoe_next_shot
+
+icon-material: FIRE_CHARGE
+glyph: "\uA018"

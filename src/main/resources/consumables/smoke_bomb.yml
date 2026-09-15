@@ -1,0 +1,9 @@
+id: smoke_bomb
+display-name: "&dBombe Fumigène"
+category: CROWD_CONTROL
+rarity: RARE
+price: 30
+effect-id: smoke_bomb
+
+icon-material: GRAY_DYE
+glyph: "\uA029"

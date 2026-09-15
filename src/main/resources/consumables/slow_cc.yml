@@ -1,0 +1,9 @@
+id: slow_cc
+display-name: "&dEntrave"
+category: CROWD_CONTROL
+rarity: UNIQUE
+price: 25
+effect-id: slow_cc
+
+icon-material: COBWEB
+glyph: "\uA028"

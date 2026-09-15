@@ -1,0 +1,19 @@
+id: armored_rifle
+display-name: "&9Fusil Blindé"
+rarity: UNIQUE
+price: 35
+special-ability: reload_gate_ignore_damage
+
+material: IRON_HOE
+max-ammo: 25
+shot-cooldown-ticks: 8
+reload-cooldown-ticks: 70
+range: 25.0
+hit-radius: 0.35
+
+lives-per-hit: 1
+
+movement-speed-modifier: 0.0
+
+icon-material: NETHERITE_INGOT
+glyph: "\uA009"

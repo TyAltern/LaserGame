@@ -1,0 +1,19 @@
+id: thrifty_carbine
+display-name: "&5Carabine Économe"
+rarity: RARE
+price: 55
+special-ability: refund_ammo_on_miss
+
+material: DIAMOND_HOE
+max-ammo: 8
+shot-cooldown-ticks: 10
+reload-cooldown-ticks: 60
+range: 22.0
+hit-radius: 0.3
+
+lives-per-hit: 1
+
+movement-speed-modifier: 0.0
+
+icon-material: DIAMOND_HOE
+glyph: "\uA002"

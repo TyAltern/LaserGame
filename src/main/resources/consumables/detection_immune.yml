@@ -1,0 +1,9 @@
+id: detection_immune
+display-name: "&9Contre-Détection"
+category: STEALTH
+rarity: UNIQUE
+price: 25
+effect-id: detection_immune
+
+icon-material: PHANTOM_MEMBRANE
+glyph: "\uA02A"

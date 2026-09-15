@@ -19,6 +19,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 public class PlayerAttackListener implements Listener {
@@ -55,7 +58,11 @@ public class PlayerAttackListener implements Listener {
 
             if (!shooter.getWeapon().tryShoot()) return;
             shooter.incrementShotsFired();
-            performShot(match, shooter, player);
+            if (shooter.isPiercingActive()) {
+                performPiercingShot(match, shooter, player);
+            } else {
+                performShot(match, shooter, player);
+            }
         });
     }
 
@@ -84,13 +91,61 @@ public class PlayerAttackListener implements Listener {
         trailRenderer.render(eye, endpoint);
 
         if (result != null && result.getHitEntity() instanceof Player target) {
-            handleHit(match, shooter, target, stats);
+            double distance = eye.distance(endpoint);
+            handleHit(match, shooter, target, stats, distance);
         } else {
             shooter.getEffects().fireShotMissed();
         }
     }
 
-    private void handleHit(Match match, GamePlayer shooter, Player target, EffectiveWeaponStats shooterStats) {
+    private void performPiercingShot(Match match, GamePlayer shooter, Player player) {
+        EffectiveWeaponStats stats = shooter.getEffectiveStats();
+        Location eye = player.getEyeLocation();
+        Vector direction = eye.getDirection().normalize();
+
+        RayTraceResult blockHit = player.getWorld().rayTraceBlocks(eye, direction, stats.getRange(), FluidCollisionMode.NEVER, true);
+        double maxDistance = blockHit != null
+                ? eye.distance(blockHit.getHitPosition().toLocation(player.getWorld()))
+                : stats.getRange();
+
+        List<PierceHit> hits = new ArrayList<>();
+        for (GamePlayer other : match.getPlayers()) {
+            if (other.getUuid().equals(shooter.getUuid())) continue;
+            if (other.isSpectator()) continue;
+
+            Player targetPlayer = other.getPlayer();
+            if (targetPlayer == null || !targetPlayer.getWorld().equals(player.getWorld())) continue;
+
+            Vector toTarget = targetPlayer.getEyeLocation().toVector().subtract(eye.toVector());
+            double t = toTarget.dot(direction);
+            if (t < 0 || t > maxDistance) continue;
+
+            Vector closestPointOnRay = direction.clone().multiply(t);
+            double perpendicularDistance = toTarget.clone().subtract(closestPointOnRay).length();
+            if (perpendicularDistance > stats.getHitRadius()) continue;
+
+            hits.add(new PierceHit(targetPlayer, t));
+        }
+        hits.sort(Comparator.comparingDouble(PierceHit::distance));
+
+        shooter.consumePiercingCharge();
+
+        Location endpoint = eye.clone().add(direction.clone().multiply(maxDistance));
+        trailRenderer.render(eye, endpoint);
+
+        if (hits.isEmpty()) {
+            shooter.getEffects().fireShotMissed();
+            return;
+        }
+
+        for (PierceHit hit : hits) {
+            handleHit(match, shooter, hit.player(), stats, hit.distance());
+        }
+    }
+
+    private record PierceHit(Player player, double distance) {}
+
+    private void handleHit(Match match, GamePlayer shooter, Player target, EffectiveWeaponStats shooterStats, double distance) {
         Optional<GamePlayer> targetGpOpt = match.getGamePlayer(target);
         if (targetGpOpt.isEmpty()) return;
 
@@ -100,8 +155,8 @@ public class PlayerAttackListener implements Listener {
             shooterPlayer.playSound(shooterPlayer.getLocation(),
                     org.bukkit.Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1.5f);
         }
-        target.sendMessage("§cTouché par " + (shooterPlayer != null ? shooterPlayer.getName() : "un adversaire"));
+//        target.sendMessage("§cTouché par " + (shooterPlayer != null ? shooterPlayer.getName() : "un adversaire"));
 
-        match.getCurrentRound().onPlayerHit(shooter, targetGpOpt.get(), shooterStats.getLivesPerHit());
+        match.getCurrentRound().onPlayerHit(shooter, targetGpOpt.get(), shooterStats.getLivesPerHit(), distance);
     }
 }

@@ -3,3 +3,6 @@ display-name: "&5Vampire"
 rarity: RARE
 price: 35
 effect-id: vampire
+
+icon-material: SPIDER_EYE
+glyph: "\uA031"

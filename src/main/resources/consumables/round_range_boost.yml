@@ -1,0 +1,9 @@
+id: round_range_boost
+display-name: "&bLunette Longue Portée"
+category: WEAPON_AMMO
+rarity: UNIQUE
+price: 25
+effect-id: round_range_boost
+
+icon-material: ENDER_EYE
+glyph: "\uA020"

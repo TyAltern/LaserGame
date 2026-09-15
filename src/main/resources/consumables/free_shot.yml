@@ -1,0 +1,9 @@
+id: free_shot
+display-name: "&cTir Gratuit"
+category: OFFENSE
+rarity: COMMON
+price: 15
+effect-id: free_shot
+
+icon-material: ARROW
+glyph: "\uA01A"

@@ -1,0 +1,9 @@
+id: piercing_shots
+display-name: "&cTirs Perforants"
+category: OFFENSE
+rarity: LEGENDARY
+price: 70
+effect-id: piercing_shots
+
+icon-material: NETHER_STAR
+glyph: "\uA02E"

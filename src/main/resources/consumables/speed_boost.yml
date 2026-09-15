@@ -4,4 +4,6 @@ category: MOBILITY
 rarity: COMMON
 price: 20
 effect-id: speed_boost
-glyph: "\uA005"
+
+icon-material: SUGAR
+glyph: "\uA014"

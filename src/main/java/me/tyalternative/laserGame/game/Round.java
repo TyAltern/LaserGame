@@ -34,6 +34,10 @@ public class Round {
     private final RoundEndCallback endCallback;
 
     private final Map<UUID, Integer> occupiedSpawns = new LinkedHashMap<>();
+    private boolean firstBloodClaimed = false;
+    private boolean firstEliminationClaimed = false;
+    private org.bukkit.scheduler.BukkitTask sneakChargeTask;
+    private static final int SNEAK_TICK_INTERVAL = 5;
 
     public interface RoundEndCallback {
         void onRoundEnded(GamePlayer winner);
@@ -49,26 +53,56 @@ public class Round {
     }
 
     public void start() {
+        firstBloodClaimed = false;
+        firstEliminationClaimed = false;
         for (GamePlayer gp : players.values()) {
             gp.addCurrency(config.getPassivePerRound(), CurrencySource.PASSIVE);
+            gp.getEffects().fireRoundStart();
             Player player = gp.getPlayer();
             if (player != null) {
                 enterRound(gp, player);
             }
         }
         broadcast("§aGO!");
+
+        sneakChargeTask = Bukkit.getScheduler().runTaskTimer(plugin, this::tickSneakCharges, SNEAK_TICK_INTERVAL, SNEAK_TICK_INTERVAL);
+    }
+
+    private void tickSneakCharges() {
+        for (GamePlayer gp : players.values()) {
+            if (gp.isSpectator()) continue;
+            Player player = gp.getPlayer();
+            if (player == null) continue;
+
+            boolean sneaking = player.isSneaking();
+            gp.tickSneakCharge(sneaking, SNEAK_TICK_INTERVAL);
+
+            if (sneaking && !gp.hasSneakCharge()) {
+                player.setSneaking(false);
+                player.sendMessage("§cPlus de charge pour rester accroupi !");
+            }
+        }
+    }
+
+    public void stop() {
+        if (sneakChargeTask != null) {
+            sneakChargeTask.cancel();
+            sneakChargeTask = null;
+        }
     }
 
     private void enterRound(GamePlayer gp, Player player) {
         WeaponType type = gp.getWeaponType();
 
         player.getInventory().clear();
-        player.getInventory().setItem(0, WeaponItemFactory.create(plugin, type));
+        player.getInventory().setItem(4, WeaponItemFactory.create(plugin, type));
+        player.getInventory().setHeldItemSlot(4);
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(allocateRandomSpawn(gp.getUuid()));
 
         applyLivesToHealthBar(player, gp.getLives());
         applyWeaponSpeedModifier(player, gp);
+        applySneakLock(player);
         gp.getWeapon().start();
     }
 
@@ -96,6 +130,13 @@ public class Round {
         player.setHealth(hp);
     }
 
+    private void applySneakLock(Player player) {
+        AttributeInstance sneakAttr = player.getAttribute(Attribute.SNEAKING_SPEED);
+        if (sneakAttr != null) {
+            sneakAttr.setBaseValue(0.0);
+        }
+    }
+
     private void applyWeaponSpeedModifier(Player player, GamePlayer gp) {
         AttributeInstance speedAttr = player.getAttribute(Attribute.MOVEMENT_SPEED);
         if (speedAttr == null) return;
@@ -110,12 +151,26 @@ public class Round {
         }
     }
 
-    public void onPlayerHit(GamePlayer shooter, GamePlayer target, int baseLivesToRemoves) {
-        HitResolutionContext ctx = new HitResolutionContext(shooter, target, baseLivesToRemoves);
+    public boolean hasFirstEliminationOccurred() { return firstEliminationClaimed; }
+
+    public void onPlayerHit(GamePlayer shooter, GamePlayer target, int baseLivesToRemoves, double shotDistance) {
+        HitResolutionContext ctx = new HitResolutionContext(shooter, target, baseLivesToRemoves, shotDistance);
+        ctx.wouldBeFirstElimination = !firstEliminationClaimed && target.getLives() - ctx.livesToRemove <= 0;
         shooter.getEffects().fireShotHit(ctx);
-        shooter.getEffects().fireDamageTaken(ctx);
+        ctx.wouldBeFirstElimination = !firstEliminationClaimed && target.getLives() - ctx.livesToRemove <= 0;
+        target.getEffects().fireDamageTaken(ctx);
 
         shooter.incrementKills();
+
+        if (!firstBloodClaimed) {
+            firstBloodClaimed = true;
+            shooter.addCurrency(config.getFirstBloodReward(), CurrencySource.FIRST_BLOOD);
+            Player shooterPlayer = shooter.getPlayer();
+            if (shooterPlayer != null) {
+                shooterPlayer.sendMessage("§6Premier sang ! +" + config.getFirstBloodReward() + "$");
+            }
+        }
+
         boolean eliminated = target.removeLife(ctx.livesToRemove);
         Player targetPlayer = target.getPlayer();
 
@@ -125,6 +180,27 @@ public class Round {
 
         if (eliminated) {
             shooter.incrementEliminations();
+
+            if (!firstEliminationClaimed) {
+                firstEliminationClaimed = true;
+                shooter.addCurrency(config.getFirstEliminationReward(), CurrencySource.FIRST_ELIMINATION);
+                Player shooterPlayer = shooter.getPlayer();
+                if (shooterPlayer != null) {
+                    shooterPlayer.sendMessage("§6Première élimination ! +" + config.getFirstEliminationReward() + "$");
+                }
+            }
+
+            if (target.getPendingBetType() == GamePlayer.BetType.WIN_X4 && target.getPendingBetAmount() > 0) {
+                int payout = target.getPendingBetAmount();
+                shooter.addCurrency(payout, CurrencySource.BET_PAYOUT);
+                Player shooterPlayer = shooter.getPlayer();
+                if (shooterPlayer != null) {
+                    shooterPlayer.sendMessage("§6" + (targetPlayer != null ? targetPlayer.getName() : "Ta cible")
+                            + " avait parié : tu récupères " + payout + "$ !");
+                }
+            }
+            target.clearBet();
+
             target.setSpectator(true);
             target.getWeapon().stop();
             occupiedSpawns.remove(target.getUuid());
@@ -133,6 +209,32 @@ public class Round {
                 targetPlayer.teleport(arena.getConfig().spectatorSpawn());
                 resetPlayerAttributes(targetPlayer);
             }
+            broadcast("§c" + (targetPlayer != null ? targetPlayer.getName() : "Un joueur") + " est éliminé !");
+            checkVictoryCondition();
+        } else {
+            if (targetPlayer != null) {
+                applyLivesToHealthBar(targetPlayer, target.getLives());
+            }
+            scheduleRespawn(target);
+        }
+    }
+
+    public void applyExtraDamage(GamePlayer target, int amount) {
+        if (amount <= 0 || target.isSpectator()) return;
+
+        boolean eliminated = target.removeLife(amount); // TODO: add item protection from it (ex: damage_cap)
+        Player targetPlayer = target.getPlayer();
+
+        if (eliminated) {
+            target.setSpectator(true);
+            target.getWeapon().stop();
+            occupiedSpawns.remove(target.getUuid());
+            if (targetPlayer != null) {
+                targetPlayer.setGameMode(GameMode.SPECTATOR);
+                targetPlayer.teleport(arena.getConfig().spectatorSpawn());
+                resetPlayerAttributes(targetPlayer);
+            }
+            target.clearBet();
             broadcast("§c" + (targetPlayer != null ? targetPlayer.getName() : "Un joueur") + " est éliminé !");
             checkVictoryCondition();
         } else {
@@ -156,6 +258,25 @@ public class Round {
             if (p == null || gp.isSpectator()) return; // déco, ou déjà éliminé/round terminé entre-temps
 
             enterRound(gp, p);
+            gp.getEffects().fireRespawn();
+        }, config.getRespawnDelayTicks());
+    }
+
+    public void simulateElimination(GamePlayer gp) {
+        Player player = gp.getPlayer();
+        if (player == null || gp.isSpectator()) return;
+
+        broadcast("§c" + player.getName() + " est éliminé !");
+        gp.getWeapon().stop();
+        player.setGameMode(GameMode.SPECTATOR);
+        player.teleport(arena.getConfig().spectatorSpawn());
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Player p = gp.getPlayer();
+            if (p == null || gp.isSpectator()) return; // déco, ou vraie élimination/round terminé entre-temps
+
+            enterRound(gp, p);
+            gp.getEffects().fireRespawn();
         }, config.getRespawnDelayTicks());
     }
 
@@ -169,6 +290,11 @@ public class Round {
         AttributeInstance speedAttr = player.getAttribute(Attribute.MOVEMENT_SPEED);
         if (speedAttr != null) {
             speedAttr.removeModifier(WeaponAttributeKeys.speedModifier(plugin));
+        }
+
+        AttributeInstance sneakAttr = player.getAttribute(Attribute.SNEAKING_SPEED);
+        if (sneakAttr != null) {
+            sneakAttr.setBaseValue(0.3);
         }
     }
 
@@ -186,13 +312,33 @@ public class Round {
             for (GamePlayer gp : players.values()) {
                 gp.getWeapon().stop();
             }
-            GamePlayer winner = alive.isEmpty() ? null : alive.get(0);
+            GamePlayer winner = alive.isEmpty() ? null : alive.getFirst();
             if (winner != null) {
+                resolveBetsOnRoundWin(winner);
                 Player p = winner.getPlayer();
                 broadcast("§6" + (p != null ? p.getName() : "???") + " remporte le round !");
             }
             Bukkit.getScheduler().runTaskLater(plugin, () -> endCallback.onRoundEnded(winner), 40L);
         }
+    }
+
+    private void resolveBetsOnRoundWin(GamePlayer winner) {
+        GamePlayer.BetType betType = winner.getPendingBetType();
+        if (betType == null) return;
+
+        Player winnerPlayer = winner.getPlayer();
+        int payout = switch (betType) {
+            case WIN_X4 -> winner.getPendingBetAmount() * 4;
+            case DOUBLE_EARNINGS -> winner.getEarningsSinceBet() * 2;
+        };
+
+        if (payout > 0) {
+            winner.addCurrency(payout, CurrencySource.BET_PAYOUT);
+            if (winnerPlayer != null) {
+                winnerPlayer.sendMessage("§6Pari remporté : +" + payout + "$ !");
+            }
+        }
+        winner.clearBet();
     }
 
     private void broadcast(String message) {

@@ -12,6 +12,6 @@ public final class Font {
     public static final NamespacedKey INVENTORY = new NamespacedKey("menu", "inventory_screen");
     public static final NamespacedKey STATS = new NamespacedKey("menu", "stats_screen");
     public static final NamespacedKey MENU = new NamespacedKey("menu", "menu");
-    public static final NamespacedKey ITEMS = new NamespacedKey("menu", "items");
+    public static final NamespacedKey ITEMS = new NamespacedKey("minecraft", "items");
 
 }

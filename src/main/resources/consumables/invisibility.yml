@@ -4,4 +4,6 @@ category: STEALTH
 rarity: RARE
 price: 35
 effect-id: invisibility_cancel_on_shot
-glyph: "\uA004"
+
+icon-material: POTION
+glyph: "\uA015"

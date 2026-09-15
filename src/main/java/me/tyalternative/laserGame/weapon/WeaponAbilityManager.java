@@ -14,6 +14,24 @@ public class WeaponAbilityManager {
         register(new StreakDamageWeaponAbility());
         register(new MassiveMagazineWeaponAbility());
         register(new PassiveRegenWeaponAbility());
+
+        // Unique
+        register(new ReloadGateWeaponAbility());
+        register(new PausableReloadWeaponAbility());
+        register(new FireRateRampWeaponAbility());
+        register(new MoneyBoostMissPenaltyWeaponAbility());
+        register(new RadiusRampWeaponAbility());
+
+        // Rare
+        register(new ReviveOnFirstEliminationWeaponAbility());
+        register(new RefundAmmoOnMissWeaponAbility());
+        register(new RoundWinStreakBonusWeaponAbility());
+        register(new RespawnGraceWeaponAbility());
+        register(new HighlightTopKillerWeaponAbility());
+        register(new GlowSelfOnMissWeaponAbility());
+
+        // Légendaire
+        register(new LuckyMagazineWeaponAbility());
     }
 
     private void register(WeaponAbility ability) {

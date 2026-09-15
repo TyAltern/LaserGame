@@ -4,3 +4,6 @@ rarity: COMMON
 price: 25
 cooldown-ticks: 160
 effect-id: speed_burst
+
+icon-material: FEATHER
+glyph: "\uA033"

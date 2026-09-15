@@ -1,0 +1,9 @@
+id: curse_troll_weapon
+display-name: "&5Arme Trollesque"
+category: SABOTAGE
+rarity: RARE
+price: 35
+effect-id: curse_troll_weapon
+
+icon-material: ROTTEN_FLESH
+glyph: "\uA01B"

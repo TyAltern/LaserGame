@@ -1,0 +1,9 @@
+id: sneak_speed_unlock
+display-name: "&aFurtivité Agile"
+category: MOBILITY
+rarity: UNIQUE
+price: 20
+effect-id: sneak_speed_unlock
+
+icon-material: RABBIT_FOOT
+glyph: "\uA024"

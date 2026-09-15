@@ -1,0 +1,19 @@
+id: champion_saber
+display-name: "&5Sabre du Champion"
+rarity: RARE
+price: 65
+special-ability: round_win_streak_bonus
+
+material: NETHERITE_HOE
+max-ammo: 200
+shot-cooldown-ticks: 2
+reload-cooldown-ticks: 100
+range: 4.5
+hit-radius: 3.5
+
+lives-per-hit: 1
+
+movement-speed-modifier: 0.30
+
+icon-material: NETHERITE_HOE
+glyph: "\uA00D"

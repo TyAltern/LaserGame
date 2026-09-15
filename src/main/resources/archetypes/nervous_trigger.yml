@@ -3,3 +3,6 @@ display-name: "&6Gachette Nerveuse"
 rarity: COMMON
 price: 20
 effect-id: nervous_trigger
+
+icon-material: STRING
+glyph: "\uA030"

@@ -1,0 +1,9 @@
+id: long_range_immune
+display-name: "&cGarde Rapprochée"
+category: DEFENSE
+rarity: UNIQUE
+price: 25
+effect-id: long_range_immune
+
+icon-material: TURTLE_HELMET
+glyph: "\uA017"

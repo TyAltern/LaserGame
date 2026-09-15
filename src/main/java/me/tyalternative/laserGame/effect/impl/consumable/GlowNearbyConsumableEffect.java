@@ -13,12 +13,13 @@ public class GlowNearbyConsumableEffect implements ConsumableEffect {
     private static final long DURATION_TICKS = 300; // 15s
 
     @Override
-    public void activate(ActivationContext ctx) {
+    public boolean activate(ActivationContext ctx) {
         int affected = 0;
         double distSqr = RADIUS*RADIUS;
         for (GamePlayer other : ctx.match.getPlayers()) {
             if (other.getUuid().equals(ctx.gp.getUuid())) continue;
             if (other.isSpectator()) continue;
+            if (other.isDetectionImmune()) continue;
 
             Player otherPlayer = other.getPlayer();
             if (otherPlayer == null) continue;
@@ -29,5 +30,6 @@ public class GlowNearbyConsumableEffect implements ConsumableEffect {
             affected++;
         }
         ctx.player.sendMessage("§7" + affected + " joueur(s) mis en surbrillance pendant 15 secondes.");
+        return true;
     }
 }

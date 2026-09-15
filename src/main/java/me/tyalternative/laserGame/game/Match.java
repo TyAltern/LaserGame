@@ -74,6 +74,7 @@ public class Match {
 
         WeaponType defaultWeapon = weaponManager.getDefault();
         GamePlayer gp = new GamePlayer(player.getUniqueId(), plugin, config, abilityManager, defaultWeapon, config.getBaseItemSlots());
+        gp.setMatch(this);
         gp.resetForNewRound(config.getStartingLives());
         players.put(player.getUniqueId(), gp);
 
@@ -170,7 +171,7 @@ public class Match {
 
         state = MatchState.STARTING;
         countdownRemaining = config.getCountdownSeconds();
-        broadcast("§eLe match commence dans " + countdownRemaining + " secondes...");
+        broadcastToAll("§eLe match commence dans " + countdownRemaining + " secondes...");
 
         scheduleTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             countdownRemaining--;
@@ -179,7 +180,7 @@ public class Match {
                 return;
             }
             if (countdownRemaining <= 5 || countdownRemaining % 10 == 0) {
-                broadcast("§e" + countdownRemaining + "...");
+                broadcastToAll("§e" + countdownRemaining + "...");
             }
         },20L,20L);
     }
@@ -190,7 +191,7 @@ public class Match {
             scheduleTask = null;
         }
         state = MatchState.WAITING;
-        broadcast("§cPas assez de joueurs, décompte annulé.");
+        broadcastToAll("§cPas assez de joueurs, décompte annulé.");
     }
 
     private void startFirstRound() {
@@ -206,6 +207,7 @@ public class Match {
 
     private void beginRound() {
         state = MatchState.ROUND_IN_PROGRESS;
+        if (currentRound != null) currentRound.stop();
         for (GamePlayer gp : players.values()) {
             gp.setShopSession(null);
             gp.setReady(false);
@@ -234,7 +236,7 @@ public class Match {
     private void startShopPhase() {
         state = MatchState.SHOP;
         int totalSeconds = config.getShopPhaseSeconds();
-        broadcast("§ePhase shop : prochain round dans " + totalSeconds + "s.");
+        broadcastToAll("§ePhase shop : prochain round dans " + totalSeconds + "s.");
 
         List<GamePlayer> matchPlayers = List.copyOf(players.values());
 
@@ -300,9 +302,10 @@ public class Match {
 
     private void endMatch(GamePlayer winner) {
         state = MatchState.ENDING;
+        if (currentRound != null) currentRound.stop();
 
         Player p = winner != null ? winner.getPlayer() : null;
-        broadcast("§1" + (p != null ? p.getName() : "???") + "remporte le match !");
+        broadcastToAll("§1" + (p != null ? p.getName() : "???") + "remporte le match !");
 
         for (GamePlayer gp : players.values()) {
             gp.getWeapon().stop();
@@ -314,7 +317,7 @@ public class Match {
         Bukkit.getScheduler().runTaskLater(plugin, () -> endCallback.onMatchEnded(this), 60L);
     }
 
-    private void broadcast(String message) {
+    public void broadcastToAll(String message) {
         for (GamePlayer gp : players.values()) {
             Player p = gp.getPlayer();
             if (p != null) {

@@ -7,4 +7,7 @@ public interface PendingEffect {
     default boolean onShotMissed() { return false; }
     default boolean onShotHit(HitResolutionContext ctx) { return false; }
     default boolean onDamageTaken(HitResolutionContext ctx) { return false; }
+    default boolean onReloadCompleted() { return false; }
+    default boolean onRoundStart() { return false; }
+    default boolean onRespawn() { return false; }
 }

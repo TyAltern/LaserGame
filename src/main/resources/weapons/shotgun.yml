@@ -1,4 +1,7 @@
 id: shotgun
+rarity: RARE
+price: 55
+special-ability: respawn_grace_period
 display-name: "&bFusil à Pompe"
 default: true
 
@@ -12,3 +15,6 @@ hit-radius: 0.6
 lives-per-hit: 1
 
 movement-speed-modifier: 0
+
+icon-material: STONE_HOE
+glyph: "\uA004"

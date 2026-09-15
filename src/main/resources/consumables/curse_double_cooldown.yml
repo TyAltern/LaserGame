@@ -1,0 +1,9 @@
+id: curse_double_cooldown
+display-name: "&5Gâchette Engourdie"
+category: SABOTAGE
+rarity: UNIQUE
+price: 25
+effect-id: curse_double_cooldown
+
+icon-material: SOUL_SAND
+glyph: "\uA01C"

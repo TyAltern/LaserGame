@@ -1,0 +1,9 @@
+id: freeze_cc
+display-name: "&dGel Total"
+category: CROWD_CONTROL
+rarity: LEGENDARY
+price: 100
+effect-id: freeze_cc
+
+icon-material: BLUE_ICE
+glyph: "\uA026"

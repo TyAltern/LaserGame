@@ -587,7 +587,7 @@ public class InventoryScreenMenu {
                             .build();
                     storageElements.add(slot);
                     HologramElement slotIcon = new HologramElement.Builder("storage_slot_icon_" + i + "_" + indexInPage, slot)
-                            .position(posX + 4, posY - 4).size(18, 18).layer(1)
+                            .position(posX + 4, posY - 5).size(16, 16).layer(1)
                             .text("")
                             .font(Font.ITEMS)
                             .build();
@@ -645,7 +645,7 @@ public class InventoryScreenMenu {
             final int equippedIndex = x;
             slot.onClick((player, source, clickType) -> onEquippedConsumableSlotClicked(equippedIndex));
             HologramElement slotIcon = new HologramElement.Builder("equipped_consumable_item_icon_" + x, slot)
-                    .position(posX+6, 121).size(18,18).layer(1)
+                    .position(posX+6, 120).size(16,16).layer(1)
                     .text("")
                     .font(Font.ITEMS)
                     .build();
@@ -662,7 +662,7 @@ public class InventoryScreenMenu {
                 .build();
         equippedWeaponSlot.onClick((player, source, clickType) -> onEquippedWeaponSlotClicked());
         equippedWeaponIcon = new HologramElement.Builder("equipped_weapon_icon", equippedWeaponSlot)
-                .position(127, 121).size(18,18).layer(1)
+                .position(127, 120).size(16,16).layer(1)
                 .text("")
                 .font(Font.ITEMS)
                 .build();
@@ -677,7 +677,7 @@ public class InventoryScreenMenu {
                 .build();
         equippedProfileSlot.onClick((player, source, clickType) -> onEquippedProfileSlotClicked());
         equippedProfileIcon = new HologramElement.Builder("equipped_profile_icon", equippedProfileSlot)
-                .position(127, 121).size(18,18).layer(1)
+                .position(127, 120).size(16,16).layer(1)
                 .text("")
                 .font(Font.ITEMS)
                 .build();
@@ -692,7 +692,7 @@ public class InventoryScreenMenu {
                 .build();
         equippedSkillSlot.onClick((player, source, clickType) -> onEquippedSkillSlotClicked());
         equippedSkillIcon = new HologramElement.Builder("equipped_skill_icon", equippedSkillSlot)
-                .position(127, 121).size(18,18).layer(1)
+                .position(127, 120).size(16,16).layer(1)
                 .text("")
                 .font(Font.ITEMS)
                 .build();

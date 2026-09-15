@@ -57,6 +57,30 @@ public class EffectRegistry {
         }
     }
 
+    public void fireReloadCompleted() {
+        for (PendingEffect effect : effects) {
+            if (effect.onReloadCompleted() && !permanent.contains(effect)) {
+                effects.remove(effect);
+            }
+        }
+    }
+
+    public void fireRoundStart() {
+        for (PendingEffect effect : effects) {
+            if (effect.onRoundStart() && !permanent.contains(effect)) {
+                effects.remove(effect);
+            }
+        }
+    }
+
+    public void fireRespawn() {
+        for (PendingEffect effect : effects) {
+            if (effect.onRespawn() && !permanent.contains(effect)) {
+                effects.remove(effect);
+            }
+        }
+    }
+
     public List<PendingEffect> getActive() {
         return effects;
     }

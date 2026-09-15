@@ -1,0 +1,9 @@
+id: execute
+display-name: "&cCoup de Grâce"
+category: OFFENSE
+rarity: LEGENDARY
+price: 90
+effect-id: execute_next_shot
+
+icon-material: GOLDEN_AXE
+glyph: "\uA019"

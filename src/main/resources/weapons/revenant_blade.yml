@@ -1,0 +1,19 @@
+id: revenant_blade
+display-name: "&5Lame du Revenant"
+rarity: RARE
+price: 60
+special-ability: revive_on_first_elimination
+
+material: IRON_DAGGER
+max-ammo: 200
+shot-cooldown-ticks: 1
+reload-cooldown-ticks: 120
+range: 4.0
+hit-radius: 4.0
+
+lives-per-hit: 1
+
+movement-speed-modifier: 0.35
+
+icon-material: NETHERITE_SWORD
+glyph: "\uA00C"

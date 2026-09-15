@@ -1,0 +1,9 @@
+id: nausea_cc
+display-name: "&dVertige"
+category: CROWD_CONTROL
+rarity: RARE
+price: 35
+effect-id: nausea_cc
+
+icon-material: PUFFERFISH
+glyph: "\uA027"

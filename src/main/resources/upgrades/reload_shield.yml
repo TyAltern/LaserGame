@@ -3,3 +3,6 @@ display-name: "&6Blindage de Rechargement"
 rarity: RARE
 price: 75
 effect-id: reload_shield
+
+icon-material: NETHERITE_CHESTPLATE
+glyph: "\uA037"

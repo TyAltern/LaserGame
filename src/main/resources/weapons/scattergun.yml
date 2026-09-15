@@ -1,0 +1,19 @@
+id: scattergun
+display-name: "&9Fusil à Dispersion"
+rarity: UNIQUE
+price: 35
+special-ability: radius_ramp_after_misses
+
+material: BLAZE_ROD
+max-ammo: 12
+shot-cooldown-ticks: 14
+reload-cooldown-ticks: 55
+range: 18.0
+hit-radius: 0.3
+
+lives-per-hit: 1
+
+movement-speed-modifier: 0.0
+
+icon-material: BLAZE_ROD
+glyph: "\uA00B"

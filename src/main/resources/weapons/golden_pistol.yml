@@ -1,0 +1,19 @@
+id: golden_pistol
+display-name: "&9Pistolet Doré"
+rarity: UNIQUE
+price: 30
+special-ability: money_boost_miss_penalty
+
+material: GOLDEN_HOE
+max-ammo: 18
+shot-cooldown-ticks: 9
+reload-cooldown-ticks: 45
+range: 15.0
+hit-radius: 0.3
+
+lives-per-hit: 1
+
+movement-speed-modifier: 0.0
+
+icon-material: GOLDEN_HOE
+glyph: "\uA000"

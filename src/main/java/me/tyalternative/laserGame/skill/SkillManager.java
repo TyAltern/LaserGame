@@ -136,7 +136,7 @@ public class SkillManager {
         }
 
         gp.startSkillCooldown(def.cooldownTicks());
-        effect.activate(new ActivationContext(gp, player, match, plugin));
+        effect.activate(new ActivationContext(gp, player, match, plugin, def.price()));
         return true;
     }
 }

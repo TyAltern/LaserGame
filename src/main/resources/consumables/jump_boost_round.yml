@@ -1,0 +1,9 @@
+id: jump_boost_round
+display-name: "&aBottes à Ressort"
+category: MOBILITY
+rarity: COMMON
+price: 10
+effect-id: jump_boost_round
+
+icon-material: SLIME_BALL
+glyph: "\uA025"

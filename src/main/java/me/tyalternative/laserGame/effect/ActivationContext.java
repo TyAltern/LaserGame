@@ -11,11 +11,13 @@ public class ActivationContext {
     public final Player player;
     public final Match match;
     public final Plugin plugin;
+    public final int price;
 
-    public ActivationContext(GamePlayer gp, Player player, Match match, Plugin plugin) {
+    public ActivationContext(GamePlayer gp, Player player, Match match, Plugin plugin, int price) {
         this.gp = gp;
         this.player = player;
         this.match = match;
         this.plugin = plugin;
+        this.price = price;
     }
 }

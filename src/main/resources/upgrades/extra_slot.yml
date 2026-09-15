@@ -3,3 +3,6 @@ display-name: "&6Sac Élargi"
 rarity: RARE
 price: 80
 effect-id: extra_slot
+
+icon-material: SHULKER_BOX
+glyph: "\uA035"

@@ -14,20 +14,21 @@ public class SpeedBoostConsumableEffect implements ConsumableEffect {
     private static final long DURATION_TICKS = 1200; // 60s
 
     @Override
-    public void activate(ActivationContext ctx) {
+    public boolean activate(ActivationContext ctx) {
         AttributeInstance speedAttr = ctx.player.getAttribute(Attribute.MOVEMENT_SPEED);
-        if (speedAttr == null) return;
+        if (speedAttr == null) return false;
 
         NamespacedKey key = new NamespacedKey(ctx.plugin, "consumable_speed_boost");
         speedAttr.removeModifier(key);
         speedAttr.addModifier(new AttributeModifier(key, AMOUNT, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
 
         Bukkit.getScheduler().runTaskLater(ctx.plugin, () -> {
-            if (ctx.player.isOnline()) return;
+            if (!ctx.player.isOnline()) return;
             AttributeInstance attr = ctx.player.getAttribute(Attribute.MOVEMENT_SPEED);
             if (attr != null) attr.removeModifier(key);
         }, DURATION_TICKS);
 
         ctx.player.sendMessage("§a+10% de vitesse pendant 1 minute !");
+        return true;
     }
 }

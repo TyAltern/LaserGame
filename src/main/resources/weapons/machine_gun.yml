@@ -14,3 +14,5 @@ lives-per-hit: 1
 movement-speed-modifier: 0.0
 
 special-ability: massive_magazine
+icon-material: IRON_HOE
+glyph: "\uA003"

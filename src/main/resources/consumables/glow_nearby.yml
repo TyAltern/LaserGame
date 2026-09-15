@@ -4,4 +4,6 @@ category: DISPLAY
 rarity: UNIQUE
 price: 25
 effect-id: glow_nearby
-glyph: "\uA002"
+
+icon-material: GLOWSTONE_DUST
+glyph: "\uA013"

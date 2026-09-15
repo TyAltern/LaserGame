@@ -1,0 +1,9 @@
+id: fake_death
+display-name: "&9Fausse Élimination"
+category: STEALTH
+rarity: RARE
+price: 40
+effect-id: fake_death
+
+icon-material: TOTEM_OF_UNDYING
+glyph: "\uA02B"

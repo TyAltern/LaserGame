@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.weapon.impl;
 
 import me.tyalternative.laserGame.effect.PendingEffect;
 import me.tyalternative.laserGame.effect.impl.effect.StreakBonusDamageEffect;
+import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.weapon.WeaponAbility;
 
 import java.util.Optional;
@@ -14,7 +15,7 @@ public class StreakDamageWeaponAbility implements WeaponAbility {
     }
 
     @Override
-    public Optional<PendingEffect> getPersistentEffect() {
+    public Optional<PendingEffect> getPersistentEffect(GamePlayer owner) {
         return Optional.of(new StreakBonusDamageEffect());
     }
 }

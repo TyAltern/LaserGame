@@ -6,13 +6,7 @@ import me.tyalternative.laserGame.arena.ArenaManager;
 import me.tyalternative.laserGame.command.LaserCommand;
 import me.tyalternative.laserGame.config.ConfigManager;
 import me.tyalternative.laserGame.game.GameManager;
-import me.tyalternative.laserGame.listeners.ConsumableUseListener;
-import me.tyalternative.laserGame.listeners.ItemSelectionListener;
-import me.tyalternative.laserGame.listeners.PlayerAttackListener;
-import me.tyalternative.laserGame.listeners.PlayerConnectionListener;
-import me.tyalternative.laserGame.listeners.PlayerDamageListener;
-import me.tyalternative.laserGame.listeners.PlayerInteractListener;
-import me.tyalternative.laserGame.listeners.SkillUseListener;
+import me.tyalternative.laserGame.listeners.*;
 import me.tyalternative.laserGame.shop.ConsumableManager;
 import me.tyalternative.laserGame.shop.ShopManager;
 import me.tyalternative.laserGame.skill.SkillManager;
@@ -102,6 +96,8 @@ public final class LaserGame extends JavaPlugin {
                 new ConsumableUseListener(gameManager, consumableManager), this);
         getServer().getPluginManager().registerEvents(
                 new SkillUseListener(gameManager, skillManager), this);
+        getServer().getPluginManager().registerEvents(
+                new SneakChargeListener(gameManager), this);
 
         var laserCommand = new LaserCommand(this,configManager, gameManager, arenaManager, weaponManager, consumableManager,
                 skillManager, archetypeManager, upgradeManager, shopManager);

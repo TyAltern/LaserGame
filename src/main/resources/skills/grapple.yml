@@ -4,3 +4,6 @@ rarity: UNIQUE
 price: 30
 cooldown-ticks: 240
 effect-id: grapple
+
+icon-material: FISHING_ROD
+glyph: "\uA032"

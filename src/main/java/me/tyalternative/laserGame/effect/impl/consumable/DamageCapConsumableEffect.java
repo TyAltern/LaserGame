@@ -7,8 +7,9 @@ import me.tyalternative.laserGame.effect.impl.effect.DamageCapNextHitEffect;
 public class DamageCapConsumableEffect implements ConsumableEffect {
 
     @Override
-    public void activate(ActivationContext ctx) {
+    public boolean activate(ActivationContext ctx) {
         ctx.gp.getEffects().add(new DamageCapNextHitEffect(1));
         ctx.player.sendMessage("§7Ton prochain coup reçu sera plafonné à 1 dégât.");
+        return true;
     }
 }

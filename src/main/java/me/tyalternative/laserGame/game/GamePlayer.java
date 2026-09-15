@@ -34,6 +34,7 @@ public class GamePlayer {
 
     private LaserWeapon weapon;
     private EffectiveWeaponStats effectiveStats;
+    private Match match;
     private final List<StatModifier> activeModifiers = new ArrayList<>();
     private final EffectRegistry effects = new EffectRegistry();
     private final ConsumableInventory consumables;
@@ -45,6 +46,7 @@ public class GamePlayer {
 
     private int lives;
     private boolean spectator = false;
+    private boolean detectionImmune = false;
 
     private int roundWins = 0;
     private int currency = 0;
@@ -72,6 +74,9 @@ public class GamePlayer {
     public LaserWeapon getWeapon() { return weapon; }
     public WeaponType getWeaponType() { return weapon.getType(); }
     public EffectiveWeaponStats getEffectiveStats() { return effectiveStats; }
+
+    public void setMatch(Match match) { this.match = match; }
+    public Match getMatch() { return match; }
 
     public void setWeapon(WeaponType newType) {
         ownedWeaponIds.add(newType.id());
@@ -108,7 +113,7 @@ public class GamePlayer {
             currentAbilityStatModifier = mod;
             activeModifiers.add(mod);
         });
-        ability.getPersistentEffect().ifPresent(eff -> {
+        ability.getPersistentEffect(this).ifPresent(eff -> {
             currentAbilityPersistentEffect = eff;
             effects.addPermanent(eff);
         });
@@ -130,6 +135,19 @@ public class GamePlayer {
         recalculateStats();
     }
 
+    private final List<StatModifier> roundScopedModifiers = new ArrayList<>();
+    private final List<Runnable> roundScopedCleanups = new ArrayList<>();
+
+    public void addRoundStatModifier(StatModifier modifier) {
+        activeModifiers.add(modifier);
+        roundScopedModifiers.add(modifier);
+        recalculateStats();
+    }
+
+    public void addRoundScopedCleanup(Runnable cleanup) {
+        roundScopedCleanups.add(cleanup);
+    }
+
     // Vies / round
 
     public int getLives() { return lives; }
@@ -142,24 +160,81 @@ public class GamePlayer {
     public boolean isSpectator() { return spectator; }
     public void setSpectator(boolean spectator) { this.spectator = spectator; }
 
+    public boolean isDetectionImmune() { return detectionImmune; }
+    public void setDetectionImmune(boolean detectionImmune) { this.detectionImmune = detectionImmune; }
+
     public int getRoundWins() { return roundWins; }
     public void incrementRoundWins() { roundWins++; }
 
     public void resetForNewRound(int startingLives) {
         this.lives = startingLives;
         this.spectator = false;
+        this.detectionImmune = false;
+        clearBet();
         this.effects.clear();
+
+        if (!roundScopedModifiers.isEmpty()) {
+            activeModifiers.removeAll(roundScopedModifiers);
+            roundScopedModifiers.clear();
+            recalculateStats();
+        }
+        if (!roundScopedCleanups.isEmpty()) {
+            for (Runnable cleanup : roundScopedCleanups) {
+                try {
+                    cleanup.run();
+                } catch (Exception e) {
+                    plugin.getLogger().warning("Erreur lors du nettoyage d'un effet de round : " + e.getMessage());
+                }
+            }
+            roundScopedCleanups.clear();
+        }
     }
 
     // Économie
+
+    // Paris économiques
+
+    public enum BetType { WIN_X4, DOUBLE_EARNINGS }
+
+    private BetType pendingBetType;
+    private int pendingBetAmount;
+    private int earningsSinceBet;
+
+    public void placeBet(BetType type, int amount) {
+        this.pendingBetType = type;
+        this.pendingBetAmount = amount;
+        this.earningsSinceBet = 0;
+    }
+
+    public BetType getPendingBetType() { return pendingBetType; }
+    public int getPendingBetAmount() { return pendingBetAmount; }
+    public int getEarningsSinceBet() { return earningsSinceBet; }
+
+    public void clearBet() {
+        this.pendingBetType = null;
+        this.pendingBetAmount = 0;
+        this.earningsSinceBet = 0;
+    }
 
     public int getCurrency() { return currency; }
 
     public void addCurrency(int amount, CurrencySource source) {
         // TODO : Point d'accroche futur pour les modificateurs type "+15% d'argent sur les kills" :
         //  remplacer par currency += modifiers.applyCurrencyBonus(amount, source);
+        if ((source == CurrencySource.SHOT_HIT || source == CurrencySource.ELIMINATION)
+                && effectiveStats != null && effectiveStats.getCombatCurrencyMultiplier() != 1.0) {
+            amount = (int) Math.round(amount * effectiveStats.getCombatCurrencyMultiplier());
+        }
+        if (pendingBetType == BetType.DOUBLE_EARNINGS && (source == CurrencySource.SHOT_HIT || source == CurrencySource.ELIMINATION)) {
+            earningsSinceBet += amount;
+            return;
+        }
         currency += amount;
         totalMoneyEarned += amount;
+    }
+
+    public void deductCurrency(int amount) {
+        currency = Math.max(0, currency - amount);
     }
 
     public boolean spendCurrency(int amount) {
@@ -175,9 +250,6 @@ public class GamePlayer {
     public int getSelectedSlot() { return selectedSlot; }
     public void setSelectedSlot(int slot) { this.selectedSlot = slot; }
 
-//
-//
-//
     public void  learnConsumable(String consumableId) {
         consumableStorage.add(consumableId);
     }
@@ -374,6 +446,45 @@ public class GamePlayer {
 
     public boolean isReady() { return ready; }
     public void setReady(boolean ready) { this.ready = ready; }
+
+    // SNEAK (jauge de charge) : 20s de sneak max, recharge de 1s toutes les 5s hors sneak.
+
+    private static final int MAX_SNEAK_CHARGE_TICKS = 400; // 20s
+    private static final int SNEAK_REGEN_INTERVAL_TICKS = 100; // 5s
+    private static final int SNEAK_REGEN_AMOUNT_TICKS = 20; // 1s
+
+    private int sneakChargeTicks = MAX_SNEAK_CHARGE_TICKS;
+    private int sneakRegenAccumulatorTicks = 0;
+
+    public boolean hasSneakCharge() { return sneakChargeTicks > 0; }
+    public int getSneakChargeTicks() { return sneakChargeTicks; }
+    public int getMaxSneakChargeTicks() { return MAX_SNEAK_CHARGE_TICKS; }
+
+    public void tickSneakCharge(boolean sneaking, int elapsedTicks) {
+        if (sneaking) {
+            sneakChargeTicks = Math.max(0, sneakChargeTicks - elapsedTicks);
+            sneakRegenAccumulatorTicks = 0;
+            return;
+        }
+        if (sneakChargeTicks >= MAX_SNEAK_CHARGE_TICKS) {
+            sneakRegenAccumulatorTicks = 0;
+            return;
+        }
+        sneakRegenAccumulatorTicks += elapsedTicks;
+        while (sneakRegenAccumulatorTicks >= SNEAK_REGEN_INTERVAL_TICKS && sneakChargeTicks < MAX_SNEAK_CHARGE_TICKS) {
+            sneakChargeTicks = Math.min(MAX_SNEAK_CHARGE_TICKS, sneakChargeTicks + SNEAK_REGEN_AMOUNT_TICKS);
+            sneakRegenAccumulatorTicks -= SNEAK_REGEN_INTERVAL_TICKS;
+        }
+    }
+
+    // PIERCING (les prochains tirs traversent les joueurs touchés au lieu de s'arrêter au premier)
+
+    private int piercingShotsRemaining = 0;
+
+    public boolean isPiercingActive() { return piercingShotsRemaining > 0; }
+    public void grantPiercingShots(int amount) { piercingShotsRemaining += amount; }
+    public void consumePiercingCharge() { if (piercingShotsRemaining > 0) piercingShotsRemaining--; }
+    public int getPiercingShotsRemaining() { return piercingShotsRemaining; }
 
     // STATISTIQUES
 

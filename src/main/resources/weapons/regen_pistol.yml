@@ -14,3 +14,6 @@ lives-per-hit: 1
 movement-speed-modifier: 0.0
 
 special-ability: passive_ammo_regen
+
+icon-material: WOODEN_HOE
+glyph: "\uA005"

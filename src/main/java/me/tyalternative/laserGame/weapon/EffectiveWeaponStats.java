@@ -16,6 +16,9 @@ public class EffectiveWeaponStats {
     private boolean reloadDisabled;
     private int passiveRegenAmount;
     private long passiveRegenIntervalTicks;
+    private double minAmmoUsedFractionToReload;
+    private boolean reloadPausable;
+    private double combatCurrencyMultiplier;
 
     public EffectiveWeaponStats(WeaponType base) {
         this.base = base;
@@ -33,6 +36,9 @@ public class EffectiveWeaponStats {
         reloadDisabled = false;
         passiveRegenAmount = 0;
         passiveRegenIntervalTicks = 0;
+        minAmmoUsedFractionToReload = 0.0;
+        reloadPausable = false;
+        combatCurrencyMultiplier = 1.0;
 
         for (StatModifier mod : activeModifiers) {
             mod.apply(this);
@@ -70,4 +76,13 @@ public class EffectiveWeaponStats {
 
     public long getPassiveRegenIntervalTicks()                               { return passiveRegenIntervalTicks; }
     public void setPassiveRegenIntervalTicks(long passiveRegenIntervalTicks) { this.passiveRegenIntervalTicks = passiveRegenIntervalTicks; }
+
+    public double getMinAmmoUsedFractionToReload()                           { return minAmmoUsedFractionToReload; }
+    public void setMinAmmoUsedFractionToReload(double fraction)              { this.minAmmoUsedFractionToReload = fraction; }
+
+    public boolean isReloadPausable()                                        { return reloadPausable; }
+    public void setReloadPausable(boolean reloadPausable)                    { this.reloadPausable = reloadPausable; }
+
+    public double getCombatCurrencyMultiplier()                              { return combatCurrencyMultiplier; }
+    public void setCombatCurrencyMultiplier(double multiplier)               { this.combatCurrencyMultiplier = multiplier; }
 }

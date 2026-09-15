@@ -1,0 +1,9 @@
+id: reflect_damage
+display-name: "&cRiposte"
+category: DEFENSE
+rarity: RARE
+price: 40
+effect-id: reflect_next_hit
+
+icon-material: SHIELD
+glyph: "\uA016"

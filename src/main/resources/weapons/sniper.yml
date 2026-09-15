@@ -15,3 +15,6 @@ lives-per-hit: 2
 movement-speed-modifier: 0
 
 special-ability: streak_bonus_damage
+
+icon-material: SPYGLASS
+glyph: "\uA008"

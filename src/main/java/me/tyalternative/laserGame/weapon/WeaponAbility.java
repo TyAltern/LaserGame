@@ -1,6 +1,7 @@
 package me.tyalternative.laserGame.weapon;
 
 import me.tyalternative.laserGame.effect.PendingEffect;
+import me.tyalternative.laserGame.game.GamePlayer;
 
 import java.util.Optional;
 
@@ -12,7 +13,7 @@ public interface WeaponAbility {
         return Optional.empty();
     }
 
-    default Optional<PendingEffect> getPersistentEffect() {
+    default Optional<PendingEffect> getPersistentEffect(GamePlayer owner) {
         return Optional.empty();
     }
 }

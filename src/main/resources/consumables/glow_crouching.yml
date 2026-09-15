@@ -1,0 +1,9 @@
+id: glow_crouching
+display-name: "&eDétecteur de Planques"
+category: DISPLAY
+rarity: COMMON
+price: 15
+effect-id: glow_crouching
+
+icon-material: GLOW_INK_SAC
+glyph: "\uA023"

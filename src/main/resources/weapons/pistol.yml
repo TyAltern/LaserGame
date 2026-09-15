@@ -14,3 +14,6 @@ hit-radius: 0.3
 lives-per-hit: 1
 
 movement-speed-modifier: 0.0
+
+icon-material: COPPER_HOE
+glyph: "\uA001"

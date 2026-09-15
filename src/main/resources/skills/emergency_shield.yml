@@ -4,3 +4,6 @@ rarity: RARE
 price: 40
 cooldown-ticks: 500
 effect-id: emergency_shield
+
+icon-material: TOTEM_OF_UNDYING
+glyph: "\uA02B"

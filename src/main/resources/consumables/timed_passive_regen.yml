@@ -1,0 +1,9 @@
+id: timed_passive_regen
+display-name: "&bChargeur Auto-Rechargeant"
+category: WEAPON_AMMO
+rarity: RARE
+price: 40
+effect-id: timed_passive_regen
+
+icon-material: HOPPER
+glyph: "\uA022"

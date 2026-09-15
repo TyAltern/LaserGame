@@ -1,4 +1,7 @@
 id: rocket_launcher
+rarity: RARE
+price: 65
+special-ability: highlight_top_killer
 display-name: "&cLance Roquette"
 
 material: TNT
@@ -11,3 +14,6 @@ hit-radius: 3
 lives-per-hit: 2
 
 movement-speed-modifier: 0
+
+icon-material: TNT
+glyph: "\uA007"
