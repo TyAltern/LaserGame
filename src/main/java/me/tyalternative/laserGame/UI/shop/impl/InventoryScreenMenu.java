@@ -4,6 +4,7 @@ import me.tyalternative.laserGame.UI.shop.*;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.shop.ConsumableDefinition;
 import me.tyalternative.laserGame.shop.ShopContext;
+import me.tyalternative.laserGame.utils.Font;
 import me.tyalternative.laserGame.utils.TextUtil;
 import me.tyalternative.laserGame.utils.TickUtil;
 

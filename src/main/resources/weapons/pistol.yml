@@ -4,7 +4,7 @@ default: true
 rarity: COMMON
 price: 0
 
-material: STICK
+material: COPPER_HOE
 max-ammo: 20
 shot-cooldown-ticks: 10
 reload-cooldown-ticks: 40

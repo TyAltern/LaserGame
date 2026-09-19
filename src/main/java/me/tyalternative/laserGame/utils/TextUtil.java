@@ -1,5 +1,9 @@
 package me.tyalternative.laserGame.utils;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.ShadowColor;
+import org.bukkit.NamespacedKey;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +16,34 @@ public final class TextUtil {
     private static final String twoPx = "fl¤t()`";
     private static final String threePx = "FLTabcdeghjknopqrsuvxyz0123456789àéè-+_*/\\÷=\"?¿{}<>[]µ";
     private static final String fourPx = "ABCDEGHJKNOPQRSUVXYZ%¶~";
-    private static final String fivePx = "MWmw#@&§^";
+    private static final String fivePx = "MWmw#@&§^$";
+
+    public static Component buildTextComponent(String text, NamespacedKey font) {
+        return Component.text(text).font(font);
+    }
+
+    public static Component buildOffset(int negative_offset, int positive_offset) {
+        negative_offset = Math.max(0, negative_offset);
+        positive_offset = Math.max(0, positive_offset);
+        return Component.text(parse("E" + String.format("%03d",negative_offset))).font(Font.NEGATIVE).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0)).append(
+                Component.text(parse("E" + String.format("%03d",positive_offset))).font(Font.POSITIVE).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0))
+        );
+    }
+
+    public static Component buildTextComponent(int negative_offset, int positive_offset, String text, NamespacedKey font) {
+        negative_offset = Math.max(0, negative_offset);
+        positive_offset = Math.max(0, positive_offset);
+        if (negative_offset == 0 && positive_offset == 0) return Component.text(text).font(font).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0));
+        if (negative_offset == 0) return Component.text(parse("E" + String.format("%03d",positive_offset))).font(Font.POSITIVE).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0))
+                .append(Component.text(text).font(font).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0)));
+        if (positive_offset == 0) return Component.text(parse("E" + String.format("%03d",negative_offset))).font(Font.NEGATIVE).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0))
+                .append(Component.text(text).font(font).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0)));
+
+        return Component.text(parse("E" + String.format("%03d",negative_offset))).font(Font.NEGATIVE).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0)).append(
+                Component.text(parse("E" + String.format("%03d",positive_offset))).font(Font.POSITIVE).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0)),
+                Component.text(text).font(font).shadowColor(ShadowColor.shadowColor(0, 0, 0, 0))
+        );
+    }
 
     public static int getStringLength(String string) {
         int counter = -1;

@@ -1,11 +1,14 @@
 package me.tyalternative.laserGame.shop;
 
+import org.bukkit.Material;
+
 public record ConsumableDefinition(
         String id,
         String displayName,
         ConsumableCategory category,
         Rarity rarity,
         int price,
+        Material material,
         String effectId,
         String glyph
 ) implements HasRarity, HasGlyph {

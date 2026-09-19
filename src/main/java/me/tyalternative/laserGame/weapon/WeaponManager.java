@@ -86,7 +86,7 @@ public class WeaponManager {
             return null;
         }
 
-        Material material = Material.matchMaterial(yaml.getString("material", "BLAZE_ROD"));
+        Material material = Material.matchMaterial(yaml.getString("icon-material", "BLAZE_ROD"));
         if (material == null) {
             plugin.getLogger().warning(file.getName() + " : matériau invalide - ignoré.");
             return null;

@@ -15,6 +15,8 @@ import me.tyalternative.laserGame.weapon.WeaponAbility;
 import me.tyalternative.laserGame.weapon.WeaponAbilityManager;
 import me.tyalternative.laserGame.weapon.WeaponType;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
@@ -449,31 +451,37 @@ public class GamePlayer {
 
     // SNEAK (jauge de charge) : 20s de sneak max, recharge de 1s toutes les 5s hors sneak.
 
-    private static final int MAX_SNEAK_CHARGE_TICKS = 400; // 20s
-    private static final int SNEAK_REGEN_INTERVAL_TICKS = 100; // 5s
-    private static final int SNEAK_REGEN_AMOUNT_TICKS = 20; // 1s
+    private boolean sneakTimed = false;
+    private long sneakChargeTicks = 0;
+    private long sneakRegenAccumulatorTicks = 0;
+    private AttributeModifier sneakSpeedModifier;
 
-    private int sneakChargeTicks = MAX_SNEAK_CHARGE_TICKS;
-    private int sneakRegenAccumulatorTicks = 0;
+    public AttributeModifier getSneakSpeedModifier() { return sneakSpeedModifier; }
+    public void setSneakSpeedModifier(AttributeModifier sneakSpeedModifier) { this.sneakSpeedModifier = sneakSpeedModifier; }
 
-    public boolean hasSneakCharge() { return sneakChargeTicks > 0; }
-    public int getSneakChargeTicks() { return sneakChargeTicks; }
-    public int getMaxSneakChargeTicks() { return MAX_SNEAK_CHARGE_TICKS; }
+    public boolean isSneakTimed() { return sneakTimed; }
+    public void setSneakTimed(boolean sneakTimed) { this.sneakTimed = sneakTimed; }
 
-    public void tickSneakCharge(boolean sneaking, int elapsedTicks) {
+    public boolean hasSneakCharge() { return sneakChargeTicks > 0 || !sneakTimed; }
+
+    public long getSneakChargeTicks() { return sneakChargeTicks; }
+    public void setSneakChargeTicks(long sneakChargeTicks) { this.sneakChargeTicks = sneakChargeTicks; }
+
+    public void tickSneakCharge(boolean sneaking, long elapsedTicks) {
+        if (!isSneakTimed()) return;
         if (sneaking) {
             sneakChargeTicks = Math.max(0, sneakChargeTicks - elapsedTicks);
             sneakRegenAccumulatorTicks = 0;
             return;
         }
-        if (sneakChargeTicks >= MAX_SNEAK_CHARGE_TICKS) {
+        if (sneakChargeTicks >= config.getMaxSneakChargeTicks()) {
             sneakRegenAccumulatorTicks = 0;
             return;
         }
         sneakRegenAccumulatorTicks += elapsedTicks;
-        while (sneakRegenAccumulatorTicks >= SNEAK_REGEN_INTERVAL_TICKS && sneakChargeTicks < MAX_SNEAK_CHARGE_TICKS) {
-            sneakChargeTicks = Math.min(MAX_SNEAK_CHARGE_TICKS, sneakChargeTicks + SNEAK_REGEN_AMOUNT_TICKS);
-            sneakRegenAccumulatorTicks -= SNEAK_REGEN_INTERVAL_TICKS;
+        while (sneakRegenAccumulatorTicks >= config.getSneakRegenIntervalTicks() && sneakChargeTicks < config.getMaxSneakChargeTicks()) {
+            sneakChargeTicks = Math.min(config.getMaxSneakChargeTicks(), sneakChargeTicks + config.getSneakRegenAmountTicks());
+            sneakRegenAccumulatorTicks -= config.getSneakRegenIntervalTicks();
         }
     }
 

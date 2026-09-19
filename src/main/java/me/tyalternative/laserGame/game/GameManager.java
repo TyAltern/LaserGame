@@ -1,5 +1,6 @@
 package me.tyalternative.laserGame.game;
 
+import me.tyalternative.laserGame.UI.hud.ActionBarManager;
 import me.tyalternative.laserGame.archetype.ArchetypeManager;
 import me.tyalternative.laserGame.arena.Arena;
 import me.tyalternative.laserGame.arena.ArenaManager;

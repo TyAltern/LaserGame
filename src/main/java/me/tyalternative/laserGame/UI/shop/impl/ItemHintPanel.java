@@ -1,6 +1,7 @@
 package me.tyalternative.laserGame.UI.shop.impl;
 
 import me.tyalternative.laserGame.UI.shop.HologramElement;
+import me.tyalternative.laserGame.utils.Font;
 import me.tyalternative.laserGame.utils.TextUtil;
 import me.tyalternative.laserGame.utils.TickUtil;
 

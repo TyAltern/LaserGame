@@ -6,6 +6,7 @@ import me.tyalternative.laserGame.effect.impl.skillEffect.*;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
 import me.tyalternative.laserGame.shop.Rarity;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -91,6 +92,15 @@ public class SkillManager {
             return null;
         }
 
+        Material material;
+        try {
+            material = Material.valueOf(yaml.getString("icon-material","AIR").toUpperCase());
+        }catch (IllegalArgumentException e) {
+            plugin.getLogger().warning(file.getName() + " : 'material' invalide - ignoré.");
+            return null;
+        }
+
+
         return new SkillDefinition(
                 id,
                 yaml.getString("display-name", id),
@@ -98,7 +108,8 @@ public class SkillManager {
                 yaml.getInt("price", 0),
                 yaml.getLong("cooldown-ticks", 100),
                 yaml.getString("effect-id", ""),
-                yaml.getString("glyph", "")
+                yaml.getString("glyph", ""),
+                material
         );
     }
 

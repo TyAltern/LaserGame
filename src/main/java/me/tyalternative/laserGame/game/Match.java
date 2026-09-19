@@ -1,5 +1,6 @@
 package me.tyalternative.laserGame.game;
 
+import me.tyalternative.laserGame.UI.hud.ActionBarManager;
 import me.tyalternative.laserGame.UI.shop.HologramHoverListener;
 import me.tyalternative.laserGame.UI.shop.impl.LaserGameMenu;
 import me.tyalternative.laserGame.archetype.ArchetypeDefinition;
@@ -21,7 +22,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +38,7 @@ public class Match {
     private final ShopManager shopManager;
     private final ShopContext shopContext;
     private final Arena arena;
+    private final ActionBarManager actionBarManager;
     private final MatchEndCallback endCallback;
 
     private final Map<UUID,GamePlayer> players = new LinkedHashMap<>();
@@ -65,6 +66,7 @@ public class Match {
         this.shopContext = shopContext;
         this.arena = arena;
         this.endCallback = endCallback;
+        this.actionBarManager = new ActionBarManager(this);
     }
 
     public boolean addPlayer(Player player) {
@@ -201,7 +203,9 @@ public class Match {
         }
         for (GamePlayer gp : players.values()) {
             gp.resetForNewRound(config.getStartingLives());
+
         }
+        actionBarManager.start();
         beginRound();
     }
 
@@ -313,6 +317,7 @@ public class Match {
             if (gpPlayer != null) closeShopMenu(gpPlayer);
         }
         openShopMenus.clear();
+        actionBarManager.stop();
 
         Bukkit.getScheduler().runTaskLater(plugin, () -> endCallback.onMatchEnded(this), 60L);
     }
@@ -332,4 +337,6 @@ public class Match {
     public boolean isFull() { return players.size() >= arena.getConfig().maxPlayers(); }
     public Optional<GamePlayer> getGamePlayer(Player player) { return Optional.ofNullable(players.get(player.getUniqueId())); }
     public List<GamePlayer> getPlayers() { return List.copyOf(players.values()); }
+    public List<GamePlayer> getAlivePlayers() { return getCurrentRound() == null ? List.of() : getCurrentRound().getAlivePlayers(); }
+    public Plugin getPlugin() { return plugin; }
 }

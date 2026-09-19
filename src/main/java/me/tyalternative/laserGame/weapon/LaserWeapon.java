@@ -72,17 +72,17 @@ public class LaserWeapon {
         if (reloading) return;
         EffectiveWeaponStats stats = statsSupplier.get();
         if (stats.isReloadDisabled()) {
-            sendActionBar(player, "§7Cette arme ne peut pas être rechargée.");
+//            sendActionBar(player, "§7Cette arme ne peut pas être rechargée.");
             return;
         }
         if (ammo >= stats.getMaxAmmo()) {
-            sendActionBar(player, "§7Munitions déjà pleines.");
+//            sendActionBar(player, "§7Munitions déjà pleines.");
             return;
         }
         double usedFraction = stats.getMaxAmmo() <= 0 ? 1.0 : 1.0 - ((double) ammo / stats.getMaxAmmo());
         if (usedFraction < stats.getMinAmmoUsedFractionToReload() - 1e-9) {
             int requiredPercent = (int) Math.round(stats.getMinAmmoUsedFractionToReload() * 100);
-            sendActionBar(player, "§cIl faut avoir utilisé au moins " + requiredPercent + "% du chargeur pour recharger.");
+//            sendActionBar(player, "§cIl faut avoir utilisé au moins " + requiredPercent + "% du chargeur pour recharger.");
             return;
         }
         reloading = true;
@@ -102,11 +102,11 @@ public class LaserWeapon {
         if (reloading) {
             if (!player.isBlocking()) {
                 if (stats.isReloadPausable()) {
-                    sendActionBar(player, "§e" + buildReloadBar(stats) + " §7(en pause)");
+//                    sendActionBar(player, "§e" + buildReloadBar(stats) + " §7(en pause)");
                     return; // conserve reloading=true et la progression : reprend dès que le joueur re-bloque
                 }
                 reloading = false;
-                sendActionBar(player, "§cRechargement interrompu !");
+//                sendActionBar(player, "§cRechargement interrompu !");
                 return;
             }
             reloadProgressTicks += config.getHudIntervalTicks();
@@ -116,12 +116,12 @@ public class LaserWeapon {
 
                 reloading = false;
                 effects.fireReloadCompleted();
-                sendActionBar(player, "§aArme rechargée !");
+//                sendActionBar(player, "§aArme rechargée !");
             } else {
-                sendActionBar(player, buildReloadBar(stats));
+//                sendActionBar(player, buildReloadBar(stats));
             }
         } else {
-            sendActionBar(player, buildAmmoText(stats));
+//            sendActionBar(player, buildAmmoText(stats));
         }
     }
 
@@ -217,5 +217,6 @@ public class LaserWeapon {
 
     public WeaponType getType() { return type; }
     public int getAmmo() { return ammo; }
+    public int getMaxAmmo() { return statsSupplier.get().getMaxAmmo(); }
     public boolean isReloading() { return reloading; }
 }

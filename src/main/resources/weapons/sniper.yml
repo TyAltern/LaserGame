@@ -3,7 +3,7 @@ display-name: "&cSniper"
 rarity: LEGENDARY
 price: 90
 
-material: STICK
+material: SPYGLASS
 max-ammo: 1
 shot-cooldown-ticks: 20
 reload-cooldown-ticks: 100

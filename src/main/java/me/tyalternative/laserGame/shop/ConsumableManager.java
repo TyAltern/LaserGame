@@ -6,6 +6,7 @@ import me.tyalternative.laserGame.effect.impl.consumable.*;
 import me.tyalternative.laserGame.effect.impl.effect.CurseNextTargetEffect;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -156,12 +157,21 @@ public class ConsumableManager {
             return null;
         }
 
+        Material material;
+        try {
+            material = Material.valueOf(yaml.getString("icon-material","AIR").toUpperCase());
+        }catch (IllegalArgumentException e) {
+            plugin.getLogger().warning(file.getName() + " : 'material' invalide - ignoré.");
+            return null;
+        }
+
         return new ConsumableDefinition(
                 id,
                 yaml.getString("display-name", id),
                 category,
                 rarity,
                 yaml.getInt("price", 0),
+                material,
                 yaml.getString("effect-id", ""),
                 yaml.getString("glyph", "")
         );

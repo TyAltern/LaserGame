@@ -1,5 +1,6 @@
 package me.tyalternative.laserGame;
 
+import me.tyalternative.laserGame.UI.hud.ActionBarManager;
 import me.tyalternative.laserGame.UI.shop.*;
 import me.tyalternative.laserGame.archetype.ArchetypeManager;
 import me.tyalternative.laserGame.arena.ArenaManager;
@@ -38,10 +39,22 @@ public final class LaserGame extends JavaPlugin {
 
         saveDefaultConfig();
         saveResourceIfMissing("arenas/test.yml");
-        saveResourceIfMissing("weapons/pistol.yml");
-        saveResourceIfMissing("weapons/sniper.yml");
+        saveResourceIfMissing("weapons/armored_rifle.yml");
+        saveResourceIfMissing("weapons/champion_saber.yml");
+        saveResourceIfMissing("weapons/golden_pistol.yml");
+        saveResourceIfMissing("weapons/knife.yml");
+        saveResourceIfMissing("weapons/longbow.yml");
+        saveResourceIfMissing("weapons/lucky_revolver.yml");
         saveResourceIfMissing("weapons/machine_gun.yml");
+        saveResourceIfMissing("weapons/pistol.yml");
         saveResourceIfMissing("weapons/regen_pistol.yml");
+        saveResourceIfMissing("weapons/revenant_blade.yml");
+        saveResourceIfMissing("weapons/rocket_launcher.yml");
+        saveResourceIfMissing("weapons/scattergun.yml");
+        saveResourceIfMissing("weapons/shotgun.yml");
+        saveResourceIfMissing("weapons/sniper.yml");
+        saveResourceIfMissing("weapons/thrifty_carbine.yml");
+        saveResourceIfMissing("weapons/tracer_rifle.yml");
         saveResourceIfMissing("consumables/damage_cap.yml");
         saveResourceIfMissing("consumables/bonus_damage.yml");
         saveResourceIfMissing("consumables/instant_reload.yml");
@@ -77,6 +90,7 @@ public final class LaserGame extends JavaPlugin {
         upgradeManager.loadAll();
         this.shopManager = new ShopManager(configManager, consumableManager, skillManager,
                 archetypeManager, upgradeManager, weaponManager);
+
 
         ShotTrailRenderer trailRenderer = new ShotTrailRenderer(this, configManager);
         this.gameManager = new GameManager(this, configManager, arenaManager, weaponManager, abilityManager,

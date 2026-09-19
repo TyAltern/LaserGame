@@ -4,7 +4,7 @@ price: 30
 special-ability: fire_rate_ramp_on_miss
 display-name: "&cCouteau"
 
-material: IRON_DAGGER
+material: IRON_SWORD
 max-ammo: 200
 shot-cooldown-ticks: 1
 reload-cooldown-ticks: 120

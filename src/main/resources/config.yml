@@ -11,6 +11,16 @@ game:
   min-players-fallback: 2
   rounds-to-win: 5
 
+gameplay:
+  hud:
+    is-action-bar-enable: true
+    action-bar-ticks-refresh-rate: 1
+
+  sneak:
+    max-sneak-charge-ticks: 400
+    sneak-regen-interval-ticks: 60
+    sneak-regen-amount-ticks: 20
+
 economy:
   passive-per-round: 10
   shot-hit-reward: 5
@@ -24,7 +34,7 @@ shop:
   duplicate-policy: SEPARATE_SLOT
   base-item-slots: 5 # Inventaire
   consumable-slots: 5 # Offre
-  phase-duration-seconds: 20
+  phase-duration-seconds: 200
 
   reroll-base-cost: 5
   reroll-cost-increment: 3

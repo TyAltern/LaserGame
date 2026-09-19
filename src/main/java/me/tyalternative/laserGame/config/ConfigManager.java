@@ -28,6 +28,14 @@ public class ConfigManager {
     private int minPlayersFallback;
     private int roundsToWin;
 
+    // Gameplay
+    private boolean isActionBarEnable;
+    private long actionBarTicksRefreshRate;
+
+    private long maxSneakChargeTicks;
+    private long sneakRegenIntervalTicks;
+    private long sneakRegenAmountTicks;
+
     // Économie
     private int passivePerRound;
     private int shotHitReward;
@@ -75,6 +83,13 @@ public class ConfigManager {
         countdownSeconds = cfg.getInt("game.countdown-seconds", 10);
         minPlayersFallback = cfg.getInt("game.min-players-fallback", 2);
         roundsToWin = cfg.getInt("game.rounds-to-win", 5);
+
+        isActionBarEnable = cfg.getBoolean("gameplay.hud.is-action-bar-enable", true);
+        actionBarTicksRefreshRate = cfg.getLong("gameplay.hud.action-bar-ticks-refresh-rate", 1L);
+
+        maxSneakChargeTicks = cfg.getLong("gameplay.sneak.max-sneak-charge-ticks", 400L);
+        sneakRegenIntervalTicks = cfg.getLong("gameplay.sneak.sneak-regen-interval-ticks", 60L);
+        sneakRegenAmountTicks = cfg.getLong("gameplay.sneak.sneak-regen-amount-ticks", 20L);
 
         passivePerRound = cfg.getInt("economy.passive-per-round", 10);
         shotHitReward = cfg.getInt("economy.shot-hit-reward", 5);
@@ -147,6 +162,13 @@ public class ConfigManager {
     public int getRoundWinReward() { return roundWinReward; }
     public int getFirstBloodReward() { return firstBloodReward; }
     public int getFirstEliminationReward() { return firstEliminationReward; }
+
+
+    public boolean isActionBarEnable() { return isActionBarEnable; }
+    public long getActionBarTicksRefreshRate() { return actionBarTicksRefreshRate; }
+    public long getMaxSneakChargeTicks() { return maxSneakChargeTicks; }
+    public long getSneakRegenIntervalTicks() { return sneakRegenIntervalTicks; }
+    public long getSneakRegenAmountTicks() { return sneakRegenAmountTicks; }
 
     public DuplicatePolicy getShopDuplicatePolicy() { return shopDuplicatePolicy; }
     public int getBaseItemSlots() { return baseItemSlots; }

@@ -3,9 +3,8 @@ package me.tyalternative.laserGame.UI.shop.impl;
 import me.tyalternative.laserGame.UI.shop.*;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.shop.ShopContext;
+import me.tyalternative.laserGame.utils.Font;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;

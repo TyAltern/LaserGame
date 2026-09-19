@@ -5,7 +5,7 @@ special-ability: respawn_grace_period
 display-name: "&bFusil à Pompe"
 default: true
 
-material: STICK
+material: STONE_HOE
 max-ammo: 10
 shot-cooldown-ticks: 15
 reload-cooldown-ticks: 60

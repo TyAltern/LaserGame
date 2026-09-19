@@ -31,6 +31,8 @@ public class SneakChargeListener implements Listener {
         if (gp.getMatch().getState() == MatchState.SHOP) return;
         if (gp.isSpectator()) return;
 
+        if (gp.isSneakTimed()) return;
+
         if (!gp.hasSneakCharge()) {
             event.setCancelled(true);
             player.sendMessage("§cTu n'as plus assez de charge pour te cacher.");
