@@ -44,8 +44,9 @@ public class PlayerInteractListener implements Listener {
 
         Optional<GamePlayer> gpOpt = match.getGamePlayer(player);
         if (gpOpt.isEmpty() || gpOpt.get().isSpectator()) return;
+        GamePlayer gamePlayer = gpOpt.get();
 
-        gpOpt.get().getWeapon().startManualReload(player);
+        gpOpt.get().getWeapon().startManualReload(gamePlayer);
         gpOpt.get().incrementReloads(); // TODO: à fixe, car compte le nombre de reload déclenché et non réalisé.
     }
 }

@@ -20,6 +20,7 @@ public final class Font {
     public static final NamespacedKey HUD_TEXT_CARD = new NamespacedKey("menu","hud_text_card");
     public static final NamespacedKey HUD_TEXT_HIGH = new NamespacedKey("menu","hud_text_high");
     public static final NamespacedKey HUD_TEXT_LOW = new NamespacedKey("menu","hud_text_low");
+    public static final NamespacedKey HUD_TEXT_RELOAD = new NamespacedKey("menu","hud_text_reload");
 
     public static final NamespacedKey POSITIVE = new NamespacedKey("offset","positive");
     public static final NamespacedKey NEGATIVE = new NamespacedKey("offset","negative");

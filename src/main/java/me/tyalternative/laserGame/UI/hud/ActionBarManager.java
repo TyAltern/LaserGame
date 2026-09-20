@@ -13,7 +13,6 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
-import org.w3c.dom.Text;
 
 import java.util.Optional;
 
@@ -28,8 +27,6 @@ public class ActionBarManager {
 
     public void start() {
         if (!LaserGame.getInstance().getConfigManager().isActionBarEnable()) return;
-
-        System.out.println("Started the action bar");
         updateTask = Bukkit.getScheduler().runTaskTimer(
                 match.getPlugin(),
                 this::update,
@@ -45,19 +42,17 @@ public class ActionBarManager {
     }
 
 
-    private void update() {
+    public void update() {
         if (!LaserGame.getInstance().getConfigManager().isActionBarEnable()) return;
-
-        Round round = match.getCurrentRound();
 
         for (GamePlayer gp : match.getPlayers()) {
             Player player = gp.getPlayer();
             if (player == null) continue;
-            updatePlayerActionBar(gp, round);
+            updatePlayerActionBar(gp);
         }
 
     }
-    private void updatePlayerActionBar(GamePlayer gp, Round round) {
+    public void updatePlayerActionBar(GamePlayer gp) {
         Player player = gp.getPlayer();
         Component component = buildBackground().append(
                 buildConsumablesDisplay(gp),
@@ -90,7 +85,7 @@ public class ActionBarManager {
             }
 
             component = component.append(
-                    TextUtil.buildTextComponent(0, 5, TextUtil.parse("F02" + (selectedSlot == index ? 1 : 0)), Font.HUD),
+                    TextUtil.buildTextComponent(0, 5, TextUtil.parse("F02" + (consumable == null ? 2 : (selectedSlot == index ? 1 : 0))), Font.HUD),
                     TextUtil.buildTextComponent(20, 0, (consumable != null? TextUtil.parse(Font.findItemGlyph(consumable.material(), true)): "\uFFFF"), Font.ITEMS)
             );
 
@@ -123,14 +118,21 @@ public class ActionBarManager {
 
     private Component buildSneakBar(GamePlayer gp) {
         Component component = Component.text("");
-        long sneakTick = gp.getSneakChargeTicks();
-        long maxSneakTick = LaserGame.getInstance().getConfigManager().getMaxSneakChargeTicks();
-        int sneakBars = Math.toIntExact(Math.ceilDiv(sneakTick * 13, Math.max(1, maxSneakTick)));
-        for (int i = 1; i < 14; i++) {
-            if (i > sneakBars) component = component.append(TextUtil.buildTextComponent("\uF010", Font.HUD));
-            else if (i == 1) component = component.append(TextUtil.buildTextComponent("\uF011", Font.HUD));
-            else if (i == 13) component = component.append(TextUtil.buildTextComponent("\uF013", Font.HUD));
-            else component = component.append(TextUtil.buildTextComponent("\uF012", Font.HUD));
+        if (gp.getWeapon().isReloading()) {
+
+            component = component.append(TextUtil.buildTextComponent(gp.getWeapon().buildReloadBar(gp.getEffectiveStats()),Font.HUD));
+
+        } else {
+
+            long sneakTick = gp.getSneakChargeTicks();
+            long maxSneakTick = LaserGame.getInstance().getConfigManager().getMaxSneakChargeTicks();
+            int sneakBars = Math.toIntExact(Math.ceilDiv(sneakTick * 13, Math.max(1, maxSneakTick)));
+            for (int i = 1; i < 14; i++) {
+                if (i > sneakBars) component = component.append(TextUtil.buildTextComponent("\uF010", Font.HUD));
+                else if (i == 1) component = component.append(TextUtil.buildTextComponent("\uF011", Font.HUD));
+                else if (i == 13) component = component.append(TextUtil.buildTextComponent("\uF013", Font.HUD));
+                else component = component.append(TextUtil.buildTextComponent("\uF012", Font.HUD));
+            }
         }
 
         return component.append(TextUtil.buildOffset(0,12));
@@ -148,8 +150,25 @@ public class ActionBarManager {
     }
 
     private Component buildLocatorBarDisplay(GamePlayer gp) {
-        return TextUtil.buildTextComponent("\uF031", Font.HUD).append(TextUtil.buildOffset(120,0));
+        Component component = Component.text("");
+        if (gp.doesSeeAmmoNotUsedEnoughMessage()) {
+            int requiredAmmo = gp.getWeapon().getAmmo() - (int) Math.ceil((1- gp.getEffectiveStats().getMinAmmoUsedFractionToReload()) * gp.getWeapon().getMaxAmmo());
+            if (requiredAmmo > 0) {
+                String text = "Utilisez " + requiredAmmo + " Muni avant de recharger";
+                int length = TextUtil.getStringLength(text);
+                int offset = (132 - length) / 2 - 1;
+                return component.append(
+                        TextUtil.buildTextComponent("\uF033", Font.HUD),
+                        TextUtil.buildTextComponent(133, offset, text, Font.HUD_TEXT_RELOAD),
+                        TextUtil.buildOffset(120, offset)
+                );
+            }
+        }
+         if (gp.getWeapon().isReloading()) component = component.append(TextUtil.buildTextComponent("\uF032", Font.HUD));
+        else if (!gp.canSeeRadar()) component = component.append(TextUtil.buildTextComponent("\uF031", Font.HUD));
+        else component = component.append(TextUtil.buildTextComponent("\uF030", Font.HUD));
 
+        return component.append(TextUtil.buildOffset(120,0));
     }
 
     private Component buildPlayerRemainingDisplay(GamePlayer gp) {
@@ -196,7 +215,6 @@ public class ActionBarManager {
         int reloadOffset = reloadTime < 10 ? 2 : 0;
 
         WeaponType weapon = gp.getWeaponType();
-        if (gp.getPlayer().isSneaking()) gp.getPlayer().sendMessage(cooldownOffset + " - " + reloadOffset);
 
         return TextUtil.buildTextComponent(0 , cooldownOffset, cooldownText, Font.HUD_TEXT_CARD).append(
                 TextUtil.buildTextComponent(0,Math.max(cooldownOffset-1, 0) + 10, TextUtil.parse(Font.findItemGlyph(weapon.material(), true)), Font.ITEMS),
@@ -204,14 +222,6 @@ public class ActionBarManager {
                 TextUtil.buildOffset(0,Math.max(reloadOffset+1, 0) + 26)
         );
     }
-
-//    {text:"\uF020",font:"menu:hud",shadow_color:0b},
-//    {text:"\uE020",font:"offset:negative",shadow_color:0b},
-//    {text:"\uF002",font:"menu:hud_item",shadow_color:0b},
-//    {text:"\uE013",font:"offset:positive",shadow_color:0b},
-//    {text:"\uE006",font:"offset:positive",shadow_color:0b},
-//
-//    {text:"10:04",font:"menu:hud_text_ability_cooldown",shadow_color:0b},
 
     private Component buildCapacityDisplay(GamePlayer gp) {
         String skillId = gp.getEquippedSkillId();
@@ -223,7 +233,7 @@ public class ActionBarManager {
         }
 
         long durationRemainingCooldown = gp.getSkillCooldownRemainingTicks();
-        int seconds = (int) durationRemainingCooldown / 20;
+        int seconds = (int) durationRemainingCooldown / 20 + 1;
         String displaySeconds = String.format("%02d",seconds % 60);
         String displayMinutes = String.valueOf(Math.min(99,Math.floorDiv(seconds, 60)));
         boolean ready = durationRemainingCooldown == 0;

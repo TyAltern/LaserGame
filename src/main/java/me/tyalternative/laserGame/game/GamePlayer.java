@@ -494,7 +494,18 @@ public class GamePlayer {
     public void consumePiercingCharge() { if (piercingShotsRemaining > 0) piercingShotsRemaining--; }
     public int getPiercingShotsRemaining() { return piercingShotsRemaining; }
 
-    // STATISTIQUES
+    // RADAR DISPLAYS
+
+    private boolean canSeeRadar = false;
+    private boolean doesSeeAmmoNotUsedEnoughMessage = false;
+
+    public boolean canSeeRadar() { return canSeeRadar; }
+    public void setCanSeeRadar(boolean canSeeRadar) { this.canSeeRadar = canSeeRadar; }
+
+    public boolean doesSeeAmmoNotUsedEnoughMessage() { return doesSeeAmmoNotUsedEnoughMessage; }
+    public void setDoesSeeAmmoNotUsedEnoughMessage(boolean see) { this.doesSeeAmmoNotUsedEnoughMessage = see; }
+
+// STATISTIQUES
 
     public int getShotsFired() { return shotsFired; }
     public void incrementShotsFired() { shotsFired++; }

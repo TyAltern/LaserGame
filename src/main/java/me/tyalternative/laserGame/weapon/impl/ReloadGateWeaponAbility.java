@@ -11,7 +11,7 @@ import java.util.Optional;
 /** Les coups reçus en rechargeant sont ignorés, mais on ne peut recharger qu'après avoir utilisé 3/4 du chargeur. */
 public class ReloadGateWeaponAbility implements WeaponAbility {
 
-    private final StatModifier modifier = stats -> stats.setMinAmmoUsedFractionToReload(0.75);
+    private final StatModifier modifier = stats -> stats.addMinAmmoUsedFractionToReload(0.75);
 
     @Override
     public String getId() {

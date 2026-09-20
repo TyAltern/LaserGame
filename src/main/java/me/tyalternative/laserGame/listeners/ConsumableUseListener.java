@@ -4,6 +4,7 @@ import me.tyalternative.laserGame.game.GameManager;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
 import me.tyalternative.laserGame.game.MatchState;
+import me.tyalternative.laserGame.shop.ConsumableInventory;
 import me.tyalternative.laserGame.shop.ConsumableManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,5 +40,19 @@ public class ConsumableUseListener implements Listener {
         GamePlayer gp = gpOpt.get();
 
         consumableManager.activate(gp, player, match, gp.getSelectedSlot());
+
+
+        ConsumableInventory inventory = gp.getConsumables();
+        if (inventory.occupiedSize() <= 0) return;
+        int maxSlots = gp.getConsumables().size();
+        Optional<String> nextSlot;
+        int newSelected = gp.getSelectedSlot();
+        do {
+            newSelected = Math.floorMod(newSelected + 1, maxSlots);
+            nextSlot = inventory.get(newSelected);
+        } while (nextSlot.isEmpty());
+
+        gp.setSelectedSlot(newSelected);
+        match.getActionBarManager().updatePlayerActionBar(gp);
     }
 }

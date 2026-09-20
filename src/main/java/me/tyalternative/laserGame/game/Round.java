@@ -38,6 +38,7 @@ public class Round {
     private boolean firstBloodClaimed = false;
     private boolean firstEliminationClaimed = false;
     private org.bukkit.scheduler.BukkitTask sneakChargeTask;
+    private org.bukkit.scheduler.BukkitTask radarCooldownTask;
 
     public interface RoundEndCallback {
         void onRoundEnded(GamePlayer winner);
@@ -68,6 +69,11 @@ public class Round {
         }
         broadcast("§aGO!");
 
+        radarCooldownTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            for (GamePlayer gamePlayer : players.values()) {
+                gamePlayer.setCanSeeRadar(true);
+            }
+        }, config.getRadarStartingCooldownTicks());
         sneakChargeTask = Bukkit.getScheduler().runTaskTimer(plugin, this::tickSneakCharges, config.getSneakRegenIntervalTicks(), config.getSneakRegenIntervalTicks());
     }
 
@@ -92,9 +98,14 @@ public class Round {
             sneakChargeTask.cancel();
             sneakChargeTask = null;
         }
+        if (radarCooldownTask != null) {
+            radarCooldownTask.cancel();
+            radarCooldownTask = null;
+        }
 
         for (GamePlayer gp : players.values()) {
             revokeSneakLockLogic(gp);
+            gp.setCanSeeRadar(false);
         }
     }
 
@@ -155,7 +166,6 @@ public class Round {
             if (!sneakAttr.getModifiers().contains(modifier)) sneakAttr.addModifier(modifier);
         }
         gp.setSneakTimed(true);
-        gp.getPlayer().sendMessage("applySneakLogic");
     }
 
     private void revokeSneakLockLogic(GamePlayer gp) {
@@ -171,7 +181,6 @@ public class Round {
             if (sneakAttr.getModifiers().contains(modifier)) sneakAttr.removeModifier(modifier);
         }
         gp.setSneakTimed(false);
-        gp.getPlayer().sendMessage("resetSneakLogic");
     }
 
     private void applyWeaponSpeedModifier(Player player, GamePlayer gp) {

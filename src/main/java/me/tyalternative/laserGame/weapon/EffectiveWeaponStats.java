@@ -36,7 +36,7 @@ public class EffectiveWeaponStats {
         reloadDisabled = false;
         passiveRegenAmount = 0;
         passiveRegenIntervalTicks = 0;
-        minAmmoUsedFractionToReload = 0.0;
+        minAmmoUsedFractionToReload = 1.0;
         reloadPausable = false;
         combatCurrencyMultiplier = 1.0;
 
@@ -77,8 +77,9 @@ public class EffectiveWeaponStats {
     public long getPassiveRegenIntervalTicks()                               { return passiveRegenIntervalTicks; }
     public void setPassiveRegenIntervalTicks(long passiveRegenIntervalTicks) { this.passiveRegenIntervalTicks = passiveRegenIntervalTicks; }
 
-    public double getMinAmmoUsedFractionToReload()                           { return minAmmoUsedFractionToReload; }
-    public void setMinAmmoUsedFractionToReload(double fraction)              { this.minAmmoUsedFractionToReload = fraction; }
+    public double getMinAmmoUsedFractionToReload()                           { return 1 - minAmmoUsedFractionToReload; }
+    public void setMinAmmoUsedFractionToReload(double fraction)              { this.minAmmoUsedFractionToReload = 1 - fraction; }
+    public void addMinAmmoUsedFractionToReload(double fraction)              { this.minAmmoUsedFractionToReload *= 1 - fraction; }
 
     public boolean isReloadPausable()                                        { return reloadPausable; }
     public void setReloadPausable(boolean reloadPausable)                    { this.reloadPausable = reloadPausable; }

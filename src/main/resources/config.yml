@@ -5,6 +5,7 @@ weapon:
   refill-ammo-on-respawn: true
 
 game:
+  radar-starting-cooldown-ticks: 1200
   starting-lives: 3
   respawn-delay-ticks: 60
   countdown-seconds: 10

@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.shop;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class ConsumableInventory {
@@ -52,6 +53,7 @@ public class ConsumableInventory {
     public int size() {
         return slots.size();
     }
+    public int occupiedSize() { return (int) slots.stream().filter(Objects::nonNull).count(); }
 
     public List<String> getSlotIds() {
         return new ArrayList<>(slots);

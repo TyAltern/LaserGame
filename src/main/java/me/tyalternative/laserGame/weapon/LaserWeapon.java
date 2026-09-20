@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.weapon;
 import me.tyalternative.laserGame.config.ConfigManager;
 import me.tyalternative.laserGame.effect.EffectRegistry;
 import me.tyalternative.laserGame.effect.ShotFiredContext;
+import me.tyalternative.laserGame.game.GamePlayer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -30,6 +31,7 @@ public class LaserWeapon {
 
     private BukkitTask tickTask;
     private BukkitTask shotLockTask;
+    private BukkitTask shotNotPossibleAmmoUnusedTask;
 
     public LaserWeapon(Plugin plugin, ConfigManager config, WeaponType type, UUID ownerUuid,
                        Supplier<EffectiveWeaponStats> statsSupplier, EffectRegistry effects) {
@@ -68,20 +70,26 @@ public class LaserWeapon {
         return true;
     }
 
-    public void startManualReload(Player player) {
+    public void startManualReload(GamePlayer gp) {
         if (reloading) return;
         EffectiveWeaponStats stats = statsSupplier.get();
         if (stats.isReloadDisabled()) {
-//            sendActionBar(player, "§7Cette arme ne peut pas être rechargée.");
+//            sendActionBar(gp, "§7Cette arme ne peut pas être rechargée.");
             return;
         }
         if (ammo >= stats.getMaxAmmo()) {
-//            sendActionBar(player, "§7Munitions déjà pleines.");
+//            sendActionBar(gp, "§7Munitions déjà pleines.");
             return;
         }
         double usedFraction = stats.getMaxAmmo() <= 0 ? 1.0 : 1.0 - ((double) ammo / stats.getMaxAmmo());
         if (usedFraction < stats.getMinAmmoUsedFractionToReload() - 1e-9) {
             int requiredPercent = (int) Math.round(stats.getMinAmmoUsedFractionToReload() * 100);
+            gp.setDoesSeeAmmoNotUsedEnoughMessage(true);
+            if (shotNotPossibleAmmoUnusedTask != null) {
+                shotNotPossibleAmmoUnusedTask.cancel();
+                shotNotPossibleAmmoUnusedTask = null;
+            }
+            shotNotPossibleAmmoUnusedTask = Bukkit.getScheduler().runTaskLater(plugin, () -> gp.setDoesSeeAmmoNotUsedEnoughMessage(false), 20L);
 //            sendActionBar(player, "§cIl faut avoir utilisé au moins " + requiredPercent + "% du chargeur pour recharger.");
             return;
         }
@@ -142,12 +150,12 @@ public class LaserWeapon {
         return "§f" + type.displayName() + " §f- Munitions : §b" + ammo + "§f/§b" + stats.getMaxAmmo() + hint;
     }
 
-    private String buildReloadBar(EffectiveWeaponStats stats) {
-        int totalBars = 20;
+    public String buildReloadBar(EffectiveWeaponStats stats) {
+        int totalBars = 13;
         int filled = (int) Math.round((double) reloadProgressTicks / stats.getReloadCooldownTicks() * totalBars);
-        StringBuilder bar = new StringBuilder("§eRechargement ");
+        StringBuilder bar = new StringBuilder();
         for (int i = 0; i < totalBars; i++) {
-            bar.append(i < filled ? "§a|" : "§8|");
+            bar.append(i < filled ? (i == 0 ? "\uF011" : i == totalBars - 1 ? "\uF013" : "\uF012") : "\uF010");
         }
         return bar.toString();
     }
@@ -219,4 +227,8 @@ public class LaserWeapon {
     public int getAmmo() { return ammo; }
     public int getMaxAmmo() { return statsSupplier.get().getMaxAmmo(); }
     public boolean isReloading() { return reloading; }
+
+    public long getReloadProgressTicks() {
+        return reloadProgressTicks;
+    }
 }

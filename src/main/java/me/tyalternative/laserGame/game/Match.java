@@ -21,6 +21,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -50,6 +52,9 @@ public class Match {
     private int countdownRemaining;
     private Round currentRound;
 
+    private String teamName = "LaserGame-hidden-team";
+    private Team nameTagHideTeam;
+
     public interface MatchEndCallback {
         void onMatchEnded(Match match);
     }
@@ -67,6 +72,13 @@ public class Match {
         this.arena = arena;
         this.endCallback = endCallback;
         this.actionBarManager = new ActionBarManager(this);
+
+        Scoreboard scoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
+        this.nameTagHideTeam = scoreboard.getTeam(teamName);
+        if (this.nameTagHideTeam == null) {
+            this.nameTagHideTeam = scoreboard.registerNewTeam(teamName);
+            this.nameTagHideTeam.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
+        }
     }
 
     public boolean addPlayer(Player player) {
@@ -203,6 +215,7 @@ public class Match {
         }
         for (GamePlayer gp : players.values()) {
             gp.resetForNewRound(config.getStartingLives());
+            this.nameTagHideTeam.addPlayer(gp.getPlayer());
 
         }
         actionBarManager.start();
@@ -314,7 +327,10 @@ public class Match {
         for (GamePlayer gp : players.values()) {
             gp.getWeapon().stop();
             Player gpPlayer = gp.getPlayer();
-            if (gpPlayer != null) closeShopMenu(gpPlayer);
+            if (gpPlayer != null) {
+                closeShopMenu(gpPlayer);
+                this.nameTagHideTeam.removeEntity(gpPlayer);
+            }
         }
         openShopMenus.clear();
         actionBarManager.stop();
@@ -334,6 +350,7 @@ public class Match {
     public Arena getArena() { return arena; }
     public MatchState getState() { return state; }
     public Round getCurrentRound() { return currentRound; }
+    public ActionBarManager getActionBarManager() { return actionBarManager; }
     public boolean isFull() { return players.size() >= arena.getConfig().maxPlayers(); }
     public Optional<GamePlayer> getGamePlayer(Player player) { return Optional.ofNullable(players.get(player.getUniqueId())); }
     public List<GamePlayer> getPlayers() { return List.copyOf(players.values()); }

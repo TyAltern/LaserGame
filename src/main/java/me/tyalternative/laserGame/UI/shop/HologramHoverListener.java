@@ -124,11 +124,9 @@ public class HologramHoverListener implements Listener {
         if (!hovered.hasHint()) return;
 
         if (event.isSneaking()) {
-            event.getPlayer().sendMessage("sneak");
             hologram.showHintPanel(hovered);
         }
         else {
-            event.getPlayer().sendMessage("unsneak");
             hologram.hideHintPanel();
         }
     }

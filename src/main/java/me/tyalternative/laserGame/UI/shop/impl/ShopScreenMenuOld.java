@@ -89,7 +89,6 @@ public class ShopScreenMenuOld {
                 .font(Font.TEXT)
                 .build();
         rerollConsumableTabBody.onClick((player, source, clickType) -> {
-            player.sendMessage("Reroll");
             int value = Integer.parseInt(rerollAmountConsumableTab.getText());
             value = Math.min(9999, value + 25);
             rerollAmountConsumableTab.setText(String.format("%04d",value));

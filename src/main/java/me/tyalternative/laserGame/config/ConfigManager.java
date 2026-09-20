@@ -22,6 +22,7 @@ public class ConfigManager {
     private boolean refillAmmoOnRespawn;
 
     // Partie / match
+    private long radarStartingCooldownTicks;
     private int startingLives;
     private long respawnDelayTicks;
     private int countdownSeconds;
@@ -78,6 +79,7 @@ public class ConfigManager {
         hudIntervalTicks = cfg.getLong("weapon.hud-interval-ticks", 2);
         refillAmmoOnRespawn = cfg.getBoolean("weapon.refill-ammo-on-respawn", true);
 
+        radarStartingCooldownTicks = cfg.getLong("game.radar-starting-cooldown-ticks", 1200);
         startingLives = cfg.getInt("game.starting-lives", 3);
         respawnDelayTicks = cfg.getLong("game.respawn-delay-ticks", 60);
         countdownSeconds = cfg.getInt("game.countdown-seconds", 10);
@@ -150,6 +152,7 @@ public class ConfigManager {
     public long getHudIntervalTicks() { return hudIntervalTicks; }
     public boolean isRefillAmmoOnRespawn() { return refillAmmoOnRespawn; }
 
+    public long getRadarStartingCooldownTicks() { return radarStartingCooldownTicks; }
     public int getStartingLives() { return startingLives; }
     public long getRespawnDelayTicks() { return respawnDelayTicks; }
     public int getCountdownSeconds() { return countdownSeconds; }

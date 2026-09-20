@@ -7,6 +7,7 @@ import me.tyalternative.laserGame.game.GameManager;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
 import me.tyalternative.laserGame.game.MatchState;
+import me.tyalternative.laserGame.shop.ConsumableInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -56,12 +57,17 @@ public class ItemSelectionListener implements Listener {
         GamePlayer gp = gpOpt.get();
 
         event.setCancelled(true);
-
+        ConsumableInventory inventory = gp.getConsumables();
+        if (inventory.occupiedSize() <= 1) return;
         int maxSlots = gp.getConsumables().size();
-        if (maxSlots <= 0) return;
+        Optional<String> nextSlot;
+        int newSelected = gp.getSelectedSlot();
+        do {
+            newSelected = Math.floorMod(newSelected + (scrollDown ? 1 : -1), maxSlots);
+            nextSlot = inventory.get(newSelected);
+        } while (nextSlot.isEmpty());
 
-        int newSelected = Math.floorMod(gp.getSelectedSlot() + (scrollDown ? 1 : -1), maxSlots);
         gp.setSelectedSlot(newSelected);
-        // TODO : rafraîchir le HUD ici
+        match.getActionBarManager().updatePlayerActionBar(gp);
     }
 }

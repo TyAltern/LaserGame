@@ -14,6 +14,12 @@ import org.joml.Vector3f;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Affiche la trajectoire d'un tir, dans l'un des deux modes configurables
+ * (voir trail.mode dans config.yml) :
+ *  - CUBES : plusieurs petites Block Display alignées le long du trajet.
+ *  - LINE  : une seule Block Display étirée entre start et end.
+ */
 public class ShotTrailRenderer {
 
     private final Plugin plugin;
@@ -53,6 +59,7 @@ public class ShotTrailRenderer {
                         new Quaternionf()
                 ));
                 bd.setBrightness(new Display.Brightness(15, 15));
+                bd.setGravity(false); // sans ça l'entité tombe dès le spawn (comportement par défaut d'un Display)
                 bd.setPersistent(false);
             });
             spawned.add(display);
@@ -65,36 +72,53 @@ public class ShotTrailRenderer {
      * Une seule Block Display étirée entre start et end.
      *
      * Principe : une Block Display non transformée occupe l'espace local
-     * [0,1]^3 (un bloc entier). On la scale à (épaisseur, épaisseur, distance)
-     * puis on fait pivoter son axe local Z pour qu'il pointe vers 'direction' :
-     * comme l'axe Z local part de 0 (à l'origine de l'entité, donc "start"),
-     * l'étirement selon Z couvre exactement [start, end] une fois tourné.
+     * [0,1]^3 (un bloc entier, l'entité étant à l'origine "coin", pas centrée).
+     * On la scale à (épaisseur, épaisseur, distance) puis on fait pivoter son
+     * axe local Z pour qu'il pointe vers 'direction' : comme l'axe Z local
+     * part de 0 (à l'origine de l'entité, donc "start"), l'étirement selon Z
+     * couvre exactement [start, end] une fois tourné.
      *
-     * La translation est utilisée pour recentrer le faisceau fin (épaisseur en
-     * X/Y) sur l'axe du tir plutôt que d'avoir la bordure du bloc collée sur
-     * l'axe. Comme la translation d'une Transformation est appliquée telle
-     * quelle (non re-tournée), on tourne nous-même le vecteur de décalage avec
-     * le même quaternion avant de le passer en translation, pour qu'il suive
-     * l'orientation du faisceau.
+     * ROTATION : dérivée du yaw/pitch calculé par Location#setDirection()
+     * (donc par Bukkit lui-même), plutôt que d'un calcul d'arc quaternion
+     * maison (Quaternionf#rotationTo) que je ne pouvais pas vérifier
+     * visuellement et qui s'est avéré ne pas fonctionner correctement en jeu.
+     * rotateY(-yaw).rotateX(pitch) reproduit exactement la convention de
+     * Location#getDirection() (yaw=0 -> +Z), vérifiée par dérivation manuelle
+     * des deux formules - beaucoup plus sûr que de réinventer le calcul.
+     *
+     * GRAVITÉ : bug quasi certain de la version précédente - une Block
+     * Display a la gravité activée PAR DÉFAUT comme n'importe quelle entité.
+     * Sans setGravity(false), le bloc étiré tombe dès le spawn, ce qui donne
+     * exactement le symptôme "part dans tous les sens" une fois combiné à
+     * l'étirement/rotation (surtout visible vu que l'entité ne vit que 0.3s,
+     * donc on ne voit quasiment que la chute, jamais un état stable).
+     *
+     * Simplification assumée : la translation de recentrage de l'épaisseur
+     * (present dans une version précédente) a été retirée pour réduire les
+     * sources d'erreur pendant qu'on confirme que la rotation de base
+     * fonctionne. Le décalage résultant (jusqu'à thickness/2, donc quelques
+     * centimètres avec l'épaisseur par défaut) est imperceptible pour un
+     * faisceau fin ; à réintroduire seulement si besoin une fois validé.
      */
     private void renderLine(Location start, Location end) {
         Vector direction = end.toVector().subtract(start.toVector());
         double distance = direction.length();
         if (distance < 1e-3) return;
-        Vector3f dirNormalized = new Vector3f(
-                (float) (direction.getX() / distance),
-                (float) (direction.getY() / distance),
-                (float) (direction.getZ() / distance)
-        );
+
+        Location dirLocation = start.clone();
+        dirLocation.setDirection(direction); // pas besoin de normaliser, setDirection gère ça en interne
+        float yawRad = (float) Math.toRadians(dirLocation.getYaw());
+        float pitchRad = (float) Math.toRadians(dirLocation.getPitch());
+
+        System.out.println("yaw: " + yawRad + " - pitch: " + pitchRad);
+
+        Quaternionf rotation = new Quaternionf()
+                .rotateY(-yawRad)
+                .rotateX(pitchRad);
 
         float thickness = config.getTrailThickness();
-        Quaternionf rotation = new Quaternionf().rotationTo(new Vector3f(0, 0, 1), dirNormalized);
-
-        Vector3f translation = new Vector3f(-thickness / 2f, -thickness / 2f, 0f);
-        rotation.transform(translation); // recentre le faisceau selon l'orientation réelle du tir
-
         Transformation transformation = new Transformation(
-                translation,
+                new Vector3f(0, 0, 0),
                 rotation,
                 new Vector3f(thickness, thickness, (float) distance),
                 new Quaternionf()
@@ -104,6 +128,7 @@ public class ShotTrailRenderer {
             bd.setBlock(config.getTrailMaterial().createBlockData());
             bd.setTransformation(transformation);
             bd.setBrightness(new Display.Brightness(15, 15));
+            bd.setGravity(false);
             bd.setPersistent(false);
         });
 
