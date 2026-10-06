@@ -114,7 +114,9 @@ public class WeaponManager {
                 yaml.getString("special-ability", null),
                 rarity,
                 yaml.getInt("price", 0),
-                yaml.getString("glyph", "")
+                yaml.getString("glyph", ""),
+                yaml.getString("description", ""),
+                yaml.getString("stat-modification", "")
         );
     }
 
@@ -148,6 +150,6 @@ public class WeaponManager {
     private static final WeaponType FALLBACK_WEAPON = new WeaponType(
             "fallback", "&7Arme de secours", Material.BLAZE_ROD,
             20, 4, 40, 50.0, 0.3,
-            1, 0.0, null, Rarity.COMMON, 0, ""
+            1, 0.0, null, Rarity.COMMON, 0, "", "Arme de secours utilisée si aucune arme valide n'est disponible.", ""
     );
 }

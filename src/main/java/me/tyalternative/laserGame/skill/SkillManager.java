@@ -109,7 +109,9 @@ public class SkillManager {
                 yaml.getLong("cooldown-ticks", 100),
                 yaml.getString("effect-id", ""),
                 yaml.getString("glyph", ""),
-                material
+                material,
+                yaml.getString("description", ""),
+                yaml.getString("stat-modification", "")
         );
     }
 

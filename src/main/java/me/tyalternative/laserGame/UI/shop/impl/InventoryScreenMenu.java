@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.UI.shop.impl;
 import me.tyalternative.laserGame.UI.shop.*;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.shop.ConsumableDefinition;
+import me.tyalternative.laserGame.shop.Rarity;
 import me.tyalternative.laserGame.shop.ShopContext;
 import me.tyalternative.laserGame.utils.Font;
 import me.tyalternative.laserGame.utils.TextUtil;
@@ -120,7 +121,8 @@ public class InventoryScreenMenu {
             if (defOpt.isPresent()) {
                 ConsumableDefinition def = defOpt.get();
                 icon.setText(def.glyph() == null ? "" : def.glyph());
-                hintPanel.setHint(slot.getId(), def.displayName(), def.category().name() + " - " + def.rarity().name());
+                hintPanel.setHint(slot.getId(), def.displayName(),
+                        buildHint(def.category().name(), def.rarity(), def.description(), def.statModification()));
             } else {
                 icon.setText("");
                 hintPanel.clearHint(slot.getId());
@@ -132,7 +134,8 @@ public class InventoryScreenMenu {
         equippedWeaponSlot.setHoverText(IDLE_HOVER);
         shopContext.weaponManager().getWeapon(weaponId).ifPresentOrElse(w -> {
                     equippedWeaponIcon.setText(w.glyph() == null ? "" : w.glyph());
-                    hintPanel.setHint(equippedWeaponSlot.getId(), w.displayName(), w.rarity().name());
+                    hintPanel.setHint(equippedWeaponSlot.getId(), w.displayName(),
+                            buildHint("Arme", w.rarity(), w.description(), w.statModification()));
                 },
                 () -> {
                     equippedWeaponIcon.setText("");
@@ -149,7 +152,8 @@ public class InventoryScreenMenu {
         } else {
             shopContext.archetypeManager().getDefinition(archetypeId).ifPresentOrElse(d -> {
                         equippedProfileIcon.setText(d.glyph() == null ? "" : d.glyph());
-                        hintPanel.setHint(equippedProfileSlot.getId(), d.displayName(), d.rarity().name());
+                        hintPanel.setHint(equippedProfileSlot.getId(), d.displayName(),
+                                buildHint("Profil", d.rarity(), d.description(), d.statModification()));
                     },
                     () -> {
                         equippedProfileIcon.setText("");
@@ -167,7 +171,8 @@ public class InventoryScreenMenu {
         } else {
             shopContext.skillManager().getDefinition(skillId).ifPresentOrElse(d -> {
                         equippedSkillIcon.setText(d.glyph() == null ? "" : d.glyph());
-                        hintPanel.setHint(equippedSkillSlot.getId(), d.displayName(), d.rarity().name());
+                        hintPanel.setHint(equippedSkillSlot.getId(), d.displayName(),
+                                buildHint("Aptitude", d.rarity(), d.description(), d.statModification()));
                     },
                     () -> {
                         equippedSkillIcon.setText("");
@@ -176,7 +181,8 @@ public class InventoryScreenMenu {
         }
     }
 
-    private record StorageItem(String id, String displayName, String description, String glyph) {}
+    private record StorageItem(String id, String displayName, String glyph, String category, Rarity rarity,
+                               String description, String statModification) {}
 
     private List<StorageItem> ownedItemsForCategory(int category) {
         List<StorageItem> items = new ArrayList<>();
@@ -184,15 +190,17 @@ public class InventoryScreenMenu {
             case CATEGORY_CONSUMABLES -> {
                 for (String id : gamePlayer.getConsumableStorage()) {
                     shopContext.consumableManager().getDefinition(id).ifPresent(def ->
-                            items.add(new StorageItem(id, def.displayName(), def.category().name() + " - " + def.rarity().name(), def.glyph())));
+                            items.add(new StorageItem(id, def.displayName(), def.glyph(), def.category().name(),
+                                    def.rarity(), def.description(), def.statModification())));
                 }
             }
             case CATEGORY_WEAPONS -> {
                 String equippedId = gamePlayer.getWeaponType().id();
                 for (String id : gamePlayer.getOwnedWeaponIds()) {
-                    if (id.equals(equippedId)) continue;
+                    if (id.equals(equippedId)) continue; // déjà équipée : ne pas la doubler dans le storage
                     shopContext.weaponManager().getWeapon(id).ifPresent(w ->
-                            items.add(new StorageItem(id, w.displayName(), w.rarity().name(), w.glyph())));
+                            items.add(new StorageItem(id, w.displayName(), w.glyph(), "Arme", w.rarity(),
+                                    w.description(), w.statModification())));
                 }
             }
             case CATEGORY_PROFILES -> {
@@ -200,7 +208,8 @@ public class InventoryScreenMenu {
                 for (String id : gamePlayer.getOwnedArchetypeIds()) {
                     if (id.equals(equippedId)) continue;
                     shopContext.archetypeManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.rarity().name(), d.glyph())));
+                            items.add(new StorageItem(id, d.displayName(), d.glyph(), "Profil", d.rarity(),
+                                    d.description(), d.statModification())));
                 }
             }
             case CATEGORY_SKILLS -> {
@@ -208,13 +217,16 @@ public class InventoryScreenMenu {
                 for (String id : gamePlayer.getOwnedSkillIds()) {
                     if (id.equals(equippedId)) continue;
                     shopContext.skillManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.rarity().name(), d.glyph())));
+                            items.add(new StorageItem(id, d.displayName(), d.glyph(), "Aptitude", d.rarity(),
+                                    d.description(), d.statModification())));
                 }
             }
             case CATEGORY_UPGRADES -> {
+                // Toutes les améliorations possédées sont actives simultanément : pas d'équipement, juste la liste.
                 for (String id : gamePlayer.getOwnedUpgradeIds()) {
                     shopContext.upgradeManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.rarity().name(), d.glyph())));
+                            items.add(new StorageItem(id, d.displayName(), d.glyph(), "Atout", d.rarity(),
+                                    d.description(), d.statModification())));
                 }
             }
             default -> { }
@@ -260,8 +272,22 @@ public class InventoryScreenMenu {
             slot.setText(selected ? SELECTED : FILLED);
             slot.setHoverText(selected ? SELECTED_HOVER : FILLED_HOVER);
             icon.setText(item.glyph() == null ? "" : item.glyph());
-            hintPanel.setHint(slot.getId(), item.displayName(), item.description());
+            hintPanel.setHint(slot.getId(), item.displayName(),
+                    buildHint(item.category(), item.rarity(), item.description(), item.statModification()));
         }
+    }
+
+    /** Construit le texte du hint : ligne d'en-tête (catégorie/rareté) + description + modification de stats. */
+    private String buildHint(String category, Rarity rarity, String description, String statModification) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(category).append(" - ").append(rarity.name());
+        if (description != null && !description.isBlank()) {
+            sb.append("  ").append(description);
+        }
+        if (statModification != null && !statModification.isBlank()) {
+            sb.append("  [").append(statModification).append("]");
+        }
+        return sb.toString();
     }
 
     private void onStorageSlotClick(int index) {

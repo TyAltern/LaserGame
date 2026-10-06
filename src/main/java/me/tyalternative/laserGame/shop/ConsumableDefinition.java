@@ -10,8 +10,10 @@ public record ConsumableDefinition(
         int price,
         Material material,
         String effectId,
-        String glyph
-) implements HasRarity, HasGlyph {
+        String glyph,
+        String description,
+        String statModification
+) implements HasRarity, HasGlyph, HasDescription {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;
         if (category == null || rarity == null) return false;

@@ -95,7 +95,8 @@ public class ShopScreenMenu {
             slot.setHoverText(SLOT_AVAILABLE_HOVER);
             priceTag.setText(formatPrice(def.price()));
             icon.setText(def.glyph() == null ? "" : def.glyph());
-            hintPanel.setHint(slot.getId(), def.displayName(), describe(def.category().name(), def.rarity(), def.price()));
+            hintPanel.setHint(slot.getId(), def.displayName(),
+                    buildHint(def.category().name(), def.rarity(), def.price(), def.description(), def.statModification()));
         }
     }
 
@@ -141,7 +142,8 @@ public class ShopScreenMenu {
             int rarityGlyph = 6 + view.rarity().ordinal();
             headerCard.setText(TextUtil.parse("E00" + rarityGlyph));
             headerCard.setHoverText(TextUtil.parse("E10" + rarityGlyph));
-            hintPanel.setHint(slot.getId(), view.displayName(), describe(labelFor(type), view.rarity(), view.price()));
+            hintPanel.setHint(slot.getId(), view.displayName(),
+                    buildHint(labelFor(type), view.rarity(), view.price(), view.description(), view.statModification()));
         }
     }
 
@@ -153,18 +155,19 @@ public class ShopScreenMenu {
         hintPanel.clearHint(slot.getId());
     }
 
-    private record SpecialItemView(String displayName, Rarity rarity, int price, String glyph) {}
+    private record SpecialItemView(String displayName, Rarity rarity, int price, String glyph,
+                                   String description, String statModification) {}
 
     private Optional<SpecialItemView> resolveSpecialItem(SpecialSlotType type, String id) {
         return switch (type) {
             case WEAPON -> shopContext.weaponManager().getWeapon(id)
-                    .map(w -> new SpecialItemView(w.displayName(), w.rarity(), w.price(), w.glyph()));
+                    .map(w -> new SpecialItemView(w.displayName(), w.rarity(), w.price(), w.glyph(), w.description(), w.statModification()));
             case UPGRADE -> shopContext.upgradeManager().getDefinition(id)
-                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph()));
+                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph(), d.description(), d.statModification()));
             case SKILL -> shopContext.skillManager().getDefinition(id)
-                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph()));
+                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph(), d.description(), d.statModification()));
             case ARCHETYPE -> shopContext.archetypeManager().getDefinition(id)
-                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph()));
+                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph(), d.description(), d.statModification()));
         };
     }
 
@@ -177,8 +180,17 @@ public class ShopScreenMenu {
         };
     }
 
-    private String describe(String category, Rarity rarity, int price) {
-        return category + " - " + rarity.name() + " - " + price + "$";
+    /** Construit le texte du hint : ligne d'en-tête (catégorie/rareté/prix) + description + modification de stats. */
+    private String buildHint(String category, Rarity rarity, int price, String description, String statModification) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(category).append(" - ").append(rarity.name()).append(" - ").append(price).append("$");
+        if (description != null && !description.isBlank()) {
+            sb.append("  ").append(description);
+        }
+        if (statModification != null && !statModification.isBlank()) {
+            sb.append("  [").append(statModification).append("]");
+        }
+        return sb.toString();
     }
 
     private String formatPrice(int price) {
@@ -188,7 +200,6 @@ public class ShopScreenMenu {
     private String formatMoney(int amount) {
         return String.format("%05d", Math.min(99999, amount));
     }
-
     private HologramElement createHologram(HologramElement parent) {
 
         HologramElement shopScreen = new HologramElement.Builder("shop_screen", parent)

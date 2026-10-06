@@ -93,7 +93,7 @@ public class StatsScreenMenu {
             nameLength = TextUtil.getStringLength(displayName);
             margin = 83 - nameLength - roundWinLength;
         }
-        return displayName + (margin % 2 == 0 ? "¤" : " ") + ".".repeat(Math.max(0, Math.floorDiv(margin - 1, 2))) + " " + roundWins;
+        return displayName + (margin % 2 == 0 ? " " : "¤") + ".".repeat(Math.max(0, Math.floorDiv(margin - 1, 2))) + " " + roundWins;
     }
 
     private HologramElement createHologram(HologramElement parent) {
@@ -201,7 +201,7 @@ public class StatsScreenMenu {
         leaderboardContainer.onScroll((player, source, scrollType) -> {
 
             if (scrollType == HologramScrollType.DOWN && currentIndex < Math.max(0, visibleLeaderboardCount-6)) {
-                currentIndex = Math.min(Math.max(0, visibleLeaderboardCount-1), currentIndex+1);
+                currentIndex = Math.clamp(visibleLeaderboardCount - 1, 0, currentIndex + 1);
                 updateLeaderboardPosition();
             }
             else if (scrollType == HologramScrollType.UP && currentIndex > 0) {
@@ -218,7 +218,7 @@ public class StatsScreenMenu {
     private void updateLeaderboardPosition() {
         for (int i = 0; i < leaderboardEntries.size(); i++) {
             HologramElement leaderboardEntry = leaderboardEntries.get(i);
-            double posY = Math.min(7,Math.max(0, 6 - i + currentIndex)) * 14 * 0.025;
+            double posY = Math.clamp(6 - i + currentIndex, 0, 7) * 14 * 0.025;
             try {
                 if ( yTranslations.get(i) == posY) continue;
             } catch (Exception e) {
@@ -226,7 +226,6 @@ public class StatsScreenMenu {
             }
 
             leaderboardEntry.setYTranslation(posY, 3);
-//            leaderboardEntry.getInteraction().teleport(leaderboardEntry.resolveInteractionLocation());
             leaderboardEntry.getChildren().getFirst().setYTranslation(posY, 3);
             yTranslations.set(i, posY);
         }

@@ -94,7 +94,9 @@ public class PermanentUpgradeManager {
                 rarity,
                 yaml.getInt("price", 0),
                 yaml.getString("effect-id", ""),
-                yaml.getString("glyph", "")
+                yaml.getString("glyph", ""),
+                yaml.getString("description", ""),
+                yaml.getString("stat-modification", "")
         );
     }
 

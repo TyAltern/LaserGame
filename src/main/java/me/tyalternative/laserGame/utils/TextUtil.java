@@ -12,8 +12,8 @@ public final class TextUtil {
         return new String(Character.toChars(Integer.parseInt(hex,16)));
     }
 
-    private static final String onePx = "Ii:;.,!|'";
-    private static final String twoPx = "fl¤t()`";
+    private static final String onePx = "Ii:;.,!|¤'";
+    private static final String twoPx = "fl t()`";
     private static final String threePx = "FLTabcdeghjknopqrsuvxyz0123456789àéè-+_*/\\÷=\"?¿{}<>[]µ";
     private static final String fourPx = "ABCDEGHJKNOPQRSUVXYZ%¶~";
     private static final String fivePx = "MWmw#@&§^$";
