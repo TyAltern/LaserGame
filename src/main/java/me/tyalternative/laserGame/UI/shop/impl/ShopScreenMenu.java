@@ -95,8 +95,7 @@ public class ShopScreenMenu {
             slot.setHoverText(SLOT_AVAILABLE_HOVER);
             priceTag.setText(formatPrice(def.price()));
             icon.setText(def.glyph() == null ? "" : def.glyph());
-            hintPanel.setHint(slot.getId(), def.displayName(),
-                    buildHint(def.category().name(), def.rarity(), def.price(), def.description(), def.statModification()));
+            hintPanel.setHint(slot.getId(), def.displayName(), def.description(), def.statModification());
         }
     }
 
@@ -142,8 +141,7 @@ public class ShopScreenMenu {
             int rarityGlyph = 6 + view.rarity().ordinal();
             headerCard.setText(TextUtil.parse("E00" + rarityGlyph));
             headerCard.setHoverText(TextUtil.parse("E10" + rarityGlyph));
-            hintPanel.setHint(slot.getId(), view.displayName(),
-                    buildHint(labelFor(type), view.rarity(), view.price(), view.description(), view.statModification()));
+            hintPanel.setHint(slot.getId(), view.displayName(), view.description(), view.statModification());
         }
     }
 
@@ -156,7 +154,7 @@ public class ShopScreenMenu {
     }
 
     private record SpecialItemView(String displayName, Rarity rarity, int price, String glyph,
-                                   String description, String statModification) {}
+                                   String description, List<String> statModification) {}
 
     private Optional<SpecialItemView> resolveSpecialItem(SpecialSlotType type, String id) {
         return switch (type) {
@@ -181,13 +179,12 @@ public class ShopScreenMenu {
     }
 
     /** Construit le texte du hint : ligne d'en-tête (catégorie/rareté/prix) + description + modification de stats. */
-    private String buildHint(String category, Rarity rarity, int price, String description, String statModification) {
+    private String buildHint(String category, Rarity rarity, int price, String description, List<String> statModification) {
         StringBuilder sb = new StringBuilder();
-        sb.append(category).append(" - ").append(rarity.name()).append(" - ").append(price).append("$");
         if (description != null && !description.isBlank()) {
             sb.append("  ").append(description);
         }
-        if (statModification != null && !statModification.isBlank()) {
+        if (statModification != null && !statModification.isEmpty()) {
             sb.append("  [").append(statModification).append("]");
         }
         return sb.toString();

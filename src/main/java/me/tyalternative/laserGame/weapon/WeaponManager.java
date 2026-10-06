@@ -1,5 +1,7 @@
 package me.tyalternative.laserGame.weapon;
 
+import me.tyalternative.laserGame.shop.ItemHint.StatHint;
+import me.tyalternative.laserGame.shop.ItemHint.StatTag;
 import me.tyalternative.laserGame.shop.Rarity;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -100,6 +102,22 @@ public class WeaponManager {
             rarity = Rarity.COMMON;
         }
 
+        List<String> hints = new ArrayList<>();
+        List<?> rawHints = yaml.getList("stat-hints");
+        if (rawHints != null) {
+            for (Object raw : rawHints) {
+                if (raw instanceof Map<?, ?> map) {
+                    try {
+                        StatTag tag = StatTag.valueOf(String.valueOf(map.get("tag")));
+                        String value = String.valueOf(map.get("value"));
+                        hints.add(new StatHint(tag, value).getLine());
+                    } catch (IllegalArgumentException e) {
+                        plugin.getLogger().warning(file.getName() + " : stat-hint avec un tag invalide.");
+                    }
+                }
+            }
+        }
+
         return new WeaponType(
                 id,
                 yaml.getString("display-name", "&bArme"),
@@ -116,7 +134,7 @@ public class WeaponManager {
                 yaml.getInt("price", 0),
                 yaml.getString("glyph", ""),
                 yaml.getString("description", ""),
-                yaml.getString("stat-modification", "")
+                hints
         );
     }
 
@@ -150,6 +168,6 @@ public class WeaponManager {
     private static final WeaponType FALLBACK_WEAPON = new WeaponType(
             "fallback", "&7Arme de secours", Material.BLAZE_ROD,
             20, 4, 40, 50.0, 0.3,
-            1, 0.0, null, Rarity.COMMON, 0, "", "Arme de secours utilisée si aucune arme valide n'est disponible.", ""
+            1, 0.0, null, Rarity.COMMON, 0, "", "Arme de secours utilisée si aucune arme valide n'est disponible.", List.of()
     );
 }

@@ -121,8 +121,7 @@ public class InventoryScreenMenu {
             if (defOpt.isPresent()) {
                 ConsumableDefinition def = defOpt.get();
                 icon.setText(def.glyph() == null ? "" : def.glyph());
-                hintPanel.setHint(slot.getId(), def.displayName(),
-                        buildHint(def.category().name(), def.rarity(), def.description(), def.statModification()));
+                hintPanel.setHint(slot.getId(), def.displayName(), def.description(), def.statModification());
             } else {
                 icon.setText("");
                 hintPanel.clearHint(slot.getId());
@@ -134,8 +133,7 @@ public class InventoryScreenMenu {
         equippedWeaponSlot.setHoverText(IDLE_HOVER);
         shopContext.weaponManager().getWeapon(weaponId).ifPresentOrElse(w -> {
                     equippedWeaponIcon.setText(w.glyph() == null ? "" : w.glyph());
-                    hintPanel.setHint(equippedWeaponSlot.getId(), w.displayName(),
-                            buildHint("Arme", w.rarity(), w.description(), w.statModification()));
+                    hintPanel.setHint(equippedWeaponSlot.getId(), w.displayName(), w.description(), w.statModification());
                 },
                 () -> {
                     equippedWeaponIcon.setText("");
@@ -152,8 +150,7 @@ public class InventoryScreenMenu {
         } else {
             shopContext.archetypeManager().getDefinition(archetypeId).ifPresentOrElse(d -> {
                         equippedProfileIcon.setText(d.glyph() == null ? "" : d.glyph());
-                        hintPanel.setHint(equippedProfileSlot.getId(), d.displayName(),
-                                buildHint("Profil", d.rarity(), d.description(), d.statModification()));
+                        hintPanel.setHint(equippedProfileSlot.getId(), d.displayName(), d.description(), d.statModification());
                     },
                     () -> {
                         equippedProfileIcon.setText("");
@@ -171,8 +168,7 @@ public class InventoryScreenMenu {
         } else {
             shopContext.skillManager().getDefinition(skillId).ifPresentOrElse(d -> {
                         equippedSkillIcon.setText(d.glyph() == null ? "" : d.glyph());
-                        hintPanel.setHint(equippedSkillSlot.getId(), d.displayName(),
-                                buildHint("Aptitude", d.rarity(), d.description(), d.statModification()));
+                        hintPanel.setHint(equippedSkillSlot.getId(), d.displayName(), d.description(), d.statModification());
                     },
                     () -> {
                         equippedSkillIcon.setText("");
@@ -182,7 +178,7 @@ public class InventoryScreenMenu {
     }
 
     private record StorageItem(String id, String displayName, String glyph, String category, Rarity rarity,
-                               String description, String statModification) {}
+                               String description, List<String> statModification) {}
 
     private List<StorageItem> ownedItemsForCategory(int category) {
         List<StorageItem> items = new ArrayList<>();
@@ -272,19 +268,18 @@ public class InventoryScreenMenu {
             slot.setText(selected ? SELECTED : FILLED);
             slot.setHoverText(selected ? SELECTED_HOVER : FILLED_HOVER);
             icon.setText(item.glyph() == null ? "" : item.glyph());
-            hintPanel.setHint(slot.getId(), item.displayName(),
-                    buildHint(item.category(), item.rarity(), item.description(), item.statModification()));
+            hintPanel.setHint(slot.getId(), item.displayName(), item.description(), item.statModification());
         }
     }
 
     /** Construit le texte du hint : ligne d'en-tête (catégorie/rareté) + description + modification de stats. */
-    private String buildHint(String category, Rarity rarity, String description, String statModification) {
+    private String buildHint(String category, Rarity rarity, String description, List<String> statModification) {
         StringBuilder sb = new StringBuilder();
         sb.append(category).append(" - ").append(rarity.name());
         if (description != null && !description.isBlank()) {
             sb.append("  ").append(description);
         }
-        if (statModification != null && !statModification.isBlank()) {
+        if (statModification != null && !statModification.isEmpty()) {
             sb.append("  [").append(statModification).append("]");
         }
         return sb.toString();

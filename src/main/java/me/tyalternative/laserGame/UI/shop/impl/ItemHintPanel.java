@@ -19,11 +19,12 @@ public class ItemHintPanel {
     private String itemName;
     private HologramElement itemNameElement;
     private String description;
+    private List<String> statModification;
     private List<HologramElement> descriptionsLinesElements = new ArrayList<>();
     private HologramElement descriptionElement;
 
 
-    private final Map<String, String[]> hintData = new HashMap<>();
+    private final Map<String, HintData> hintData = new HashMap<>();
 
     public ItemHintPanel(HologramElement parent) {
         createHologram(parent);
@@ -66,13 +67,13 @@ public class ItemHintPanel {
     }
 
 
-    public void setHint(String slotId, String name, String description) {
+    public void setHint(String slotId, String name, String description, List<String> statModification) {
         if (slotId == null) return;
         if (name == null) {
             hintData.remove(slotId);
             return;
         }
-        hintData.put(slotId, new String[]{name,description == null ? "" : description});
+        hintData.put(slotId, new HintData(name,description == null ? "" : description,statModification));
     }
 
 
@@ -83,7 +84,7 @@ public class ItemHintPanel {
 
     public void showHint(HologramElement slot) {
 
-        String[] data = hintData.get(slot.getId());
+        HintData data = hintData.get(slot.getId());
         if (data == null) {
 
             return;
@@ -93,8 +94,8 @@ public class ItemHintPanel {
 
         placeNextTo(slot);
 
-        TickUtil.nextTick(() -> setItemName(data[0]));
-        TickUtil.nextTick(() -> setDescription(data[1]));
+        TickUtil.nextTick(() -> setItemName(data.displayName));
+        TickUtil.nextTick(() -> setDescription(data.description, data.statModification));
 
         itemHintPanel.setVisible(true);
     }
@@ -123,9 +124,29 @@ public class ItemHintPanel {
         this.itemName = itemName;
     }
 
-    private void setDescription(String description) {
+    private void setDescription(String description, List<String> statModification) {
         if (description == null) description = "";
         List<String> lines = TextUtil.wrapText(description, 74);
+        int index = 0;
+        for (int i = 9; i >= 0; i--) {
+            HologramElement lineElement = descriptionsLinesElements.get(i);
+            lineElement.setText("");
+
+
+            if (index < statModification.size()) {
+                String line = "¤ " + statModification.get(index);
+                int textSize = TextUtil.getStringLength(line);
+                lineElement.setText(line);
+                lineElement.setSize(textSize, 5);
+            } else if (i < lines.size()){
+                String line = lines.get(i);
+                int textSize = TextUtil.getStringLength(line);
+                lineElement.setText(line);
+                lineElement.setSize(textSize, 5);
+            }
+
+            index++;
+        }
         for (int i = 0; i < descriptionsLinesElements.size(); i++) {
             HologramElement lineElement = descriptionsLinesElements.get(i);
             if (i >= lines.size()) {
@@ -138,6 +159,7 @@ public class ItemHintPanel {
             lineElement.setSize(textSize, 5);
         }
         this.description = description;
+        this.statModification = statModification;
     }
 
     private void setPosition(int x, int y) {
@@ -151,5 +173,17 @@ public class ItemHintPanel {
 //            statLineElement.setPosition(x,y);
 //        }
 
+    }
+
+    private class HintData{
+        public String displayName;
+        public String description;
+        public List<String> statModification;
+
+        public HintData(String displayName, String description, List<String> statModification) {
+            this.displayName = displayName;
+            this.description = description;
+            this.statModification = statModification;
+        }
     }
 }

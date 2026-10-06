@@ -93,7 +93,7 @@ public class StatsScreenMenu {
             nameLength = TextUtil.getStringLength(displayName);
             margin = 83 - nameLength - roundWinLength;
         }
-        return displayName + (margin % 2 == 0 ? " " : "¤") + ".".repeat(Math.max(0, Math.floorDiv(margin - 1, 2))) + " " + roundWins;
+        return displayName + (margin % 2 == 0 ? " " : "°") + ".".repeat(Math.max(0, Math.floorDiv(margin - 1, 2))) + " " + roundWins;
     }
 
     private HologramElement createHologram(HologramElement parent) {

@@ -1,7 +1,9 @@
 package me.tyalternative.laserGame.shop;
 
+import java.util.List;
+
 public interface HasDescription {
     String description();
-    String statModification();
+    List<String> statModification();
 }
 

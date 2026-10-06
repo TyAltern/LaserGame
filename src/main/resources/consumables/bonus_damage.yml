@@ -1,8 +1,13 @@
 id: bonus_damage
-display-name: "&cBoost de Dégâts"
+display-name: "Boost de Degats"
 category: OFFENSE
 rarity: COMMON
 price: 15
 effect-id: bonus_damage_next_shot
 icon-material: BLAZE_POWDER
+description: "Le prochain tir reussi inflige un degat supplementaire."
+stat-hints:
+  - tag: DAMAGE_DEALT
+    value: "+1"
+
 glyph: "\uA010"

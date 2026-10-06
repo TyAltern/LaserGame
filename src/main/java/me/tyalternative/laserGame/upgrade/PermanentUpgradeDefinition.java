@@ -5,6 +5,8 @@ import me.tyalternative.laserGame.shop.HasGlyph;
 import me.tyalternative.laserGame.shop.HasRarity;
 import me.tyalternative.laserGame.shop.Rarity;
 
+import java.util.List;
+
 public record PermanentUpgradeDefinition(
         String id,
         String displayName,
@@ -13,7 +15,7 @@ public record PermanentUpgradeDefinition(
         String effectId,
         String glyph,
         String description,
-        String statModification
+        List<String> statModification
 ) implements HasRarity, HasGlyph, HasDescription {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;

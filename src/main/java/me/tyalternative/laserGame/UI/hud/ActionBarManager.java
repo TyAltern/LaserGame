@@ -179,7 +179,7 @@ public class ActionBarManager {
         int length = TextUtil.getStringLength(text) + 10;
         int offset = (47 - length) / 2;
         Component component = TextUtil.buildTextComponent(0, offset, "\uF040", Font.HUD).append(
-                TextUtil.buildTextComponent("¤" + text, Font.HUD_TEXT_LOW)
+                TextUtil.buildTextComponent(" " + text, Font.HUD_TEXT_LOW)
         );
         return component.append(TextUtil.buildOffset(0, offset + 15));
 

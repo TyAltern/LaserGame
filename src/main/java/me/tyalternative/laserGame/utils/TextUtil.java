@@ -12,11 +12,23 @@ public final class TextUtil {
         return new String(Character.toChars(Integer.parseInt(hex,16)));
     }
 
-    private static final String onePx = "Ii:;.,!|¤'";
+    private static final String onePx = "Ii:;.,!|°'";
     private static final String twoPx = "fl t()`";
     private static final String threePx = "FLTabcdeghjknopqrsuvxyz0123456789àéè-+_*/\\÷=\"?¿{}<>[]µ";
     private static final String fourPx = "ABCDEGHJKNOPQRSUVXYZ%¶~";
     private static final String fivePx = "MWmw#@&§^$";
+
+    public static boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
 
     public static Component buildTextComponent(String text, NamespacedKey font) {
         return Component.text(text).font(font);

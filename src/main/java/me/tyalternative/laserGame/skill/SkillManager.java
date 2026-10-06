@@ -5,6 +5,8 @@ import me.tyalternative.laserGame.effect.SkillEffect;
 import me.tyalternative.laserGame.effect.impl.skillEffect.*;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
+import me.tyalternative.laserGame.shop.ItemHint.StatHint;
+import me.tyalternative.laserGame.shop.ItemHint.StatTag;
 import me.tyalternative.laserGame.shop.Rarity;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -100,6 +102,22 @@ public class SkillManager {
             return null;
         }
 
+        List<String> hints = new ArrayList<>();
+        List<?> rawHints = yaml.getList("stat-hints");
+        if (rawHints != null) {
+            for (Object raw : rawHints) {
+                if (raw instanceof Map<?, ?> map) {
+                    try {
+                        StatTag tag = StatTag.valueOf(String.valueOf(map.get("tag")));
+                        String value = String.valueOf(map.get("value"));
+                        hints.add(new StatHint(tag, value).getLine());
+                    } catch (IllegalArgumentException e) {
+                        plugin.getLogger().warning(file.getName() + " : stat-hint avec un tag invalide.");
+                    }
+                }
+            }
+        }
+
 
         return new SkillDefinition(
                 id,
@@ -111,7 +129,7 @@ public class SkillManager {
                 yaml.getString("glyph", ""),
                 material,
                 yaml.getString("description", ""),
-                yaml.getString("stat-modification", "")
+                hints
         );
     }
 

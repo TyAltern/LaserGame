@@ -6,6 +6,8 @@ import me.tyalternative.laserGame.shop.HasRarity;
 import me.tyalternative.laserGame.shop.Rarity;
 import org.bukkit.Material;
 
+import java.util.List;
+
 public record WeaponType(
         String id,
         String displayName,
@@ -22,7 +24,7 @@ public record WeaponType(
         int price,
         String glyph,
         String description,
-        String statModification
+        List<String> statModification
 ) implements HasRarity, HasGlyph, HasDescription {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;

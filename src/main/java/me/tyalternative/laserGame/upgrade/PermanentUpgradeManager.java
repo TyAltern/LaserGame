@@ -1,5 +1,7 @@
 package me.tyalternative.laserGame.upgrade;
 
+import me.tyalternative.laserGame.shop.ItemHint.StatHint;
+import me.tyalternative.laserGame.shop.ItemHint.StatTag;
 import me.tyalternative.laserGame.shop.Rarity;
 import me.tyalternative.laserGame.upgrade.impl.*;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -88,6 +90,22 @@ public class PermanentUpgradeManager {
             return null;
         }
 
+        List<String> hints = new ArrayList<>();
+        List<?> rawHints = yaml.getList("stat-hints");
+        if (rawHints != null) {
+            for (Object raw : rawHints) {
+                if (raw instanceof Map<?, ?> map) {
+                    try {
+                        StatTag tag = StatTag.valueOf(String.valueOf(map.get("tag")));
+                        String value = String.valueOf(map.get("value"));
+                        hints.add(new StatHint(tag, value).getLine());
+                    } catch (IllegalArgumentException e) {
+                        plugin.getLogger().warning(file.getName() + " : stat-hint avec un tag invalide.");
+                    }
+                }
+            }
+        }
+
         return new PermanentUpgradeDefinition(
                 id,
                 yaml.getString("display-name", id),
@@ -96,7 +114,7 @@ public class PermanentUpgradeManager {
                 yaml.getString("effect-id", ""),
                 yaml.getString("glyph", ""),
                 yaml.getString("description", ""),
-                yaml.getString("stat-modification", "")
+                hints
         );
     }
 
