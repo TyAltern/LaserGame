@@ -1,9 +1,13 @@
 id: slow_cc
-display-name: "&dEntrave"
+display-name: "Entrave"
 category: CROWD_CONTROL
 rarity: UNIQUE
 price: 25
 effect-id: slow_cc
 
 icon-material: COBWEB
+description: "Ralentit tous les joueurs proches pendant 15 secondes."
+stat-hints:
+  - tag: MOVEMENT_SPEED
+    value: "-20%"
 glyph: "\uA028"

@@ -1,9 +1,13 @@
 id: round_max_ammo_boost
-display-name: "&bMunitions Supplémentaires"
+display-name: "Chargeur Abandonne"
 category: WEAPON_AMMO
 rarity: UNIQUE
 price: 25
 effect-id: round_max_ammo_boost
 
 icon-material: SPECTRAL_ARROW
+description: "Augmente tes munitions maximal pour le reste du round."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "+20%"
 glyph: "\uA01F"

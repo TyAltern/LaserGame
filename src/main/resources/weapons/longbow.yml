@@ -1,5 +1,5 @@
 id: longbow
-display-name: "&9Arc Long"
+display-name: "Arc Long"
 rarity: UNIQUE
 price: 35
 special-ability: pausable_reload
@@ -16,4 +16,18 @@ lives-per-hit: 1
 movement-speed-modifier: -0.05
 
 icon-material: BOW
+description: "Le tir de charge peut etre mis en pause et repris sans perdre sa progression."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "8"
+  - tag: FIRE_RATE
+    value: "12t"
+  - tag: RELOAD_SPEED
+    value: "4.5s"
+  - tag: RANGE
+    value: "35"
+  - tag: DAMAGE_DEALT
+    value: "1"
+  - tag: MOVEMENT_SPEED
+    value: "-05%"
 glyph: "\uA00A"

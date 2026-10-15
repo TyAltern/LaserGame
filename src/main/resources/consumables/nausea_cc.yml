@@ -1,9 +1,13 @@
 id: nausea_cc
-display-name: "&dVertige"
+display-name: "Vertige"
 category: CROWD_CONTROL
 rarity: RARE
 price: 35
 effect-id: nausea_cc
 
 icon-material: PUFFERFISH
+description: "Donne la nausee a tous les joueurs proches pendant 10 secondes."
+stat-hints:
+  - tag: RADIUS
+    value: "25"
 glyph: "\uA027"

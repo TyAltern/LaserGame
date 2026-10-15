@@ -1,13 +1,13 @@
 id: lucky_revolver
-display-name: "&6Revolver Chanceux"
+display-name: "Revolver"
 rarity: LEGENDARY
 price: 90
 special-ability: lucky_magazine
 
 material: TRIDENT
-max-ammo: 6
+max-ammo: 20
 shot-cooldown-ticks: 10
-reload-cooldown-ticks: 40
+reload-cooldown-ticks: 200
 range: 20.0
 hit-radius: 0.35
 
@@ -16,4 +16,14 @@ lives-per-hit: 1
 movement-speed-modifier: 0.0
 
 icon-material: TRIDENT
+description: "Chaque tir a une chance de recharger ou vider le chargeur."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "20"
+  - tag: FIRE_RATE
+    value: "10t"
+  - tag: RELOAD_SPEED
+    value: "10s"
+  - tag: RANGE
+    value: "08"
 glyph: "\uA00F"

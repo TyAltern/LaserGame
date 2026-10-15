@@ -15,7 +15,8 @@ public class ExecuteNextShotEffect implements PendingEffect {
         int remainingAfterHit = ctx.target.getLives() - ctx.livesToRemove;
         if (remainingAfterHit == 1) {
             ctx.livesToRemove = ctx.target.getLives();
+            return true;
         }
-        return true;
+        return false;
     }
 }

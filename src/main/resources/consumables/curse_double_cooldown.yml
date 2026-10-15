@@ -1,9 +1,13 @@
 id: curse_double_cooldown
-display-name: "&5Gâchette Engourdie"
+display-name: "Gachette Engourdie"
 category: SABOTAGE
 rarity: UNIQUE
 price: 25
 effect-id: curse_double_cooldown
 
 icon-material: SOUL_SAND
+description: "Le prochain joueur touche voit son cooldown de tir double, jusqu'a son prochain tir ou coup recu." 
+stat-hints:
+  - tag: FIRE_RATE
+    value: "*2"
 glyph: "\uA01C"

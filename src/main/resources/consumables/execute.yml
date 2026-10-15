@@ -1,9 +1,13 @@
 id: execute
-display-name: "&cCoup de Grâce"
+display-name: "Coup de Grace"
 category: OFFENSE
 rarity: LEGENDARY
 price: 90
 effect-id: execute_next_shot
 
 icon-material: GOLDEN_AXE
+description: "Ton prochain tir qui amene un joueur a sa derniere vie l'elimine directement."
+stat-hints:
+  - tag: CRITICAL_DAMAGE_DEALT
+    value: "+1"
 glyph: "\uA019"

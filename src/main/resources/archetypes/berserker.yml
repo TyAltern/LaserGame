@@ -1,8 +1,16 @@
 id: berserker
-display-name: "&4Berserker"
+display-name: "Berserker"
 rarity: UNIQUE
 price: 30
 effect-id: berserker
 
 icon-material: DIAMOND_AXE
+description: "Inflige plus de degats, mais en subit aussi plus."
+stat-hints:  
+  - tag: DAMAGE_DEALT
+    value: "+1"
+  - tag: DAMAGE_TAKEN
+    value: "+1"
+
+
 glyph: "\uA02F"

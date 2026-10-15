@@ -1,8 +1,12 @@
 id: fast_reload_permanent
-display-name: "&aMains Agiles"
+display-name: "Mains Agiles"
 rarity: COMMON
 price: 40
 effect-id: fast_reload_permanent
 
 icon-material: HONEY_BOTTLE
+description: "Reduit durablement le temps de rechargement."
+stat-hints: 
+  - tag: RELOAD_SPEED
+    value: "-10%"
 glyph: "\uA036"

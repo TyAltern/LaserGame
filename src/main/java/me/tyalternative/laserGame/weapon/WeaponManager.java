@@ -165,6 +165,12 @@ public class WeaponManager {
         return new ArrayList<>(weaponsById.values());
     }
 
+    public List<WeaponType> getAllBuyableWeapons() {
+        List<WeaponType> weapons = new ArrayList<>(weaponsById.values());
+        weapons.remove(weaponsById.get(defaultWeaponId));
+        return new ArrayList<>(weaponsById.values());
+    }
+
     private static final WeaponType FALLBACK_WEAPON = new WeaponType(
             "fallback", "&7Arme de secours", Material.BLAZE_ROD,
             20, 4, 40, 50.0, 0.3,

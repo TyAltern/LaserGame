@@ -1,10 +1,10 @@
 id: armored_rifle
-display-name: "&9Fusil Blindé"
+display-name: "Fusil Blinde"
 rarity: UNIQUE
 price: 35
 special-ability: reload_gate_ignore_damage
 
-material: IRON_HOE
+material: NETHERITE_INGOT
 max-ammo: 25
 shot-cooldown-ticks: 8
 reload-cooldown-ticks: 70
@@ -15,5 +15,15 @@ lives-per-hit: 1
 
 movement-speed-modifier: 0.0
 
-icon-material: IRON_HOE
+icon-material: NETHERITE_INGOT
+description: "Ignore les degats pendant le rechargement, or celui ci n'est possible que s'il est eppuise a 75%."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "25"
+  - tag: FIRE_RATE
+    value: "8t"
+  - tag: RELOAD_SPEED
+    value: "3.5s"
+  - tag: RANGE
+    value: "25"
 glyph: "\uA009"

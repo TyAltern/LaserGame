@@ -1,9 +1,10 @@
 id: glow_nearby
-display-name: "&dPulse de détection"
+display-name: "Pulse de detection"
 category: DISPLAY
 rarity: UNIQUE
 price: 25
 effect-id: glow_nearby
 
 icon-material: GLOWSTONE_DUST
+description: "Met en surbrillance tous les joueurs proches, pendant 15 secondes."
 glyph: "\uA013"

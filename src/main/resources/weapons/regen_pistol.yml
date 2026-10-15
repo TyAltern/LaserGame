@@ -1,5 +1,5 @@
 id: regen_pistol
-display-name: "&aPistolet Auto-Rechargeant"
+display-name: "Pistolet Automatique"
 rarity: UNIQUE
 price: 50
 
@@ -16,4 +16,16 @@ movement-speed-modifier: 0.0
 special-ability: passive_ammo_regen
 
 icon-material: WOODEN_HOE
+description: "Pistolet qui regenere ses munitions tout seul au fil du temps."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "10"
+  - tag: FIRE_RATE
+    value: "12t"
+  - tag: RELOAD_SPEED
+    value: "2s"
+  - tag: RANGE
+    value: "9"
+  - tag: AMMO_REGEN
+    value: "+1"
 glyph: "\uA005"

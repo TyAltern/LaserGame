@@ -2,10 +2,10 @@ id: shotgun
 rarity: RARE
 price: 55
 special-ability: respawn_grace_period
-display-name: "&bFusil à Pompe"
+display-name: "Fusil a Pompe"
 default: true
 
-material: STONE_HOE
+material: STICK
 max-ammo: 10
 shot-cooldown-ticks: 15
 reload-cooldown-ticks: 60
@@ -17,4 +17,18 @@ lives-per-hit: 1
 movement-speed-modifier: 0
 
 icon-material: STONE_HOE
+description: "Offre une breve immunite apres chaque respawn."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "10"
+  - tag: FIRE_RATE
+    value: "15t"
+  - tag: RELOAD_SPEED
+    value: "3s"
+  - tag: RANGE
+    value: "20"
+  - tag: RADIUS
+    value: "0.6"
+  - tag: DURATION
+    value: "15s de"
 glyph: "\uA004"

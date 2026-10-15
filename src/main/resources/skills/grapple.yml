@@ -1,9 +1,13 @@
 id: grapple
-display-name: "&bGrappin"
+display-name: "Grappin"
 rarity: UNIQUE
 price: 30
 cooldown-ticks: 240
 effect-id: grapple
 
 icon-material: FISHING_ROD
+description: "Te propulse dans la direction visée grace a un grappin."
+stat-hints:
+  - tag: ABILITY_COOLDOWN
+    value: "12s"
 glyph: "\uA032"

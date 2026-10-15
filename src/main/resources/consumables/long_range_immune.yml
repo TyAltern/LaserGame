@@ -1,9 +1,13 @@
 id: long_range_immune
-display-name: "&cGarde Rapprochée"
+display-name: "Garde Eloignee"
 category: DEFENSE
 rarity: UNIQUE
 price: 25
 effect-id: long_range_immune
 
 icon-material: TURTLE_HELMET
+description: "Ignore le prochain coup recu s'il provient d'un tir de plus de 15 blocs."
+stat-hints:
+  - tag: DAMAGE_BLOCKED
+    value: "+1"
 glyph: "\uA017"

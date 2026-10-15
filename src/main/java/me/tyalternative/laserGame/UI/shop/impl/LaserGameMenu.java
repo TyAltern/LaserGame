@@ -84,6 +84,7 @@ public class LaserGameMenu {
                 child.onClick((player1, source, clickType) -> {
                     menuHeader.show(shopScreenMenu.getHologram());
                     menuTextTitle.setText("\uE002");
+                    refresh();
                 });
             }
             if (child.getId().equals("stats_screen_button_link_from_inventory")) {
@@ -91,6 +92,7 @@ public class LaserGameMenu {
                     menuHeader.show(statsScreenMenu.getHologram());
                     menuTextTitle.setText("\uE003");
                     hologram.getRoot().setText("\uEFFF");
+                    refresh();
                 });
             }
 
@@ -102,6 +104,7 @@ public class LaserGameMenu {
                 child.onClick((player1, source, clickType) -> {
                     menuHeader.show(inventoryScreenMenu.getHologram());
                     menuTextTitle.setText("\uE001");
+                    refresh();
                 });
             }
             if (child.getId().equals("stats_screen_button_link_from_shop")) {
@@ -109,6 +112,7 @@ public class LaserGameMenu {
                     menuHeader.show(statsScreenMenu.getHologram());
                     menuTextTitle.setText("\uE003");
                     hologram.getRoot().setText("\uEFFF");
+                    refresh();
                 });
             }
         }
@@ -120,6 +124,7 @@ public class LaserGameMenu {
                     menuHeader.show(inventoryScreenMenu.getHologram());
                     menuTextTitle.setText("\uE001");
                     hologram.getRoot().setText("\uFFFF");
+                    refresh();
                 });
             }
             if (child.getId().equals("shop_screen_button_link_from_stats")) {
@@ -127,6 +132,7 @@ public class LaserGameMenu {
                     menuHeader.show(shopScreenMenu.getHologram());
                     menuTextTitle.setText("\uE002");
                     hologram.getRoot().setText("\uFFFF");
+                    refresh();
                 });
             }
         }

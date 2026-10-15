@@ -1,8 +1,12 @@
 id: extra_slot
-display-name: "&6Sac Élargi"
+display-name: "Sac Elargi"
 rarity: RARE
 price: 80
 effect-id: extra_slot
 
 icon-material: SHULKER_BOX
+description: "Ajoute un emplacement de consommable equipe supplementaire."
+stat-hints: 
+  - tag: CONSUMABLE_SLOT
+    value: "+1"
 glyph: "\uA035"

@@ -1,8 +1,12 @@
 id: speed_boost_permanent
-display-name: "&aJambes d'Acier"
+display-name: "Jambes d'Acier"
 rarity: COMMON
 price: 40
 effect-id: speed_boost_permanent
 
 icon-material: LEATHER_BOOTS
+description: "Augmente durablement ta vitesse de deplacement."
+stat-hints: 
+  - tag: MOVEMENT_SPEED
+    value: "+10%"
 glyph: "\uA038"

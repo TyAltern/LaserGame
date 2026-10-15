@@ -1,9 +1,13 @@
 id: reload_overflow
-display-name: "&bChargeur Débordant"
+display-name: "Munitions Surprises"
 category: WEAPON_AMMO
 rarity: COMMON
-price: 10
+price: 18
 effect-id: reload_overflow
 
 icon-material: BUNDLE
+description: "Ton prochain rechargement restaure 5 munitions bonus au-dela du max."
+stat-hints:
+  - tag: AMMO_BONUS
+    value: "+5"
 glyph: "\uA01E"

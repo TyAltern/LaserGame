@@ -1,10 +1,10 @@
 id: revenant_blade
-display-name: "&5Lame du Revenant"
+display-name: "Lame du Revenant"
 rarity: RARE
 price: 60
 special-ability: revive_on_first_elimination
 
-material: NETHERITE_SWORD
+material: IRON_DAGGER
 max-ammo: 200
 shot-cooldown-ticks: 1
 reload-cooldown-ticks: 120
@@ -16,4 +16,16 @@ lives-per-hit: 1
 movement-speed-modifier: 0.35
 
 icon-material: NETHERITE_SWORD
+description: "Si vous etes le premier elimine du round, vous revenez avec 1 coeur."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "200"
+  - tag: FIRE_RATE
+    value: "1t"
+  - tag: RELOAD_SPEED
+    value: "6s"
+  - tag: RANGE
+    value: "4"
+  - tag: MOVEMENT_SPEED
+    value: "+35%"
 glyph: "\uA00C"

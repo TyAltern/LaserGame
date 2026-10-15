@@ -1,9 +1,10 @@
 id: jump_boost_round
-display-name: "&aBottes à Ressort"
+display-name: "Bottes a Ressort"
 category: MOBILITY
 rarity: COMMON
 price: 10
 effect-id: jump_boost_round
 
-icon-material: SLIME_BALL
-glyph: "\uA025"
+icon-material: RABBIT_FOOT
+description: "Tu sautes plus haut pour le reste du round."
+glyph: "\uA024"

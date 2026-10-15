@@ -1,9 +1,13 @@
 id: round_cooldown_reduction
-display-name: "&bGâchette Affûtée"
+display-name: "Huile pour Gachette"
 category: WEAPON_AMMO
 rarity: RARE
 price: 35
 effect-id: round_cooldown_reduction
 
 icon-material: REDSTONE
+description: "Reduit le temps entre deux tirs pour le reste du round."
+stat-hints:
+  - tag: FIRE_RATE
+    value: "-20%"
 glyph: "\uA021"

@@ -1,8 +1,12 @@
 id: damage_cap
-display-name: "&bBouclier d'absorption"
+display-name: "Veste de Securite"
 category: DEFENSE
 rarity: COMMON
 price: 15
 effect-id: damage_cap_next_hit
 icon-material: IRON_CHESTPLATE
+description: "Le prochain coup recu est plafonne a 1 degat."
+stat-hints:
+  - tag: DAMAGE_BLOCKED
+    value: "+1"
 glyph: "\uA011"

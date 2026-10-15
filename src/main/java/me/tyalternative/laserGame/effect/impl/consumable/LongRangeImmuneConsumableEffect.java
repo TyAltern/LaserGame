@@ -6,7 +6,7 @@ import me.tyalternative.laserGame.effect.impl.effect.IgnoreLongRangeHitEffect;
 
 public class LongRangeImmuneConsumableEffect implements ConsumableEffect {
 
-    private static final double MIN_DISTANCE = 50.0;
+    private static final double MIN_DISTANCE = 15.0;
 
     @Override
     public boolean activate(ActivationContext ctx) {

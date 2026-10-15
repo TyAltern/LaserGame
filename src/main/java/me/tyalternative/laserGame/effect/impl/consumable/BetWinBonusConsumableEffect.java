@@ -16,7 +16,7 @@ public class BetWinBonusConsumableEffect implements ConsumableEffect {
     public boolean activate(ActivationContext ctx) {
         Round round = ctx.match.getCurrentRound();
         if (round == null || round.hasFirstEliminationOccurred()) {
-            ctx.player.sendMessage("§cTrop tard : une élimination a déjà eu lieu ce round.");
+            ctx.player.sendMessage("§cTrop tard, une élimination a déjà eu lieu ce round.");
             return false;
         }
 

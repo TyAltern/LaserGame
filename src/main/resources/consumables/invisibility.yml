@@ -1,9 +1,13 @@
 id: invisibility
-display-name: "&7Camouflage"
+display-name: "Camouflage"
 category: STEALTH
 rarity: RARE
 price: 35
 effect-id: invisibility_cancel_on_shot
 
 icon-material: POTION
+description: "Te rend invisible, l'effet cesse des lors que tu tires."
+stat-hints:
+  - tag: INVISIBILITY
+    value: "+5s"
 glyph: "\uA015"

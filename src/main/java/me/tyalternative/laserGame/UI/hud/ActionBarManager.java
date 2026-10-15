@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.UI.hud;
 import me.tyalternative.laserGame.LaserGame;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
+import me.tyalternative.laserGame.game.MatchState;
 import me.tyalternative.laserGame.game.Round;
 import me.tyalternative.laserGame.shop.ConsumableDefinition;
 import me.tyalternative.laserGame.skill.SkillDefinition;
@@ -124,8 +125,8 @@ public class ActionBarManager {
 
         } else {
 
-            long sneakTick = gp.getSneakChargeTicks();
             long maxSneakTick = LaserGame.getInstance().getConfigManager().getMaxSneakChargeTicks();
+            long sneakTick = match.getState() == MatchState.SHOP ? maxSneakTick: gp.getSneakChargeTicks();
             int sneakBars = Math.toIntExact(Math.ceilDiv(sneakTick * 13, Math.max(1, maxSneakTick)));
             for (int i = 1; i < 14; i++) {
                 if (i > sneakBars) component = component.append(TextUtil.buildTextComponent("\uF010", Font.HUD));
@@ -141,7 +142,8 @@ public class ActionBarManager {
     private Component buildAmmoDisplay(GamePlayer gp) {
         int maxAmmo = gp.getWeapon().getMaxAmmo();
         int decimal = (int) Math.floor(Math.log10(maxAmmo)) + 1;
-        String text = "Muni: " + String.format("%0" + decimal + "d",gp.getWeapon().getAmmo())  + " / " + maxAmmo;
+        int ammo = match.getState() == MatchState.SHOP ? maxAmmo: gp.getWeapon().getAmmo();
+        String text = "Muni:°" + String.format("%0" + decimal + "d", ammo)  + "°/°" + maxAmmo;
 //        int length = TextUtil.getStringLength(text);
         int offset = (3-decimal) * 4;
         if (offset == 0) return TextUtil.buildTextComponent(1, 0,text, Font.HUD_TEXT_HIGH).append(TextUtil.buildOffset(145, 0));
@@ -173,7 +175,7 @@ public class ActionBarManager {
 
     private Component buildPlayerRemainingDisplay(GamePlayer gp) {
         int maxPlayers = match.getPlayers().size();
-        int alivePlayers = match.getAlivePlayers().size();
+        int alivePlayers = match.getState() == MatchState.SHOP ? maxPlayers : match.getAlivePlayers().size();
         int decimal = (int) Math.floor(Math.log10(maxPlayers)) + 1;
         String text = String.format("%0" + decimal + "d",alivePlayers)  + "/" + maxPlayers;
         int length = TextUtil.getStringLength(text) + 10;
@@ -197,7 +199,7 @@ public class ActionBarManager {
     private Component buildWeaponDisplay(GamePlayer gp) {
 
         long cooldownTime = gp.getEffectiveStats().getShotCooldownTicks();
-        String cooldownSuffix = " t";
+        String cooldownSuffix = "°t";
         if (cooldownTime >= 20) {
             cooldownTime = Math.floorDiv(cooldownTime, 20);
             cooldownSuffix = "s";
@@ -206,7 +208,7 @@ public class ActionBarManager {
         int cooldownOffset = cooldownTime < 10 ? 3 : 0;
 
         long reloadTime = gp.getEffectiveStats().getReloadCooldownTicks();
-        String reloadSuffix = " t";
+        String reloadSuffix = "°t";
         if (reloadTime >= 20) {
             reloadTime = Math.floorDiv(reloadTime, 20);
             reloadSuffix = "s";

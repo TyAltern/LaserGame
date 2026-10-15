@@ -84,6 +84,9 @@ public class InventoryScreenMenu {
         clearSelections();
         refreshEquippedSlots();
         refreshStorage();
+
+        HologramElement element = HologramHoverListener.getCurrentHover(gamePlayer.getPlayer());
+        if (element != null && gamePlayer.getPlayer().isSneaking()) this.hintPanel.showHint(element);
     }
 
     private int currentCategoryIndex() {
@@ -102,11 +105,20 @@ public class InventoryScreenMenu {
 
     private void refreshEquippedSlots() {
         List<String> held = gamePlayer.getConsumables().getSlotIds();
+        boolean expendedInv = gamePlayer.getConsumables().size() == 6;
+
         for (int i = 0; i < equippedConsumableSlots.size(); i++) {
+
             HologramElement slot = equippedConsumableSlots.get(i);
             HologramElement icon = equippedConsumableIcons.get(i);
             boolean selected = selectedConsumableEquippedIndex != null && selectedConsumableEquippedIndex == i;
 
+            if (expendedInv) {
+                slot.setTranslation(-15 * 0.025,0,0);
+                if (slot.isHidden()) slot.setVisible(true);
+                icon.setTranslation(-15 * 0.025,0,0);
+                if (icon.isHidden()) icon.setVisible(true);
+            }
             String id = i < held.size() ? held.get(i) : null;
             if (id == null) {
                 slot.setText(selected ? EQUIPPED_SELECTED : IDLE);
@@ -175,6 +187,8 @@ public class InventoryScreenMenu {
                         hintPanel.clearHint(equippedSkillSlot.getId());
                     });
         }
+
+
     }
 
     private record StorageItem(String id, String displayName, String glyph, String category, Rarity rarity,
@@ -270,19 +284,6 @@ public class InventoryScreenMenu {
             icon.setText(item.glyph() == null ? "" : item.glyph());
             hintPanel.setHint(slot.getId(), item.displayName(), item.description(), item.statModification());
         }
-    }
-
-    /** Construit le texte du hint : ligne d'en-tête (catégorie/rareté) + description + modification de stats. */
-    private String buildHint(String category, Rarity rarity, String description, List<String> statModification) {
-        StringBuilder sb = new StringBuilder();
-        sb.append(category).append(" - ").append(rarity.name());
-        if (description != null && !description.isBlank()) {
-            sb.append("  ").append(description);
-        }
-        if (statModification != null && !statModification.isEmpty()) {
-            sb.append("  [").append(statModification).append("]");
-        }
-        return sb.toString();
     }
 
     private void onStorageSlotClick(int index) {
@@ -609,7 +610,7 @@ public class InventoryScreenMenu {
                             .build();
                     storageElements.add(slot);
                     HologramElement slotIcon = new HologramElement.Builder("storage_slot_icon_" + i + "_" + indexInPage, slot)
-                            .position(posX + 4, posY - 5).size(16, 16).layer(1)
+                            .position(posX + 5, posY - 5).size(16, 16).layer(1)
                             .text("")
                             .font(Font.ITEMS)
                             .build();
@@ -654,7 +655,7 @@ public class InventoryScreenMenu {
 
         // CONSUMABLES TAB
 
-        for (int x = 0; x < 5; x++) { // TODO : CHANGE TO ACCEPT ONE MORE SLOT (16 + x * 30)
+        for (int x = 0; x < 6; x++) {
             int posX = 31 + x * 30;
             HologramElement slot = new HologramElement.Builder("equipped_consumable_item_slot_" + x, consumablesCategory)
                     .position(posX, 127).size(30,30).layer(-4)
@@ -667,11 +668,13 @@ public class InventoryScreenMenu {
             final int equippedIndex = x;
             slot.onClick((player, source, clickType) -> onEquippedConsumableSlotClicked(equippedIndex));
             HologramElement slotIcon = new HologramElement.Builder("equipped_consumable_item_icon_" + x, slot)
-                    .position(posX+6, 120).size(16,16).layer(1)
+                    .position(posX+7, 120).size(16,16).layer(1)
                     .text("")
                     .font(Font.ITEMS)
                     .build();
             equippedConsumableIcons.add(slotIcon);
+
+            if (x == 5) {slot.setVisible(false); slotIcon.setVisible(false);}
         }
 
         // WEAPONS TAB
@@ -684,7 +687,7 @@ public class InventoryScreenMenu {
                 .build();
         equippedWeaponSlot.onClick((player, source, clickType) -> onEquippedWeaponSlotClicked());
         equippedWeaponIcon = new HologramElement.Builder("equipped_weapon_icon", equippedWeaponSlot)
-                .position(127, 120).size(16,16).layer(1)
+                .position(128, 120).size(16,16).layer(1)
                 .text("")
                 .font(Font.ITEMS)
                 .build();
@@ -699,7 +702,7 @@ public class InventoryScreenMenu {
                 .build();
         equippedProfileSlot.onClick((player, source, clickType) -> onEquippedProfileSlotClicked());
         equippedProfileIcon = new HologramElement.Builder("equipped_profile_icon", equippedProfileSlot)
-                .position(127, 120).size(16,16).layer(1)
+                .position(128, 120).size(16,16).layer(1)
                 .text("")
                 .font(Font.ITEMS)
                 .build();
@@ -714,7 +717,7 @@ public class InventoryScreenMenu {
                 .build();
         equippedSkillSlot.onClick((player, source, clickType) -> onEquippedSkillSlotClicked());
         equippedSkillIcon = new HologramElement.Builder("equipped_skill_icon", equippedSkillSlot)
-                .position(127, 120).size(16,16).layer(1)
+                .position(128, 120).size(16,16).layer(1)
                 .text("")
                 .font(Font.ITEMS)
                 .build();

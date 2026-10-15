@@ -1,9 +1,13 @@
 id: smoke_bomb
-display-name: "&dBombe Fumigène"
+display-name: "Bombe Fumigene"
 category: CROWD_CONTROL
 rarity: RARE
 price: 30
 effect-id: smoke_bomb
 
 icon-material: GRAY_DYE
+description: "Lance une bombe fumigene qui aveugle les joueurs restant dans son nuage."
+stat-hints:
+  - tag: DURATION
+    value: "20s de"
 glyph: "\uA029"

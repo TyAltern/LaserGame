@@ -1,9 +1,13 @@
 id: round_range_boost
-display-name: "&bLunette Longue Portée"
+display-name: "Lunette Longue Portee"
 category: WEAPON_AMMO
 rarity: UNIQUE
 price: 25
 effect-id: round_range_boost
 
 icon-material: ENDER_EYE
+description: "Augmente ta portee de tir pour le reste du round."
+stat-hints:
+  - tag: RANGE
+    value: "+30%"
 glyph: "\uA020"

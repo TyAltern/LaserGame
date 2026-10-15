@@ -1,7 +1,11 @@
 id: extra_shop_slot
-display-name: "&6Client Habitué"
+display-name: "Client Habitue"
 rarity: RARE
 price: 65
 effect-id: extra_shop_slot
 icon-material: CHEST
+description: "Ajoute un slot d'offre supplementaire en boutique."
+stat-hints: 
+  - tag: SHOP_SLOT
+    value: "+1"
 glyph: "\uA034"

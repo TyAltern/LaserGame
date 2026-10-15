@@ -58,6 +58,7 @@ public class HologramElement {
     private boolean hidden = false;
     private boolean selfVisible = true;
     private boolean disabled = false;
+    private TextDisplay.TextAlignment alignment;
 
     private TextDisplay textDisplay;
     private Interaction interaction;
@@ -93,6 +94,7 @@ public class HologramElement {
         this.scrollActions.addAll(    builder.scrollActions);
         this.hoverEnterActions.addAll(builder.hoverEnterActions);
         this.hoverExitActions.addAll( builder.hoverExitActions);
+        this.alignment =                 builder.alignment;
 
         this.font = builder.font != null ? builder.font : resolveInheritedFontFromParent();
 
@@ -128,6 +130,7 @@ public class HologramElement {
         private boolean bubbleScrollToParent = false;
         private boolean hasHint = false;
         private boolean hideByDefault = false;
+        private TextDisplay.TextAlignment alignment = TextDisplay.TextAlignment.CENTER;
 
         private final List<HologramAction> actions = new ArrayList<>();
         private final List<HologramScrollAction> scrollActions = new ArrayList<>();
@@ -163,6 +166,7 @@ public class HologramElement {
         public Builder bubbleScrollToParent(boolean value) { this.bubbleScrollToParent = value; return this; }
         public Builder hasHint(boolean value)             { this.hasHint = value; return this; }
         public Builder hideByDefault(boolean value)       { this.hideByDefault = value; return this; }
+        public Builder alignement(TextDisplay.TextAlignment alignment) { this.alignment = alignment; return this;}
 
         public Builder scale(double x, double y, double z) { this.scale = new Vector3f((float) x, (float) y, (float) z); return this;}
         public Builder translation(double x, double y, double z) { this.translation = new Vector3f((float) x, (float) y, (float) z); return this;}
@@ -264,6 +268,7 @@ public class HologramElement {
                 entity.setBackgroundColor(Color.fromARGB(0, 0, 0, 0));
                 entity.setBillboard(Display.Billboard.FIXED);
                 entity.setPersistent(false);
+                entity.setAlignment(this.alignment);
 
                 entity.addScoreboardTag("hologram_element_" + id);
                 entity.addScoreboardTag("hologram_element");
@@ -435,7 +440,7 @@ public class HologramElement {
     }
 
     public void addTranslation(double x, double y, double z) {
-        setTranslation(new Vector3f((float) x, (float) y, (float) z));
+        addTranslation(new Vector3f((float) x, (float) y, (float) z));
     }
     public void addTranslation(Vector3f translation) {
         if (textDisplay == null) return;

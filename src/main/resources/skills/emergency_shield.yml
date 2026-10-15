@@ -1,9 +1,15 @@
 id: emergency_shield
-display-name: "&bBouclier d'urgence"
+display-name: "Bouclier d'urgence"
 rarity: RARE
 price: 40
 cooldown-ticks: 500
 effect-id: emergency_shield
 
 icon-material: TOTEM_OF_UNDYING
+description: "Absorbe entierement le prochain coup recu pendant 5 secondes."
+stat-hints:
+  - tag: DAMAGE_BLOCKED
+    value: "+1"
+  - tag: ABILITY_COOLDOWN
+    value: "25s"
 glyph: "\uA02B"

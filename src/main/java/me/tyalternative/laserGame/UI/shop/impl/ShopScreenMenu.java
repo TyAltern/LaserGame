@@ -68,6 +68,9 @@ public class ShopScreenMenu {
         rerollAmountConsumableTab.setText(String.format("%04d", ctx.shopManager().getConsumableRerollCost(session)));
         refreshConsumableSlots(session);
         refreshSpecialSlots(session);
+
+        HologramElement element = HologramHoverListener.getCurrentHover(gamePlayer.getPlayer());
+        if (element != null && gamePlayer.getPlayer().isSneaking()) this.hintPanel.showHint(element);
     }
 
     private void refreshConsumableSlots(ShopSession session) {
@@ -296,7 +299,7 @@ public class ShopScreenMenu {
                         .build();
                 consumableSlotPriceTags.add(slotPriceTag);
                 HologramElement slotIcon = new HologramElement.Builder("consumable_slot_icon_" + index, slot)
-                        .position(posX+6, posY-13).size(16, 16).layer(1)
+                        .position(posX+7, posY-13).size(16, 16).layer(1)
                         .text("")
                         .font(Font.ITEMS)
                         .build();
@@ -373,7 +376,7 @@ public class ShopScreenMenu {
                     .build();
             specialItemsSlotPriceTags.add(slotPriceTag);
             HologramElement slotIcon = new HologramElement.Builder("special_items_slot_icon_" + x, slot)
-                    .position(posX+6, 101).size(16, 16).layer(1)
+                    .position(posX+7, 101).size(16, 16).layer(1)
                     .text("")
                     .font(Font.ITEMS)
                     .build();

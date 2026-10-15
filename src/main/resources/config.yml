@@ -8,7 +8,7 @@ game:
   radar-starting-cooldown-ticks: 1200
   starting-lives: 3
   respawn-delay-ticks: 60
-  countdown-seconds: 10
+  countdown-seconds: 2
   min-players-fallback: 2
   rounds-to-win: 5
 
@@ -19,8 +19,8 @@ gameplay:
 
   sneak:
     max-sneak-charge-ticks: 400
-    sneak-regen-interval-ticks: 60
-    sneak-regen-amount-ticks: 20
+    sneak-regen-interval-ticks: 3
+    sneak-regen-amount-ticks: 1
 
 economy:
   passive-per-round: 10

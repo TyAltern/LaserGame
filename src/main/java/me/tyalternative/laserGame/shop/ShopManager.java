@@ -77,7 +77,7 @@ public class ShopManager {
 
     private String rollSpecialSlotId(SpecialSlotType type) {
         return switch (type) {
-            case WEAPON -> RarityPool.draw(weaponManager.getAllWeapons(), config.getRarityWeights(), 0, 0)
+            case WEAPON -> RarityPool.draw(weaponManager.getAllBuyableWeapons(), config.getRarityWeights(), 0, 0)
                     .map(WeaponType::id).orElse(null);
             case UPGRADE -> RarityPool.draw(upgradeManager.getAllDefinitions(), config.getRarityWeights(), 0, 0)
                     .map(PermanentUpgradeDefinition::id).orElse(null);

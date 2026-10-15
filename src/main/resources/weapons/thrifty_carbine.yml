@@ -1,5 +1,5 @@
 id: thrifty_carbine
-display-name: "&5Carabine Économe"
+display-name: "Carabine"
 rarity: RARE
 price: 55
 special-ability: refund_ammo_on_miss
@@ -16,4 +16,14 @@ lives-per-hit: 1
 movement-speed-modifier: 0.0
 
 icon-material: DIAMOND_HOE
+description: "Un tir manqué ne consomme pas de munition, mais son chargeur est plus petit."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "8"
+  - tag: FIRE_RATE
+    value: "10t"
+  - tag: RELOAD_SPEED
+    value: "3s"
+  - tag: RANGE
+    value: "22"
 glyph: "\uA002"

@@ -2,7 +2,7 @@ id: rocket_launcher
 rarity: RARE
 price: 65
 special-ability: highlight_top_killer
-display-name: "&cLance Roquette"
+display-name: "Lance Roquette"
 
 material: TNT
 max-ammo: 2
@@ -16,4 +16,18 @@ lives-per-hit: 2
 movement-speed-modifier: 0
 
 icon-material: TNT
+description: "Le joueur avec le plus de kills apparait en surbrillance."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "2"
+  - tag: FIRE_RATE
+    value: "2s"
+  - tag: RELOAD_SPEED
+    value: "10s"
+  - tag: RANGE
+    value: "6"
+  - tag: RADIUS
+    value: "3"
+  - tag: DAMAGE_DEALT
+    value: "2"
 glyph: "\uA007"

@@ -1,9 +1,13 @@
 id: curse_ammo_loss
-display-name: "&5Chargeur Percé"
+display-name: "Perce-Chargeur"
 category: SABOTAGE
 rarity: UNIQUE
 price: 20
 effect-id: curse_ammo_loss
 
 icon-material: FLINT
+description: "Le prochain joueur touche perd une partie de ses munitions max pour le round."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "-40%"
 glyph: "\uA01D"

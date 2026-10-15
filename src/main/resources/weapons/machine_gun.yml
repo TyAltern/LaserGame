@@ -1,10 +1,10 @@
 id: machine_gun
-display-name: "&eMitraillette"
+display-name: "Mitraillette"
 rarity: LEGENDARY
 price: 85
 
 material: IRON_HOE
-max-ammo: 20
+max-ammo: 100
 shot-cooldown-ticks: 3
 reload-cooldown-ticks: 30
 range: 25.0
@@ -15,4 +15,12 @@ movement-speed-modifier: 0.0
 
 special-ability: massive_magazine
 icon-material: IRON_HOE
+description: "Mitraillette a tres grand chargeur, mais incapable de recharger."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "100"
+  - tag: FIRE_RATE
+    value: "3t"
+  - tag: RANGE
+    value: "25"
 glyph: "\uA003"

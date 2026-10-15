@@ -2,11 +2,11 @@ id: knife
 rarity: UNIQUE
 price: 30
 special-ability: fire_rate_ramp_on_miss
-display-name: "&cCouteau"
+display-name: "Couteau de Cuisine"
 
-material: IRON_SWORD
+material: IRON_DAGGER
 max-ammo: 200
-shot-cooldown-ticks: 1
+shot-cooldown-ticks: 10
 reload-cooldown-ticks: 120
 range: 4.0
 hit-radius: 4.0
@@ -16,4 +16,18 @@ lives-per-hit: 1
 movement-speed-modifier: 0.35
 
 icon-material: IRON_SWORD
+description: "La vitesse de tir augmente a chaque tir rate, reset au hit ou au rechargement."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "200"
+  - tag: FIRE_RATE
+    value: "10t"
+  - tag: RELOAD_SPEED
+    value: "6s"
+  - tag: RANGE
+    value: "4"
+  - tag: RADIUS
+    value: "4"
+  - tag: MOVEMENT_SPEED
+    value: "+35%"
 glyph: "\uA006"

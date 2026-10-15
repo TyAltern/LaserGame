@@ -1,9 +1,13 @@
 id: sneak_speed_unlock
-display-name: "&aFurtivité Agile"
+display-name: "Pro des Squats"
 category: MOBILITY
 rarity: UNIQUE
 price: 20
 effect-id: sneak_speed_unlock
 
-icon-material: RABBIT_FOOT
-glyph: "\uA024"
+icon-material: RABBIT_HIDE
+description: "Te permet de te deplacer a vitesse normale en etant accroupi, pour le round."
+stat-hints:
+  - tag: MOVEMENT_SPEED
+    value: "+100%"
+glyph: "\uA03A"

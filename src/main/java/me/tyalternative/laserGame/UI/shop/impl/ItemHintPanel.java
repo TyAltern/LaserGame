@@ -4,6 +4,9 @@ import me.tyalternative.laserGame.UI.shop.HologramElement;
 import me.tyalternative.laserGame.utils.Font;
 import me.tyalternative.laserGame.utils.TextUtil;
 import me.tyalternative.laserGame.utils.TickUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.TextDisplay;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,30 +45,21 @@ public class ItemHintPanel {
         itemNameElement = new HologramElement.Builder("item_name", itemHintPanel)
                 .size(78,5).layer(14)
                 .text("").font(Font.TEXT)
-                .translation(3 * 0.025, 82 * 0.025,0)
+                .alignement(TextDisplay.TextAlignment.LEFT)
+                .translation(5 * 0.025, 82 * 0.025,0)
                 .build();
-
-//        descriptionElement = new HologramElement.Builder("item_description", itemHintPanel)
-//                .size(74, 5).layer(14)
-//                .text("").font(Font.TEXT)
-//                .translation(7 * 0.025, (7)  * 0.025,0)
-//
-//                .build();
 
         for (int i = 9; i >= 0; i--) {
             descriptionsLinesElements.add(
                     new HologramElement.Builder("description_line_" + (9-i), itemHintPanel)
-                            .size(74, 5).layer(14)
+                            .size(MAX_PIXEL_PER_LINE, 5).layer(14)
                             .text("").font(Font.TEXT)
-                            .translation(7 * 0.025, (6 + i * 7)  * 0.025,0)
+                            .alignement(TextDisplay.TextAlignment.LEFT)
+                            .translation(6 * 0.025, (6 + i * 7)  * 0.025,0)
                             .build()
             );
         }
-
-
-
     }
-
 
     public void setHint(String slotId, String name, String description, List<String> statModification) {
         if (slotId == null) return;
@@ -103,13 +97,17 @@ public class ItemHintPanel {
     public void hideHint() {
 
         itemHintPanel.setVisible(false);
+        itemNameElement.setText("");
+        for (HologramElement linesElement : descriptionsLinesElements) {
+            linesElement.setText("");
+        }
     }
 
     private void placeNextTo(HologramElement slot) {
 
         int position = slot.getPositionX() + slot.getSizeX()/2 > itemHintPanel.getRootElement().getSizeX()/2 ? -1 : 1;
         int x = position == -1 ? slot.getPositionX() - itemHintPanel.getSizeX()-1 : slot.getPositionX() + slot.getSizeX() + 1;
-        int y = Math.min(itemHintPanel.getRootElement().getSizeY() - 5, Math.max(linkedHologramElement.getSizeY() + 5,slot.getPositionY() + slot.getSizeY()/2));
+        int y = Math.clamp(slot.getPositionY() + slot.getSizeY() / 2, linkedHologramElement.getSizeY() + 5, itemHintPanel.getRootElement().getSizeY() - 5);
 
         setPosition(x,y);
     }
@@ -117,16 +115,16 @@ public class ItemHintPanel {
     private void setItemName(String itemName) {
         if (itemName == null || itemName.isBlank()) return;
 
-        int textSize = TextUtil.getStringLength(itemName);
+//        int textSize = TextUtil.getStringLength(itemName);
         itemNameElement.setText(itemName);
-        itemNameElement.setSize(textSize, 5);
+//        itemNameElement.setSize(textSize, 5);
 
         this.itemName = itemName;
     }
 
     private void setDescription(String description, List<String> statModification) {
         if (description == null) description = "";
-        List<String> lines = TextUtil.wrapText(description, 74);
+        List<String> lines = TextUtil.wrapText(description, MAX_PIXEL_PER_LINE);
         int index = 0;
         for (int i = 9; i >= 0; i--) {
             HologramElement lineElement = descriptionsLinesElements.get(i);
@@ -135,29 +133,21 @@ public class ItemHintPanel {
 
             if (index < statModification.size()) {
                 String line = "¤ " + statModification.get(index);
-                int textSize = TextUtil.getStringLength(line);
+//                int textSize = TextUtil.getStringLength(line);
                 lineElement.setText(line);
-                lineElement.setSize(textSize, 5);
+                lineElement.setTranslation(6 * 0.025, (3 + index * 7)  * 0.025 ,0);
+//                lineElement.setSize(textSize, 5);
             } else if (i < lines.size()){
                 String line = lines.get(i);
-                int textSize = TextUtil.getStringLength(line);
+//                int textSize = TextUtil.getStringLength(line);
                 lineElement.setText(line);
-                lineElement.setSize(textSize, 5);
+                lineElement.setTranslation(6 * 0.025, (6 + index * 7)  * 0.025 ,0);
+//                lineElement.setSize(textSize, 5);
             }
 
             index++;
         }
-        for (int i = 0; i < descriptionsLinesElements.size(); i++) {
-            HologramElement lineElement = descriptionsLinesElements.get(i);
-            if (i >= lines.size()) {
-                lineElement.setText("");
-                continue;
-            }
-            String line = lines.get(i);
-            int textSize = TextUtil.getStringLength(line);
-            lineElement.setText(line);
-            lineElement.setSize(textSize, 5);
-        }
+
         this.description = description;
         this.statModification = statModification;
     }
@@ -169,10 +159,6 @@ public class ItemHintPanel {
         for (HologramElement descriptionLineElement : descriptionsLinesElements) {
             descriptionLineElement.setPosition(x,y);
         }
-//        for (HologramElement statLineElement : statsLinesElements) {
-//            statLineElement.setPosition(x,y);
-//        }
-
     }
 
     private class HintData{

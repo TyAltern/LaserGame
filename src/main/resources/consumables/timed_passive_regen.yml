@@ -1,9 +1,13 @@
 id: timed_passive_regen
-display-name: "&bChargeur Auto-Rechargeant"
+display-name: "Rechargement Manuel"
 category: WEAPON_AMMO
 rarity: RARE
 price: 40
 effect-id: timed_passive_regen
 
 icon-material: HOPPER
+description: "Regenere automatiquement tes munitions pendant une minute."
+stat-modification:
+  - tag: AMMO_REGEN
+    value: "+12"
 glyph: "\uA022"

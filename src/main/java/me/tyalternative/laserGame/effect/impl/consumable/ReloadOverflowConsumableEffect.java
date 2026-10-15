@@ -5,7 +5,7 @@ import me.tyalternative.laserGame.effect.ConsumableEffect;
 
 public class ReloadOverflowConsumableEffect implements ConsumableEffect {
 
-    private static final int BONUS_AMMO = 1;
+    private static final int BONUS_AMMO = 5;
 
     @Override
     public boolean activate(ActivationContext ctx) {

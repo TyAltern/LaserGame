@@ -7,15 +7,22 @@ public enum StatTag {
     AMMO_BONUS("Muni Bonus"),                                           // Muni Bonus
     FREE_SHOT("Tir Gratuit","Tirs Gratuits"),            // Tir Gratuit
     FIRE_RATE("Cadence de Tir"),                                        // Cadence de tir
+    HIT_RADIUS("Taille Faisceau"),                                        // Cadence de tir
     DAMAGE_BLOCKED("Degat Annule", "Degats Annules"),    // Degats Annules
     RELOAD_SPEED("Rechargement"),                                       // Rechargement
+    ABILITY_COOLDOWN("de Cooldown"),                                       // Rechargement
     EXTRA_LIFE("Vie", "Vies"),                           // Vie
     RANGE("Portee"),                                                    // Portee
     MAX_AMMO("Munition", "Munitions"),                   // Munitions
-    DAMAGE_DEALT("Degat", "Degats"),                     // Degats
+    DAMAGE_DEALT("Degat Infligé", "Degats Infligés"),                     // Degats
+    CRITICAL_DAMAGE_DEALT("Degat Critique", "Degats Critiques"),                     // Degats
     DAMAGE_TAKEN("Degat Subit", "Degats SUbits"),        // Degat Subit
     MOVEMENT_SPEED("Vitesse"),                                          // Vitesse
     CROUCH_TIME("Tps Accroupi"),                                        // Tps Accroupis
+    INVISIBILITY("Invisibilite"),                                        // Tps Accroupis
+    DURATION("Duree"),                                                  // Tps Accroupis
+    RADIUS("Blocs de Distance"),                                                  // Tps Accroupis
+    PIERCING_SHOT("Tir perforant", "Tirs Perforants"),  // Tire Perforant                                      // Tps Accroupis
     AMMO_REGEN("Muni Regen")                                            // Muni Regen
 ;
     final String displayName;

@@ -80,7 +80,7 @@ public class ConsumableManager {
         effectRegistry.put("nausea_cc", new AreaPotionConsumableEffect(
                 PotionEffectType.NAUSEA, 0, 25.0, 200, "§7{count} joueur(s) pris de nausée pendant 10 secondes."));
         effectRegistry.put("slow_cc", new AreaPotionConsumableEffect(
-                PotionEffectType.SLOWNESS, 1, 30.0, 100, "§7{count} joueur(s) ralenti(s) pendant 5 secondes."));
+                PotionEffectType.SLOWNESS, 1, 30.0, 300, "§7{count} joueur(s) ralenti(s) pendant 15 secondes."));
         effectRegistry.put("smoke_bomb", new SmokeBombConsumableEffect());
 
         // Autres

@@ -1,5 +1,5 @@
 id: champion_saber
-display-name: "&5Sabre du Champion"
+display-name: "Sabre"
 rarity: RARE
 price: 65
 special-ability: round_win_streak_bonus
@@ -16,4 +16,18 @@ lives-per-hit: 1
 movement-speed-modifier: 0.30
 
 icon-material: NETHERITE_HOE
+description: "Remporter un round sans perdre de vie octroie un boost."
+stat-hints:
+  - tag: MAX_AMMO
+    value: "200"
+  - tag: FIRE_RATE
+    value: "2t"
+  - tag: RELOAD_SPEED
+    value: "5s"
+  - tag: RANGE
+    value: "4.5"
+  - tag: RADIUS
+    value: "3.5"
+  - tag: MOVEMENT_SPEED
+    value: "+30%"
 glyph: "\uA00D"

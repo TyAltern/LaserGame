@@ -1,9 +1,13 @@
 id: piercing_shots
-display-name: "&cTirs Perforants"
+display-name: "Tirs Perforants"
 category: OFFENSE
 rarity: LEGENDARY
 price: 70
 effect-id: piercing_shots
 
 icon-material: NETHER_STAR
+description: "Tes prochains tirs traversent les joueurs touches au lieu de s'arreter au premier."
+stat-hints:
+  - tag: PIERCING_SHOT
+    value: "+10"
 glyph: "\uA02E"

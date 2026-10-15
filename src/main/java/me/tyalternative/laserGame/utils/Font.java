@@ -84,6 +84,8 @@ public final class Font {
             case HONEY_BOTTLE -> "A036";
             case NETHERITE_CHESTPLATE -> "A037";
             case IRON_BOOTS -> "A038";
+            case ROSE_BUSH -> "A039";
+            case RABBIT_HIDE -> "A03A";
             default -> "FFFF";
         };
         if (forHUD) unicode = unicode.replaceFirst("A","B");

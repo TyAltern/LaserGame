@@ -1,9 +1,13 @@
 id: free_shot
-display-name: "&cTir Gratuit"
+display-name: "Tir Gratuit"
 category: OFFENSE
 rarity: COMMON
-price: 15
+price: 5
 effect-id: free_shot
 
 icon-material: ARROW
+description: "Ton prochain tir ne consomme pas de munition."
+stat-hints:
+  - tag: AMMO_BONUS
+    value: "+1"
 glyph: "\uA01A"

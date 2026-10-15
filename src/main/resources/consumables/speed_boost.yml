@@ -1,9 +1,13 @@
 id: speed_boost
-display-name: "&aBottes légères"
+display-name: "DOPAMINE"
 category: MOBILITY
 rarity: COMMON
 price: 20
 effect-id: speed_boost
 
 icon-material: SUGAR
+description: "Augmente ta vitesse de deplacement pendant 60 secondes."
+stat-hints:
+  - tag: MOVEMENT_SPEED
+    value: "+10%"
 glyph: "\uA014"

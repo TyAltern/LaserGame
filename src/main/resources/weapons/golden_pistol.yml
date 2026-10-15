@@ -1,5 +1,5 @@
 id: golden_pistol
-display-name: "&9Pistolet Doré"
+display-name: "Pistolet Dore"
 rarity: UNIQUE
 price: 30
 special-ability: money_boost_miss_penalty
@@ -16,4 +16,16 @@ lives-per-hit: 1
 movement-speed-modifier: 0.0
 
 icon-material: GOLDEN_HOE
+description: "Rapporte plus d'argent au combat, mais chaque tir manque coute un peu. (-2$/miss)"
+stat-hints:
+  - tag: MAX_AMMO
+    value: "18"
+  - tag: FIRE_RATE
+    value: "9t"
+  - tag: RELOAD_SPEED
+    value: "2s"
+  - tag: RANGE
+    value: "15"
+  - tag: MONEY_BONUS
+    value: "+50%"
 glyph: "\uA000"

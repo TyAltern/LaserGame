@@ -253,12 +253,22 @@ public class Match {
     private void startShopPhase() {
         state = MatchState.SHOP;
         int totalSeconds = config.getShopPhaseSeconds();
+        for (BukkitTask task : getCurrentRound().getRespawnTask().values()) {
+            if (task != null) {
+                task.cancel();
+                task = null;
+            }
+        }
+
+
         broadcastToAll("§ePhase shop : prochain round dans " + totalSeconds + "s.");
 
         List<GamePlayer> matchPlayers = List.copyOf(players.values());
 
         int playerIndex = 0;
         for (GamePlayer gp : players.values()) {
+            gp.resetForNewRound(config.getStartingLives());
+
             gp.setShopSession(shopManager.createSession(gp));
             gp.setReady(false);
 
@@ -305,9 +315,6 @@ public class Match {
             shopTimerTickTask = null;
         }
 
-        for (GamePlayer gp : players.values()) {
-            gp.resetForNewRound(config.getStartingLives());
-        }
         beginRound();
     }
 

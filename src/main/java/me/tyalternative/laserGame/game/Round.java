@@ -17,12 +17,9 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Round {
@@ -32,6 +29,7 @@ public class Round {
     private final Arena arena;
     private final Map<UUID, GamePlayer> players;
     private final List<GamePlayer> alivePlayers = new ArrayList<>();
+    private final Map<UUID, BukkitTask> respawnTask = new HashMap<>();
     private final RoundEndCallback endCallback;
 
     private final Map<UUID, Integer> occupiedSpawns = new LinkedHashMap<>();
@@ -114,6 +112,8 @@ public class Round {
     }
 
     private void enterRound(GamePlayer gp, Player player) {
+        respawnTask.remove(gp.getUuid());
+
         WeaponType type = gp.getWeaponType();
 
         player.getInventory().clear();
@@ -248,7 +248,7 @@ public class Round {
         }
 
         if (target.getPendingBetType() == GamePlayer.BetType.WIN_X4 && target.getPendingBetAmount() > 0) {
-            int payout = target.getPendingBetAmount();
+            int payout = target.getPendingBetAmount()* 4;
             shooter.addCurrency(payout, CurrencySource.BET_PAYOUT);
             Player shooterPlayer = shooter.getPlayer();
             if (shooterPlayer != null) {
@@ -304,14 +304,21 @@ public class Round {
             player.setGameMode(GameMode.SPECTATOR);
             player.teleport(arena.getConfig().spectatorSpawn());
         }
+        if (respawnTask.containsKey(gp.getUuid())) {
+            BukkitTask task = respawnTask.get(gp.getUuid());
+            if (task != null) {
+                task.cancel();
+            }
+        }
 
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+        respawnTask.put(gp.getUuid(),Bukkit.getScheduler().runTaskLater(plugin, () -> {
+
             Player p = gp.getPlayer();
             if (p == null || gp.isSpectator()) return; // déco, ou déjà éliminé/round terminé entre-temps
 
             enterRound(gp, p);
             gp.getEffects().fireRespawn();
-        }, config.getRespawnDelayTicks());
+        }, config.getRespawnDelayTicks()));
     }
 
     public void simulateElimination(GamePlayer gp) {
@@ -401,6 +408,10 @@ public class Round {
                 p.sendMessage(message);
             }
         }
+    }
+
+    public Map<UUID, BukkitTask> getRespawnTask() {
+        return respawnTask;
     }
 
     public List<GamePlayer> getAlivePlayers() {

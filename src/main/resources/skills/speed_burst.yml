@@ -1,9 +1,15 @@
 id: speed_burst
-display-name: "&bSprint explosif"
+display-name: "Sprint Explosif"
 rarity: COMMON
 price: 25
 cooldown-ticks: 160
 effect-id: speed_burst
 
 icon-material: FEATHER
+description: "Accorde une poussee de vitesse de 2 secondes."
+stat-hints:
+  - tag: MOVEMENT_SPEED
+    value: "+60%"
+  - tag: ABILITY_COOLDOWN
+    value: "8s"
 glyph: "\uA033"

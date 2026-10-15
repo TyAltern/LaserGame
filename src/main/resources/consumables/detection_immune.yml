@@ -1,9 +1,10 @@
 id: detection_immune
-display-name: "&9Contre-Détection"
+display-name: "Contre-Detection"
 category: STEALTH
 rarity: UNIQUE
 price: 25
 effect-id: detection_immune
 
 icon-material: PHANTOM_MEMBRANE
+description: "Te rend immunise aux effets de detection (surbrillance) adverses pour le round."
 glyph: "\uA02A"

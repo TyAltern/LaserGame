@@ -1,9 +1,13 @@
 id: bet_double_earnings
-display-name: "&2Tout ou Rien"
+display-name: "Tout ou Rien"
 category: ECONOMY
 rarity: UNIQUE
 price: 15
 effect-id: bet_double_earnings
 
 icon-material: EMERALD
+description: "Tes gains de kills sont retenus tant que ce pari est actif, mais doubles si tu remportes le round."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "*2"
 glyph: "\uA02D"

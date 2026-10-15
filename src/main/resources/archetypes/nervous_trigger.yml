@@ -1,8 +1,14 @@
 id: nervous_trigger
-display-name: "&6Gachette Nerveuse"
+display-name: "Nervosite"
 rarity: COMMON
 price: 20
 effect-id: nervous_trigger
 
 icon-material: STRING
+description: "Rechargement rapide, au prix d'un chargeur reduit."
+stat-hints: 
+  - tag: RELOAD_SPEED
+    value: "*2"
+  - tag: MAX_AMMO
+    value: "-33%"
 glyph: "\uA030"

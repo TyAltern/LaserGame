@@ -16,7 +16,7 @@ public final class WeaponItemFactory {
         ItemStack item = new ItemStack(type.material());
 
         item.editMeta(meta -> {
-            meta.customName(Component.text(type.displayName()));
+            meta.customName(Component.empty());
             meta.setUnbreakable(true);
             meta.getPersistentDataContainer().set(
                     WeaponManager.weaponIdKey(plugin), PersistentDataType.STRING, type.id());

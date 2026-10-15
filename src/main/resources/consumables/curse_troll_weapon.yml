@@ -1,9 +1,15 @@
 id: curse_troll_weapon
-display-name: "&5Arme Trollesque"
+display-name: "Sabotage d'Arme"
 category: SABOTAGE
 rarity: RARE
-price: 35
+price: 45
 effect-id: curse_troll_weapon
 
 icon-material: ROTTEN_FLESH
+description: "Le prochain joueur touche voit son arme sabotee, jusqu'a son prochain tir reussi ou coup recu."
+stat-hints: 
+  - tag: RELOAD_SPEED
+    value: "*4"
+  - tag: FIRE_RATE
+    value: "-70%"
 glyph: "\uA01B"

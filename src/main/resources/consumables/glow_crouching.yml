@@ -1,9 +1,10 @@
 id: glow_crouching
-display-name: "&eDétecteur de Planques"
+display-name: "Detecteur de Planques"
 category: DISPLAY
 rarity: COMMON
 price: 15
 effect-id: glow_crouching
 
 icon-material: GLOW_INK_SAC
+description: "Met en surbrillance tous les joueurs actuellement accroupis pendant 25 secondes."
 glyph: "\uA023"

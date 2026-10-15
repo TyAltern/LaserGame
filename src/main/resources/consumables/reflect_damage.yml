@@ -1,9 +1,13 @@
 id: reflect_damage
-display-name: "&cRiposte"
+display-name: "Riposte"
 category: DEFENSE
 rarity: RARE
 price: 40
 effect-id: reflect_next_hit
 
-icon-material: SHIELD
-glyph: "\uA016"
+icon-material: ROSE_BUSH
+description: "Le prochain coup que tu recois inflige aussi 1 degat au tireur."
+stat-hints:
+  - tag: DAMAGE_DEALT
+    value: "+1"
+glyph: "\uA039"
