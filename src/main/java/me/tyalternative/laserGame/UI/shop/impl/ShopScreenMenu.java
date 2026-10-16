@@ -5,6 +5,7 @@ import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.shop.*;
 import me.tyalternative.laserGame.utils.Font;
 import me.tyalternative.laserGame.utils.TextUtil;
+import me.tyalternative.laserGame.lang.Lang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -173,12 +174,7 @@ public class ShopScreenMenu {
     }
 
     private String labelFor(SpecialSlotType type) {
-        return switch (type) {
-            case WEAPON -> "Arme";
-            case UPGRADE -> "Atout";
-            case SKILL -> "Aptitude";
-            case ARCHETYPE -> "Profil";
-        };
+        return Lang.get("ui.slot-label." + type.name().toLowerCase());
     }
 
     /** Construit le texte du hint : ligne d'en-tête (catégorie/rareté/prix) + description + modification de stats. */

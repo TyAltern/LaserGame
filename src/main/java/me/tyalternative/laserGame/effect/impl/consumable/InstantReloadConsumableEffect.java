@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
+import me.tyalternative.laserGame.lang.Lang;
 
 public class InstantReloadConsumableEffect implements ConsumableEffect {
 
@@ -9,9 +10,9 @@ public class InstantReloadConsumableEffect implements ConsumableEffect {
     public boolean activate(ActivationContext ctx) {
         boolean success = ctx.gp.getWeapon().instantRefill();
         if (success) {
-            ctx.player.sendMessage("§aArme rechargée instantanément !");
+            Lang.send(ctx.player, "effect.consumable.instant_reload.success");
         } else {
-            ctx.player.sendMessage("§cCette arme ne peut pas être rechargée.");
+            Lang.send(ctx.player, "effect.consumable.instant_reload.failure");
         }
         return success;
     }

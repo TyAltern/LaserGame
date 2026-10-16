@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.weapon.StatModifier;
+import me.tyalternative.laserGame.lang.Lang;
 
 /** Boost d'une statistique d'arme pour le reste du round (munitions max, portée, ou cooldown de tir). */
 public class RoundWeaponBoostConsumableEffect implements ConsumableEffect {
@@ -11,12 +12,12 @@ public class RoundWeaponBoostConsumableEffect implements ConsumableEffect {
 
     private final Kind kind;
     private final double percent; // positif = boost, négatif = réduction (ex : -0.20 pour -20% cooldown)
-    private final String message;
+    private final String messageKey;
 
-    public RoundWeaponBoostConsumableEffect(Kind kind, double percent, String message) {
+    public RoundWeaponBoostConsumableEffect(Kind kind, double percent, String messageKey) {
         this.kind = kind;
         this.percent = percent;
-        this.message = message;
+        this.messageKey = messageKey;
     }
 
     @Override
@@ -27,7 +28,7 @@ public class RoundWeaponBoostConsumableEffect implements ConsumableEffect {
             case COOLDOWN -> stats -> stats.setShotCooldownTicks(Math.max(1L, (long) Math.floor(stats.getShotCooldownTicks() * (1 + percent))));
         };
         ctx.gp.addRoundStatModifier(modifier);
-        ctx.player.sendMessage(message);
+        Lang.send(ctx.player, messageKey, "percent", (int) Math.round(Math.abs(percent) * 100));
         return true;
     }
 }

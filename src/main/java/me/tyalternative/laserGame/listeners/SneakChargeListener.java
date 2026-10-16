@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.listeners;
 import me.tyalternative.laserGame.game.GameManager;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.MatchState;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +36,7 @@ public class SneakChargeListener implements Listener {
 
         if (!gp.hasSneakCharge()) {
             event.setCancelled(true);
-            player.sendMessage("§cTu n'as plus assez de charge pour te cacher.");
+            Lang.send(player, "combat.sneak-no-charge-hide");
         }
     }
 }

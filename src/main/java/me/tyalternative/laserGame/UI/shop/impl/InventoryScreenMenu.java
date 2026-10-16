@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.UI.shop.impl;
 
 import me.tyalternative.laserGame.UI.shop.*;
 import me.tyalternative.laserGame.game.GamePlayer;
+import me.tyalternative.laserGame.lang.Lang;
 import me.tyalternative.laserGame.shop.ConsumableDefinition;
 import me.tyalternative.laserGame.shop.Rarity;
 import me.tyalternative.laserGame.shop.ShopContext;
@@ -194,13 +195,18 @@ public class InventoryScreenMenu {
     private record StorageItem(String id, String displayName, String glyph, String category, Rarity rarity,
                                String description, List<String> statModification) {}
 
+    private static String categoryLabel(String enumName) {
+        String key = "ui.category." + enumName.toLowerCase();
+        return Lang.has(key) ? Lang.get(key) : enumName;
+    }
+
     private List<StorageItem> ownedItemsForCategory(int category) {
         List<StorageItem> items = new ArrayList<>();
         switch (category) {
             case CATEGORY_CONSUMABLES -> {
                 for (String id : gamePlayer.getConsumableStorage()) {
                     shopContext.consumableManager().getDefinition(id).ifPresent(def ->
-                            items.add(new StorageItem(id, def.displayName(), def.glyph(), def.category().name(),
+                            items.add(new StorageItem(id, def.displayName(), def.glyph(), categoryLabel(def.category().name()),
                                     def.rarity(), def.description(), def.statModification())));
                 }
             }
@@ -209,7 +215,7 @@ public class InventoryScreenMenu {
                 for (String id : gamePlayer.getOwnedWeaponIds()) {
                     if (id.equals(equippedId)) continue; // déjà équipée : ne pas la doubler dans le storage
                     shopContext.weaponManager().getWeapon(id).ifPresent(w ->
-                            items.add(new StorageItem(id, w.displayName(), w.glyph(), "Arme", w.rarity(),
+                            items.add(new StorageItem(id, w.displayName(), w.glyph(), Lang.get("ui.slot-label.weapon"), w.rarity(),
                                     w.description(), w.statModification())));
                 }
             }
@@ -218,7 +224,7 @@ public class InventoryScreenMenu {
                 for (String id : gamePlayer.getOwnedArchetypeIds()) {
                     if (id.equals(equippedId)) continue;
                     shopContext.archetypeManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.glyph(), "Profil", d.rarity(),
+                            items.add(new StorageItem(id, d.displayName(), d.glyph(), Lang.get("ui.slot-label.archetype"), d.rarity(),
                                     d.description(), d.statModification())));
                 }
             }
@@ -227,7 +233,7 @@ public class InventoryScreenMenu {
                 for (String id : gamePlayer.getOwnedSkillIds()) {
                     if (id.equals(equippedId)) continue;
                     shopContext.skillManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.glyph(), "Aptitude", d.rarity(),
+                            items.add(new StorageItem(id, d.displayName(), d.glyph(), Lang.get("ui.slot-label.skill"), d.rarity(),
                                     d.description(), d.statModification())));
                 }
             }
@@ -235,7 +241,7 @@ public class InventoryScreenMenu {
                 // Toutes les améliorations possédées sont actives simultanément : pas d'équipement, juste la liste.
                 for (String id : gamePlayer.getOwnedUpgradeIds()) {
                     shopContext.upgradeManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.glyph(), "Atout", d.rarity(),
+                            items.add(new StorageItem(id, d.displayName(), d.glyph(), Lang.get("ui.slot-label.upgrade"), d.rarity(),
                                     d.description(), d.statModification())));
                 }
             }

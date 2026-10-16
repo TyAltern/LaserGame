@@ -4,6 +4,7 @@ import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Round;
+import me.tyalternative.laserGame.lang.Lang;
 
 /**
  * Pari : tu ne gagnes plus d'argent pour chaque kill/élimination tant que ce pari est actif, mais si tu
@@ -16,12 +17,12 @@ public class BetDoubleEarningsConsumableEffect implements ConsumableEffect {
     public boolean activate(ActivationContext ctx) {
         Round round = ctx.match.getCurrentRound();
         if (round == null || round.hasFirstEliminationOccurred()) {
-            ctx.player.sendMessage("§cTrop tard : une élimination a déjà eu lieu ce round.");
+            Lang.send(ctx.player, "effect.consumable.bet_double_earnings.too-late");
             return false;
         }
 
         ctx.gp.placeBet(GamePlayer.BetType.DOUBLE_EARNINGS, 0);
-        ctx.player.sendMessage("§7Tes gains de kills sont retenus, doublés si tu remportes le round.");
+        Lang.send(ctx.player, "effect.consumable.bet_double_earnings.activated");
         return true;
     }
 }

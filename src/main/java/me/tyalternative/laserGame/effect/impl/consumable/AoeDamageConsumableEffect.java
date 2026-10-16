@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.effect.impl.effect.AoeNextShotEffect;
+import me.tyalternative.laserGame.lang.Lang;
 
 public class AoeDamageConsumableEffect implements ConsumableEffect {
 
@@ -12,7 +13,7 @@ public class AoeDamageConsumableEffect implements ConsumableEffect {
     @Override
     public boolean activate(ActivationContext ctx) {
         ctx.gp.getEffects().add(new AoeNextShotEffect(ctx.match, RADIUS, SPLASH_LIVES));
-        ctx.player.sendMessage("§7Ton prochain tir réussi infligera aussi 1 dégât aux joueurs proches de la cible.");
+        Lang.send(ctx.player, "effect.consumable.aoe_next_shot.activated", "damage", SPLASH_LIVES);
         return true;
     }
 }

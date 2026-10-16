@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.game.GamePlayer;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -14,14 +15,14 @@ public class AreaPotionConsumableEffect implements ConsumableEffect {
     private final int amplifier;
     private final double radius;
     private final long durationTicks;
-    private final String message;
+    private final String messageKey;
 
-    public AreaPotionConsumableEffect(PotionEffectType potionType, int amplifier, double radius, long durationTicks, String message) {
+    public AreaPotionConsumableEffect(PotionEffectType potionType, int amplifier, double radius, long durationTicks, String messageKey) {
         this.potionType = potionType;
         this.amplifier = amplifier;
         this.radius = radius;
         this.durationTicks = durationTicks;
-        this.message = message;
+        this.messageKey = messageKey;
     }
 
     @Override
@@ -40,7 +41,7 @@ public class AreaPotionConsumableEffect implements ConsumableEffect {
             otherPlayer.addPotionEffect(new PotionEffect(potionType, (int) durationTicks, amplifier, false, false));
             affected++;
         }
-        ctx.player.sendMessage(message.replace("{count}", String.valueOf(affected)));
+        Lang.send(ctx.player, messageKey, "count", affected, "duration", Lang.duration(durationTicks / 20));
         return true;
     }
 }

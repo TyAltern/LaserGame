@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.effect.impl.skillEffect;
 
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.SkillEffect;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.util.Vector;
 
 public class GrappleSkillEffect implements SkillEffect {
@@ -12,6 +13,6 @@ public class GrappleSkillEffect implements SkillEffect {
     public void activate(ActivationContext ctx) {
         Vector direction = ctx.player.getEyeLocation().getDirection().normalize();
         ctx.player.setVelocity(direction.multiply(POWER));
-        ctx.player.sendMessage("§bGrappin !");
+        Lang.send(ctx.player, "effect.skill.grapple.activated");
     }
 }

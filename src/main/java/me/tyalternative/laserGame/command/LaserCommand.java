@@ -12,6 +12,7 @@ import me.tyalternative.laserGame.game.GameManager;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
 import me.tyalternative.laserGame.game.MatchState;
+import me.tyalternative.laserGame.lang.Lang;
 import me.tyalternative.laserGame.shop.ConsumableDefinition;
 import me.tyalternative.laserGame.shop.ConsumableManager;
 import me.tyalternative.laserGame.shop.DuplicatePolicy;
@@ -86,7 +87,7 @@ public class LaserCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage("§eUsage: /laser <join|leave|list|weapon|weapons|skill|skills|archetype|archetypes|upgrades|shop|shopreroll|buy|give|reload> [argument]");
+            Lang.send(sender, "command.usage.main");
             return true;
         }
 
@@ -108,62 +109,63 @@ public class LaserCommand implements CommandExecutor {
             case "buy" -> handleBuy(sender, args);
             case "give" -> handleGive(sender, args);
             case "reload" -> handleReload(sender);
-            default -> sender.sendMessage("§eUsage: /laser <join|leave|list|weapon|weapons|skill|skills|archetype|archetypes|upgrades|shop|shopreroll|buy|give|reload> [argument]");
+            default -> Lang.send(sender, "command.usage.main");
         }
         return true;
     }
 
     private void handleJoin(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cCommande réservée aux joueurs.");
+            Lang.send(sender, "general.player-only");
             return;
         }
         if (args.length < 2) {
-            player.sendMessage("§eUsage: /laser join <arène>");
+            Lang.send(player, "command.usage.join");
             return;
         }
         boolean joined = gameManager.joinGame(player, args[1]);
         if (joined) {
-            player.sendMessage("§aTu as rejoint l'arène " + args[1] + ".");
+            Lang.send(player, "command.join-success", "arena", args[1]);
         }
     }
 
     private void handleLeave(CommandSender sender) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cCommande réservée aux joueurs.");
+            Lang.send(sender, "general.player-only");
             return;
         }
         boolean left = gameManager.leaveGame(player);
         if (left) {
-            player.sendMessage("§aTu as quitté la partie.");
+            Lang.send(player, "command.leave-success");
         }
     }
 
     private void handleList(CommandSender sender) {
         List<Arena> arenas = arenaManager.getAllArenas();
         if (arenas.isEmpty()) {
-            sender.sendMessage("§cAucune arène disponible.");
+            Lang.send(sender, "command.arenas-none");
             return;
         }
         String names = arenas.stream()
-                .map(a -> a.getName() + " (" + a.getConfig().minPlayers() + "-" + a.getConfig().maxPlayers() + ")")
-                .collect(Collectors.joining(", "));
-        sender.sendMessage("§eArènes disponibles : §f" + names);
+                .map(a -> Lang.get("command.arena-entry", "name", a.getName(),
+                        "min", a.getConfig().minPlayers(), "max", a.getConfig().maxPlayers()))
+                .collect(Collectors.joining(Lang.get("command.arena-separator")));
+        Lang.send(sender, "command.arenas-list", "list", names);
     }
 
     private void handleWeaponChoice(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cCommande réservée aux joueurs.");
+            Lang.send(sender, "general.player-only");
             return;
         }
         if (args.length < 2) {
-            player.sendMessage("§eUsage: /laser weapon <id>");
+            Lang.send(player, "command.usage.weapon");
             return;
         }
 
         Optional<Match> gameOpt = gameManager.getGame(player);
         if (gameOpt.isEmpty()) {
-            player.sendMessage("§cTu n'es dans aucune partie. Rejoins d'abord une arène avec /laser join.");
+            Lang.send(player, "general.not-in-game-join-hint");
             return;
         }
 
@@ -174,34 +176,34 @@ public class LaserCommand implements CommandExecutor {
     private void handleWeaponsList(CommandSender sender) {
         List<WeaponType> weapons = weaponManager.getAllWeapons();
         if (weapons.isEmpty()) {
-            sender.sendMessage("§cAucune arme disponible.");
+            Lang.send(sender, "command.weapons-none");
             return;
         }
         String names = weapons.stream()
-                .map(w -> w.id() + " (" + ChatColor.translateAlternateColorCodes('&', w.displayName()) + "§e)")
-                .collect(Collectors.joining("§e, "));
-        sender.sendMessage("§eArmes disponibles : §f" + names);
+                .map(w -> Lang.get("command.list-entry", "id", w.id(), "name", Lang.color(w.displayName())))
+                .collect(Collectors.joining(Lang.get("command.list-separator")));
+        Lang.send(sender, "command.weapons-list", "list", names);
     }
 
     private void handleSkillChoice(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cCommande réservée aux joueurs.");
+            Lang.send(sender, "general.player-only");
             return;
         }
         if (args.length < 2) {
-            player.sendMessage("§eUsage: /laser skill <id>");
+            Lang.send(player, "command.usage.skill");
             return;
         }
 
         Optional<Match> matchOpt = gameManager.getGame(player);
         if (matchOpt.isEmpty()) {
-            player.sendMessage("§cTu n'es dans aucune partie. Rejoins d'abord une arène avec /laser join.");
+            Lang.send(player, "general.not-in-game-join-hint");
             return;
         }
         Match match = matchOpt.get();
         if (match.getState() != MatchState.WAITING && match.getState() != MatchState.STARTING
                 && match.getState() != MatchState.SHOP) {
-            player.sendMessage("§cTu ne peux pas changer de compétence pendant un round.");
+            Lang.send(player, "command.skill-change-forbidden");
             return;
         }
 
@@ -210,39 +212,39 @@ public class LaserCommand implements CommandExecutor {
 
         Optional<SkillDefinition> defOpt = skillManager.getDefinition(args[1]);
         if (defOpt.isEmpty()) {
-            player.sendMessage("§cCompétence inconnue : " + args[1] + ". Utilise /laser skills pour la liste.");
+            Lang.send(player, "command.skill-unknown", "id", args[1]);
             return;
         }
 
         gpOpt.get().setEquippedSkillId(defOpt.get().id());
-        player.sendMessage("§aCompétence équipée : §f" + defOpt.get().displayName());
+        Lang.send(player, "command.skill-equipped", "name", Lang.color(defOpt.get().displayName()));
     }
 
     private void handleSkillsList(CommandSender sender) {
         List<SkillDefinition> skills = skillManager.getAllDefinitions();
         if (skills.isEmpty()) {
-            sender.sendMessage("§cAucune compétence disponible.");
+            Lang.send(sender, "command.skills-none");
             return;
         }
         String names = skills.stream()
-                .map(s -> s.id() + " (" + ChatColor.translateAlternateColorCodes('&', s.displayName()) + "§e)")
-                .collect(Collectors.joining("§e, "));
-        sender.sendMessage("§eCompétences disponibles : §f" + names);
+                .map(s -> Lang.get("command.list-entry", "id", s.id(), "name", Lang.color(s.displayName())))
+                .collect(Collectors.joining(Lang.get("command.list-separator")));
+        Lang.send(sender, "command.skills-list", "list", names);
     }
 
     private void handleArchetypeChoice(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cCommande réservée aux joueurs.");
+            Lang.send(sender, "general.player-only");
             return;
         }
         if (args.length < 2) {
-            player.sendMessage("§eUsage: /laser archetype <id>");
+            Lang.send(player, "command.usage.archetype");
             return;
         }
 
         Optional<Match> matchOpt = gameManager.getGame(player);
         if (matchOpt.isEmpty()) {
-            player.sendMessage("§cTu n'es dans aucune partie. Rejoins d'abord une arène avec /laser join.");
+            Lang.send(player, "general.not-in-game-join-hint");
             return;
         }
 
@@ -253,13 +255,13 @@ public class LaserCommand implements CommandExecutor {
     private void handleArchetypesList(CommandSender sender) {
         List<ArchetypeDefinition> archetypes = archetypeManager.getAllDefinitions();
         if (archetypes.isEmpty()) {
-            sender.sendMessage("§cAucun archétype disponible.");
+            Lang.send(sender, "command.archetypes-none");
             return;
         }
         String names = archetypes.stream()
-                .map(a -> a.id() + " (" + ChatColor.translateAlternateColorCodes('&', a.displayName()) + "§e)")
-                .collect(Collectors.joining("§e, "));
-        sender.sendMessage("§eArchétypes disponibles : §f" + names);
+                .map(a -> Lang.get("command.list-entry", "id", a.id(), "name", Lang.color(a.displayName())))
+                .collect(Collectors.joining(Lang.get("command.list-separator")));
+        Lang.send(sender, "command.archetypes-list", "list", names);
     }
 
     /**
@@ -269,21 +271,21 @@ public class LaserCommand implements CommandExecutor {
      */
     private void handleShopView(CommandSender sender) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cCommande réservée aux joueurs.");
+            Lang.send(sender, "general.player-only");
             return;
         }
         Optional<GamePlayer> gpOpt = gameManager.getGamePlayer(player);
         if (gpOpt.isEmpty()) {
-            player.sendMessage("§cTu n'es dans aucune partie.");
+            Lang.send(player, "general.not-in-game");
             return;
         }
         ShopSession session = gpOpt.get().getShopSession();
         if (session == null) {
-            player.sendMessage("§cLe shop n'est pas ouvert en ce moment.");
+            Lang.send(player, "general.shop-closed");
             return;
         }
 
-        player.sendMessage("§e--- Shop (argent : §f" + gpOpt.get().getCurrency() + "§e) ---");
+        Lang.send(player, "command.shop.header", "money", gpOpt.get().getCurrency());
 
         List<String> consumableIds = session.getConsumableSlotIds();
         for (int i = 0; i < consumableIds.size(); i++) {
@@ -291,26 +293,25 @@ public class LaserCommand implements CommandExecutor {
             Optional<ConsumableDefinition> defOpt = id != null ? consumableManager.getDefinition(id) : Optional.empty();
             if (defOpt.isPresent()) {
                 ConsumableDefinition def = defOpt.get();
-                player.sendMessage("§7[" + (i + 1) + "] §f" + ChatColor.translateAlternateColorCodes('&', def.displayName())
-                        + " §7(" + def.rarity() + ", §6" + def.price() + "$§7)");
+                Lang.send(player, "command.shop.consumable-line", "slot", i + 1,
+                        "name", Lang.color(def.displayName()), "rarity", def.rarity(), "price", def.price());
             } else {
-                player.sendMessage("§7[" + (i + 1) + "] §8(vide)");
+                Lang.send(player, "command.shop.consumable-empty", "slot", i + 1);
             }
         }
-        player.sendMessage("§7Reroll consommables : §6" + shopManager.getConsumableRerollCost(session)
-                + "$ §7(§f/laser shopreroll§7)");
+        Lang.send(player, "command.shop.reroll-line", "cost", shopManager.getConsumableRerollCost(session));
 
-        player.sendMessage("§e--- Slots spéciaux (exclu ce shop : " + session.getExcludedSpecialType() + ") ---");
+        Lang.send(player, "command.shop.special-header", "excluded", session.getExcludedSpecialType());
         for (SpecialSlotType type : SpecialSlotType.values()) {
             String id = session.getSpecialSlotIds().get(type);
             if (id == null) continue; // type exclu cette phase, ou aucun item trouvé
-            player.sendMessage("§7" + type + " : §f" + id + " §7(§f/laser buy special " + type.name().toLowerCase() + "§7)");
+            Lang.send(player, "command.shop.special-line", "type", type, "id", id, "command", type.name().toLowerCase());
         }
     }
 
     private void handleShopReroll(CommandSender sender) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cCommande réservée aux joueurs.");
+            Lang.send(sender, "general.player-only");
             return;
         }
         Optional<GamePlayer> gpOpt = gameManager.getGamePlayer(player);
@@ -319,15 +320,15 @@ public class LaserCommand implements CommandExecutor {
 
         ShopSession session = gp.getShopSession();
         if (session == null) {
-            player.sendMessage("§cLe shop n'est pas ouvert en ce moment.");
+            Lang.send(player, "general.shop-closed");
             return;
         }
 
         boolean success = shopManager.rerollConsumables(gp, session);
         if (success) {
-            player.sendMessage("§aSlots consommables rerollés.");
+            Lang.send(player, "command.shop.reroll-success");
         } else {
-            player.sendMessage("§cPas assez d'argent pour reroll (" + shopManager.getConsumableRerollCost(session) + "$).");
+            Lang.send(player, "command.shop.reroll-fail", "cost", shopManager.getConsumableRerollCost(session));
         }
     }
 
@@ -337,11 +338,11 @@ public class LaserCommand implements CommandExecutor {
      */
     private void handleBuy(CommandSender sender, String[] args) {
         if (!(sender instanceof Player player)) {
-            sender.sendMessage("§cCommande réservée aux joueurs.");
+            Lang.send(sender, "general.player-only");
             return;
         }
         if (args.length < 3) {
-            player.sendMessage("§eUsage: /laser buy <consumable <slot>|special <type>>");
+            Lang.send(player, "command.usage.buy");
             return;
         }
 
@@ -351,7 +352,7 @@ public class LaserCommand implements CommandExecutor {
 
         ShopSession session = gp.getShopSession();
         if (session == null) {
-            player.sendMessage("§cLe shop n'est pas ouvert en ce moment.");
+            Lang.send(player, "general.shop-closed");
             return;
         }
 
@@ -361,36 +362,36 @@ public class LaserCommand implements CommandExecutor {
             try {
                 slot = Integer.parseInt(args[2]) - 1; // affiché 1-indexé, stocké 0-indexé
             } catch (NumberFormatException e) {
-                player.sendMessage("§eUsage: /laser buy consumable <slot 1-5>");
+                Lang.send(player, "command.usage.buy-consumable");
                 return;
             }
             boolean success = shopManager.purchaseConsumableSlot(gp, session, slot);
-            player.sendMessage(success ? "§aAchat effectué." : "§cAchat impossible (prix, slot vide, ou inventaire plein).");
+            Lang.send(player, success ? "general.purchase-success" : "command.shop.buy-consumable-fail");
         } else if (kind.equals("special")) {
             SpecialSlotType type;
             try {
                 type = SpecialSlotType.valueOf(args[2].toUpperCase());
             } catch (IllegalArgumentException e) {
-                player.sendMessage("§eType invalide. Utilise : weapon, upgrade, skill, archetype.");
+                Lang.send(player, "command.shop.invalid-type");
                 return;
             }
             boolean success = shopManager.purchaseSpecialSlot(gp, session, type);
-            player.sendMessage(success ? "§aAchat effectué." : "§cAchat impossible (prix, slot exclu ce shop, ou déjà possédé).");
+            Lang.send(player, success ? "general.purchase-success" : "command.shop.buy-special-fail");
         } else {
-            player.sendMessage("§eUsage: /laser buy <consumable <slot>|special <type>>");
+            Lang.send(player, "command.usage.buy");
         }
     }
 
     private void handleUpgradesList(CommandSender sender) {
         List<PermanentUpgradeDefinition> upgrades = upgradeManager.getAllDefinitions();
         if (upgrades.isEmpty()) {
-            sender.sendMessage("§cAucune amélioration disponible.");
+            Lang.send(sender, "command.upgrades-none");
             return;
         }
         String names = upgrades.stream()
-                .map(u -> u.id() + " (" + ChatColor.translateAlternateColorCodes('&', u.displayName()) + "§e)")
-                .collect(Collectors.joining("§e, "));
-        sender.sendMessage("§eAméliorations disponibles : §f" + names);
+                .map(u -> Lang.get("command.list-entry", "id", u.id(), "name", Lang.color(u.displayName())))
+                .collect(Collectors.joining(Lang.get("command.list-separator")));
+        Lang.send(sender, "command.upgrades-list", "list", names);
     }
 
     /**
@@ -400,11 +401,11 @@ public class LaserCommand implements CommandExecutor {
      */
     private void handleGive(CommandSender sender, String[] args) {
         if (!sender.hasPermission("lasergame.admin")) {
-            sender.sendMessage("§cTu n'as pas la permission.");
+            Lang.send(sender, "general.no-permission");
             return;
         }
         if (args.length < 3) {
-            sender.sendMessage("§eUsage: /laser give <consumable|skill|archetype|upgrade> <id> [joueur]");
+            Lang.send(sender, "command.usage.give");
             return;
         }
 
@@ -415,19 +416,19 @@ public class LaserCommand implements CommandExecutor {
         if (args.length >= 4) {
             target = Bukkit.getPlayer(args[3]);
             if (target == null) {
-                sender.sendMessage("§cJoueur introuvable : " + args[3]);
+                Lang.send(sender, "command.give.player-not-found", "player", args[3]);
                 return;
             }
         } else if (sender instanceof Player p) {
             target = p;
         } else {
-            sender.sendMessage("§cPrécise un joueur cible depuis la console.");
+            Lang.send(sender, "command.give.console-needs-target");
             return;
         }
 
         Optional<GamePlayer> gpOpt = gameManager.getGamePlayer(target);
         if (gpOpt.isEmpty()) {
-            sender.sendMessage("§c" + target.getName() + " n'est dans aucune partie.");
+            Lang.send(sender, "command.give.target-not-in-game", "player", target.getName());
             return;
         }
         GamePlayer gp = gpOpt.get();
@@ -435,51 +436,49 @@ public class LaserCommand implements CommandExecutor {
         switch (type) {
             case "consumable" -> {
                 if (consumableManager.getDefinition(id).isEmpty()) {
-                    sender.sendMessage("§cConsommable inconnu : " + id);
+                    Lang.send(sender, "command.give.consumable-unknown", "id", id);
                     return;
                 }
                 boolean added = gp.getConsumables().add(id, DuplicatePolicy.SEPARATE_SLOT);
-                sender.sendMessage(added
-                        ? "§a" + id + " donné à " + target.getName() + "."
-                        : "§cAucun slot disponible pour " + target.getName() + ".");
+                Lang.send(sender, added ? "command.give.consumable-given" : "command.give.consumable-no-slot",
+                        "id", id, "player", target.getName());
             }
             case "skill" -> {
                 if (skillManager.getDefinition(id).isEmpty()) {
-                    sender.sendMessage("§cCompétence inconnue : " + id);
+                    Lang.send(sender, "command.give.skill-unknown", "id", id);
                     return;
                 }
                 gp.setEquippedSkillId(id);
-                sender.sendMessage("§a" + id + " équipée par " + target.getName() + ".");
+                Lang.send(sender, "command.give.skill-equipped", "id", id, "player", target.getName());
             }
             case "archetype" -> {
                 Optional<ArchetypeDefinition> defOpt = archetypeManager.getDefinition(id);
                 if (defOpt.isEmpty()) {
-                    sender.sendMessage("§cArchétype inconnu : " + id);
+                    Lang.send(sender, "command.give.archetype-unknown", "id", id);
                     return;
                 }
                 ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get().effectId()).orElse(null);
                 gp.setArchetype(defOpt.get().id(), effect);
-                sender.sendMessage("§a" + id + " équipé par " + target.getName() + ".");
+                Lang.send(sender, "command.give.archetype-equipped", "id", id, "player", target.getName());
             }
             case "upgrade" -> {
                 Optional<PermanentUpgradeDefinition> defOpt = upgradeManager.getDefinition(id);
                 if (defOpt.isEmpty()) {
-                    sender.sendMessage("§cAmélioration inconnue : " + id);
+                    Lang.send(sender, "command.give.upgrade-unknown", "id", id);
                     return;
                 }
                 PermanentUpgradeEffect effect = upgradeManager.getEffect(defOpt.get().effectId()).orElse(null);
                 boolean added = gp.addPermanentUpgrade(defOpt.get().id(), effect);
-                sender.sendMessage(added
-                        ? "§a" + id + " débloquée pour " + target.getName() + "."
-                        : "§c" + target.getName() + " possède déjà cette amélioration.");
+                Lang.send(sender, added ? "command.give.upgrade-unlocked" : "command.give.upgrade-already-owned",
+                        "id", id, "player", target.getName());
             }
-            default -> sender.sendMessage("§eUsage: /laser give <consumable|skill|archetype|upgrade> <id> [joueur]");
+            default -> Lang.send(sender, "command.usage.give");
         }
     }
 
     private void handleReload(CommandSender sender) {
         if (!sender.hasPermission("lasergame.admin")) {
-            sender.sendMessage("§cTu n'as pas la permission.");
+            Lang.send(sender, "general.no-permission");
             return;
         }
         configManager.load();
@@ -489,6 +488,7 @@ public class LaserCommand implements CommandExecutor {
         skillManager.loadAll();
         archetypeManager.loadAll();
         upgradeManager.loadAll();
-        sender.sendMessage("§aArènes, armes, consommables, compétences, archétypes et améliorations rechargés.");
+        Lang.load(plugin, plugin.getConfig().getString("language", Lang.DEFAULT_LANGUAGE));
+        Lang.send(sender, "command.reload-success");
     }
 }

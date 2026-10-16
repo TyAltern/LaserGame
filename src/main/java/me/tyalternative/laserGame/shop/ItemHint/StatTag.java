@@ -1,5 +1,7 @@
 package me.tyalternative.laserGame.shop.ItemHint;
 
+import me.tyalternative.laserGame.lang.Lang;
+
 public enum StatTag {
     MONEY_BONUS("Argent Bonus"),                                        // Argent Bonus
     SHOP_SLOT("Slot Shop"),                                             // Slot Shop
@@ -34,5 +36,10 @@ public enum StatTag {
     StatTag(String displayName, String displayNamePlural) {
         this.displayName = displayName;
         this.displayNamePlural = displayNamePlural;
+    }
+    public String label(boolean plural) {
+        String key = "stat." + name().toLowerCase() + (plural ? ".other" : ".one");
+        if (Lang.has(key)) return Lang.get(key);
+        return plural ? displayNamePlural : displayName;
     }
 }

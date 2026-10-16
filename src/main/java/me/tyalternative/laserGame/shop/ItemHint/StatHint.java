@@ -11,6 +11,6 @@ public record StatHint(StatTag tag, String displayValue) {
         else if (TextUtil.isNumeric(displayValue)) plural = Double.parseDouble(displayValue) > 1;
         else if (TextUtil.isNumeric(signless)) plural = Double.parseDouble(signless) > 1;
 
-        return displayValue + " " + (plural ? tag.displayNamePlural : tag.displayName);
+        return displayValue + " " + tag.label(plural);
     }
 }

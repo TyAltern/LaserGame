@@ -9,15 +9,20 @@ import me.tyalternative.laserGame.archetype.ArchetypeManager;
 import me.tyalternative.laserGame.arena.Arena;
 import me.tyalternative.laserGame.config.ConfigManager;
 import me.tyalternative.laserGame.economy.CurrencySource;
+import me.tyalternative.laserGame.lang.Lang;
 import me.tyalternative.laserGame.shop.ShopContext;
 import me.tyalternative.laserGame.shop.ShopManager;
 import me.tyalternative.laserGame.weapon.WeaponAbilityManager;
+import me.tyalternative.laserGame.weapon.WeaponAttributeKeys;
 import me.tyalternative.laserGame.weapon.WeaponManager;
 import me.tyalternative.laserGame.weapon.WeaponType;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -95,8 +100,7 @@ public class Match {
         player.getInventory().clear();
         player.setGameMode(GameMode.ADVENTURE);
         player.teleport(arena.getConfig().waitingRoom());
-        player.sendMessage("§7Arme actuelle : §f" + defaultWeapon.displayName()
-                + "§7. Utilise §f/laser weapon <id>§7 pour en changer, §f/laser weapons§7 pour la liste.");
+        Lang.send(player, "match.joined-hint", "weapon", Lang.color(defaultWeapon.displayName()));
 
         maybeStartCountdown();
         return true;
@@ -108,15 +112,34 @@ public class Match {
 
         gp.getWeapon().stop();
         closeShopMenu(player);
+        cleanupPlayerState(player, gp);
 
         if (state == MatchState.STARTING && players.size() < effectiveMinPlayers()) cancelCountdown();
         if (state == MatchState.ROUND_IN_PROGRESS && currentRound != null) currentRound.onPlayerRemoved(gp);
         if (state == MatchState.SHOP) maybeEndShopPhaseEarly();
     }
 
-    public boolean setWeaponChoice(Player player, String weaponId) { // TODO : ADD SHOP COMPATIBILITY (CURRENTLY CHOSEN BY COMMAND AND NOT BY SHOP)
+    private void cleanupPlayerState(Player player, GamePlayer gp) {
+        nameTagHideTeam.removeEntity(player);
+
+        AttributeModifier sneakModifier = gp.getSneakSpeedModifier();
+        AttributeInstance sneakAttr = player.getAttribute(Attribute.SNEAKING_SPEED);
+        if (sneakAttr != null && sneakModifier != null) {
+            sneakAttr.removeModifier(sneakModifier);
+        }
+        gp.setSneakTimed(false);
+
+        AttributeInstance maxHealthAttr = player.getAttribute(Attribute.MAX_HEALTH);
+        if (maxHealthAttr != null) maxHealthAttr.setBaseValue(20.0);
+        if (!player.isDead()) player.setHealth(20.0);
+
+        AttributeInstance speedAttr = player.getAttribute(Attribute.MOVEMENT_SPEED);
+        if (speedAttr != null) speedAttr.removeModifier(WeaponAttributeKeys.speedModifier(plugin));
+    }
+
+    public boolean setWeaponChoice(Player player, String weaponId) {
         if (state != MatchState.WAITING && state != MatchState.STARTING && state != MatchState.SHOP) {
-            player.sendMessage("§cTu ne peux pas changer d'arme pendant un round.");
+            Lang.send(player, "match.weapon-change-forbidden");
             return false;
         }
         GamePlayer gp = players.get(player.getUniqueId());
@@ -124,18 +147,18 @@ public class Match {
 
         Optional<WeaponType> typeOpt = weaponManager.getWeapon(weaponId);
         if (typeOpt.isEmpty()) {
-            player.sendMessage("§cArme inconnue : " + weaponId + ". Utilise /laser weapons pour la liste.");
+            Lang.send(player, "match.weapon-unknown", "id", weaponId);
             return false;
         }
 
         gp.setWeapon(typeOpt.get());
-        player.sendMessage("§aArme sélectionnée : §f" + typeOpt.get().displayName());
+        Lang.send(player, "match.weapon-selected", "weapon", Lang.color(typeOpt.get().displayName()));
         return true;
     }
 
     public boolean setArchetypeChoice(Player player, String archetypeId) {
         if (state != MatchState.WAITING && state != MatchState.STARTING && state != MatchState.SHOP) {
-            player.sendMessage("§cTu ne peux pas changer d'archétype pendant un round.");
+            Lang.send(player, "match.archetype-change-forbidden");
             return false;
         }
         GamePlayer gp = players.get(player.getUniqueId());
@@ -143,13 +166,13 @@ public class Match {
 
         Optional<ArchetypeDefinition> defOpt = archetypeManager.getDefinition(archetypeId);
         if (defOpt.isEmpty()) {
-            player.sendMessage("§cArchétype inconnu : " + archetypeId + ". Utilise /laser archetypes pour la liste.");
+            Lang.send(player, "match.archetype-unknown", "id", archetypeId);
             return false;
         }
 
         ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get().effectId()).orElse(null);
         gp.setArchetype(defOpt.get().id(), effect);
-        player.sendMessage("§aArchétype équipé : §f" + defOpt.get().displayName());
+        Lang.send(player, "match.archetype-equipped", "name", Lang.color(defOpt.get().displayName()));
         return true;
     }
 
@@ -185,7 +208,7 @@ public class Match {
 
         state = MatchState.STARTING;
         countdownRemaining = config.getCountdownSeconds();
-        broadcastToAll("§eLe match commence dans " + countdownRemaining + " secondes...");
+        broadcastToAll(Lang.get("match.countdown-start", "seconds", countdownRemaining));
 
         scheduleTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             countdownRemaining--;
@@ -194,7 +217,7 @@ public class Match {
                 return;
             }
             if (countdownRemaining <= 5 || countdownRemaining % 10 == 0) {
-                broadcastToAll("§e" + countdownRemaining + "...");
+                broadcastToAll(Lang.get("match.countdown-start", "seconds", countdownRemaining));
             }
         },20L,20L);
     }
@@ -205,7 +228,7 @@ public class Match {
             scheduleTask = null;
         }
         state = MatchState.WAITING;
-        broadcastToAll("§cPas assez de joueurs, décompte annulé.");
+        broadcastToAll(Lang.get("match.countdown-cancelled"));
     }
 
     private void startFirstRound() {
@@ -261,7 +284,7 @@ public class Match {
         }
 
 
-        broadcastToAll("§ePhase shop : prochain round dans " + totalSeconds + "s.");
+        broadcastToAll(Lang.get("match.shop-phase", "seconds", totalSeconds));
 
         List<GamePlayer> matchPlayers = List.copyOf(players.values());
 
@@ -329,7 +352,7 @@ public class Match {
         if (currentRound != null) currentRound.stop();
 
         Player p = winner != null ? winner.getPlayer() : null;
-        broadcastToAll("§1" + (p != null ? p.getName() : "???") + "remporte le match !");
+        broadcastToAll(Lang.get("match.winner", "player", p != null ? p.getName() : null));
 
         for (GamePlayer gp : players.values()) {
             gp.getWeapon().stop();

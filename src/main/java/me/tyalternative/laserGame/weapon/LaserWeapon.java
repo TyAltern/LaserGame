@@ -4,6 +4,7 @@ import me.tyalternative.laserGame.config.ConfigManager;
 import me.tyalternative.laserGame.effect.EffectRegistry;
 import me.tyalternative.laserGame.effect.ShotFiredContext;
 import me.tyalternative.laserGame.game.GamePlayer;
+import me.tyalternative.laserGame.lang.Lang;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -70,16 +71,16 @@ public class LaserWeapon {
         return true;
     }
 
-    public void startManualReload(GamePlayer gp) {
-        if (reloading) return;
+    public boolean startManualReload(GamePlayer gp) {
+        if (reloading) return false;
         EffectiveWeaponStats stats = statsSupplier.get();
         if (stats.isReloadDisabled()) {
 //            sendActionBar(gp, "§7Cette arme ne peut pas être rechargée.");
-            return;
+            return false;
         }
         if (ammo >= stats.getMaxAmmo()) {
 //            sendActionBar(gp, "§7Munitions déjà pleines.");
-            return;
+            return false;
         }
         double usedFraction = stats.getMaxAmmo() <= 0 ? 1.0 : 1.0 - ((double) ammo / stats.getMaxAmmo());
         if (usedFraction < stats.getMinAmmoUsedFractionToReload() - 1e-9) {
@@ -91,10 +92,11 @@ public class LaserWeapon {
             }
             shotNotPossibleAmmoUnusedTask = Bukkit.getScheduler().runTaskLater(plugin, () -> gp.setDoesSeeAmmoNotUsedEnoughMessage(false), 20L);
 //            sendActionBar(player, "§cIl faut avoir utilisé au moins " + requiredPercent + "% du chargeur pour recharger.");
-            return;
+            return false;
         }
         reloading = true;
         reloadProgressTicks = 0;
+        return true;
     }
 
     private void tick() {
@@ -146,8 +148,9 @@ public class LaserWeapon {
     }
 
     private String buildAmmoText(EffectiveWeaponStats stats) {
-        String hint = ammo <= 0 ? " §7(clic droit maintenu pour recharger)" : "";
-        return "§f" + type.displayName() + " §f- Munitions : §b" + ammo + "§f/§b" + stats.getMaxAmmo() + hint;
+        String hint = ammo <= 0 ? Lang.get("weapon.reload-hint") : "";
+        return Lang.get("weapon.ammo-text", "weapon", Lang.color(type.displayName()),
+                "ammo", ammo, "max", stats.getMaxAmmo(), "hint", hint);
     }
 
     public String buildReloadBar(EffectiveWeaponStats stats) {

@@ -7,6 +7,7 @@ import me.tyalternative.laserGame.arena.ArenaManager;
 import me.tyalternative.laserGame.command.LaserCommand;
 import me.tyalternative.laserGame.config.ConfigManager;
 import me.tyalternative.laserGame.game.GameManager;
+import me.tyalternative.laserGame.lang.Lang;
 import me.tyalternative.laserGame.listeners.*;
 import me.tyalternative.laserGame.shop.ConsumableManager;
 import me.tyalternative.laserGame.shop.ShopManager;
@@ -18,6 +19,10 @@ import me.tyalternative.laserGame.weapon.WeaponManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public final class LaserGame extends JavaPlugin {
 
@@ -38,40 +43,8 @@ public final class LaserGame extends JavaPlugin {
         instance = this;
 
         saveDefaultConfig();
-        saveResourceIfMissing("arenas/test.yml");
-        saveResourceIfMissing("weapons/armored_rifle.yml");
-        saveResourceIfMissing("weapons/champion_saber.yml");
-        saveResourceIfMissing("weapons/golden_pistol.yml");
-        saveResourceIfMissing("weapons/knife.yml");
-        saveResourceIfMissing("weapons/longbow.yml");
-        saveResourceIfMissing("weapons/lucky_revolver.yml");
-        saveResourceIfMissing("weapons/machine_gun.yml");
-        saveResourceIfMissing("weapons/pistol.yml");
-        saveResourceIfMissing("weapons/regen_pistol.yml");
-        saveResourceIfMissing("weapons/revenant_blade.yml");
-        saveResourceIfMissing("weapons/rocket_launcher.yml");
-        saveResourceIfMissing("weapons/scattergun.yml");
-        saveResourceIfMissing("weapons/shotgun.yml");
-        saveResourceIfMissing("weapons/sniper.yml");
-        saveResourceIfMissing("weapons/thrifty_carbine.yml");
-        saveResourceIfMissing("weapons/tracer_rifle.yml");
-        saveResourceIfMissing("consumables/damage_cap.yml");
-        saveResourceIfMissing("consumables/bonus_damage.yml");
-        saveResourceIfMissing("consumables/instant_reload.yml");
-        saveResourceIfMissing("consumables/glow_nearby.yml");
-        saveResourceIfMissing("consumables/speed_boost.yml");
-        saveResourceIfMissing("consumables/invisibility.yml");
-        saveResourceIfMissing("skills/grapple.yml");
-        saveResourceIfMissing("skills/emergency_shield.yml");
-        saveResourceIfMissing("skills/speed_burst.yml");
-        saveResourceIfMissing("archetypes/berserker.yml");
-        saveResourceIfMissing("archetypes/nervous_trigger.yml");
-        saveResourceIfMissing("archetypes/vampire.yml");
-        saveResourceIfMissing("upgrades/speed_boost_permanent.yml");
-        saveResourceIfMissing("upgrades/fast_reload_permanent.yml");
-        saveResourceIfMissing("upgrades/extra_slot.yml");
-        saveResourceIfMissing("upgrades/reload_shield.yml");
-        saveResourceIfMissing("upgrades/extra_shop_slot.yml");
+        saveDefaultResources();
+        Lang.load(this, getConfig().getString("language", Lang.DEFAULT_LANGUAGE));
 
         this.configManager = new ConfigManager(this);
         configManager.load();
@@ -136,6 +109,22 @@ public final class LaserGame extends JavaPlugin {
     public void onDisable() {
         HologramHoverListener.shutdown();
         getLogger().info("LaserGame désactivé.");
+    }
+
+    private static final List<String> DATA_FOLDERS =
+            List.of("arenas/", "weapons/", "consumables/", "skills/", "archetypes/", "upgrades/");
+
+    private void saveDefaultResources() {
+        try (JarFile jar = new JarFile(getFile())) {
+            jar.stream()
+                    .filter(entry -> !entry.isDirectory())
+                    .map(JarEntry::getName)
+                    .filter(name -> name.endsWith(".yml"))
+                    .filter(name -> DATA_FOLDERS.stream().anyMatch(name::startsWith))
+                    .forEach(this::saveResourceIfMissing);
+        } catch (IOException e) {
+            getLogger().severe("Impossible d'extraire les ressources par défaut : " + e.getMessage());
+        }
     }
 
     private void saveResourceIfMissing(String resourcePath) {

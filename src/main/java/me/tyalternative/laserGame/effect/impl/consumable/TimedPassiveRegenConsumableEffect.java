@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.weapon.StatModifier;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.Bukkit;
 
 /** Régénère 1 munition toutes les 5s sans recharge manuelle, pendant 1 minute. */
@@ -20,7 +21,8 @@ public class TimedPassiveRegenConsumableEffect implements ConsumableEffect {
         };
         ctx.gp.addStatModifier(modifier);
         Bukkit.getScheduler().runTaskLater(ctx.plugin, () -> ctx.gp.removeStatModifier(modifier), DURATION_TICKS);
-        ctx.player.sendMessage("§7Régénère " + REGEN_AMOUNT + " munition toutes les 5 secondes pendant 1 minute.");
+        Lang.send(ctx.player, "effect.consumable.timed_passive_regen.activated", "amount", REGEN_AMOUNT,
+                "interval", Lang.duration(REGEN_INTERVAL_TICKS / 20), "duration", Lang.duration(DURATION_TICKS / 20));
         return true;
     }
 }

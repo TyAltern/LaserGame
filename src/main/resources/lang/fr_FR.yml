@@ -1,0 +1,285 @@
+# ============================================================================
+#  LaserGame - Textes (français)
+# ----------------------------------------------------------------------------
+#  Pour créer une autre langue : copie ce fichier en lang/<code>.yml
+#  (ex : en_US.yml), traduis-le, puis mets langage : en_US dans config.yml
+#  et fais /laser reload. Les clés absentes reprennent la valeur de fr_FR.
+#
+#  COULEURS      &a &c &l ...  et couleurs hexa  &#RRGGBB
+#  PLACEHOLDERS  {nom}                       -> valeur
+#                {nom|défaut}                -> défaut si le placeholder n'existe pas
+#                {n|singulier|pluriel}       -> accord selon le nombre n (singulier si n = 1)
+#                {n|zéro|singulier|pluriel}  -> idem, avec une forme pour 0
+#                Les formes peuvent contenir d'autres placeholders :
+#                "{n|aucun joueur|{n} joueur|{n} joueurs}"
+#                {prefix}                    -> texte de general.prefix (utilisable partout)
+#  Un texte vide ("") désactive le message.
+#  Plusieurs lignes : écrire une liste YAML (- "ligne 1" / - "ligne 2").
+#
+#  Les noms et descriptions des armes, consommables, compétences, archétypes
+#  et améliorations se modifient dans leurs propres fichiers .yml.
+# ============================================================================
+
+general:
+  prefix: ""
+  player-only: "&cCommande réservée aux joueurs."
+  no-permission: "&cTu n'as pas la permission."
+  not-in-game: "&cTu n'es dans aucune partie."
+  not-in-game-join-hint: "&cTu n'es dans aucune partie. Rejoins d'abord une arène avec /laser join."
+  shop-closed: "&cLe shop n'est pas ouvert en ce moment."
+  purchase-success: "&aAchat effectué."
+
+# Durées accordées automatiquement ({duration} dans certains textes)
+time:
+  second: "{n} {n|seconde|secondes}"
+  minute: "{n} {n|minute|minutes}"
+  separator: " "
+
+# ----------------------------------------------------------------------------
+#  Commandes
+# ----------------------------------------------------------------------------
+command:
+  usage:
+    main: "&eUsage: /laser <join|leave|list|weapon|weapons|skill|skills|archetype|archetypes|upgrades|shop|shopreroll|buy|give|reload> [argument]"
+    join: "&eUsage: /laser join <arène>"
+    weapon: "&eUsage: /laser weapon <id>"
+    skill: "&eUsage: /laser skill <id>"
+    archetype: "&eUsage: /laser archetype <id>"
+    buy: "&eUsage: /laser buy <consumable <slot>|special <type>>"
+    buy-consumable: "&eUsage: /laser buy consumable <slot 1-5>"
+    give: "&eUsage: /laser give <consumable|skill|archetype|upgrade> <id> [joueur]"
+  # Mise en forme des listes (/laser list, weapons, skills...)
+  list-entry: "{id} ({name}&e)"
+  list-separator: "&e, "
+  arena-entry: "{name} ({min}-{max})"
+  arena-separator: ", "
+  join-success: "&aTu as rejoint l'arène {arena}."
+  leave-success: "&aTu as quitté la partie."
+  arenas-none: "&cAucune arène disponible."
+  arenas-list: "&eArènes disponibles : &f{list}"
+  weapons-none: "&cAucune arme disponible."
+  weapons-list: "&eArmes disponibles : &f{list}"
+  skills-none: "&cAucune compétence disponible."
+  skills-list: "&eCompétences disponibles : &f{list}"
+  archetypes-none: "&cAucun archétype disponible."
+  archetypes-list: "&eArchétypes disponibles : &f{list}"
+  upgrades-none: "&cAucune amélioration disponible."
+  upgrades-list: "&eAméliorations disponibles : &f{list}"
+  skill-change-forbidden: "&cTu ne peux pas changer de compétence pendant un round."
+  skill-unknown: "&cCompétence inconnue : {id}. Utilise /laser skills pour la liste."
+  skill-equipped: "&aCompétence équipée : &f{name}"
+  reload-success: "&aArènes, armes, consommables, compétences, archétypes, améliorations et textes rechargés."
+
+  shop:
+    header: "&e--- Shop (argent : &f{money}&e) ---"
+    consumable-line: "&7[{slot}] &f{name} &7({rarity}, &6{price}$&7)"
+    consumable-empty: "&7[{slot}] &8(vide)"
+    reroll-line: "&7Reroll consommables : &6{cost}$ &7(&f/laser shopreroll&7)"
+    special-header: "&e--- Slots spéciaux (exclu ce shop : {excluded}) ---"
+    special-line: "&7{type} : &f{id} &7(&f/laser buy special {command}&7)"
+    reroll-success: "&aSlots consommables rerollés."
+    reroll-fail: "&cPas assez d'argent pour reroll ({cost}$)."
+    invalid-type: "&eType invalide. Utilise : weapon, upgrade, skill, archetype."
+    buy-consumable-fail: "&cAchat impossible (prix, slot vide, ou inventaire plein)."
+    buy-special-fail: "&cAchat impossible (prix, slot exclu ce shop, ou déjà possédé)."
+
+  give:
+    player-not-found: "&cJoueur introuvable : {player}"
+    console-needs-target: "&cPrécise un joueur cible depuis la console."
+    target-not-in-game: "&c{player} n'est dans aucune partie."
+    consumable-unknown: "&cConsommable inconnu : {id}"
+    consumable-given: "&a{id} donné à {player}."
+    consumable-no-slot: "&cAucun slot disponible pour {player}."
+    skill-unknown: "&cCompétence inconnue : {id}"
+    skill-equipped: "&a{id} équipée par {player}."
+    archetype-unknown: "&cArchétype inconnu : {id}"
+    archetype-equipped: "&a{id} équipé par {player}."
+    upgrade-unknown: "&cAmélioration inconnue : {id}"
+    upgrade-unlocked: "&a{id} débloquée pour {player}."
+    upgrade-already-owned: "&c{player} possède déjà cette amélioration."
+
+# ----------------------------------------------------------------------------
+#  Parties
+# ----------------------------------------------------------------------------
+game:
+  already-in-game: "&cTu es déjà dans une partie. Utilise /laser leave d'abord."
+  unknown-arena: "&cArène inconnue : {arena}"
+  already-started: "&cCe match a déjà commencé."
+  arena-full: "&cCette arène est pleine."
+
+match:
+  joined-hint: "&7Arme actuelle : &f{weapon}&7. Utilise &f/laser weapon <id>&7 pour en changer, &f/laser weapons&7 pour la liste."
+  weapon-change-forbidden: "&cTu ne peux pas changer d'arme pendant un round."
+  weapon-unknown: "&cArme inconnue : {id}. Utilise /laser weapons pour la liste."
+  weapon-selected: "&aArme sélectionnée : &f{weapon}"
+  archetype-change-forbidden: "&cTu ne peux pas changer d'archétype pendant un round."
+  archetype-unknown: "&cArchétype inconnu : {id}. Utilise /laser archetypes pour la liste."
+  archetype-equipped: "&aArchétype équipé : &f{name}"
+  countdown-start: "&eLe match commence dans {seconds} {seconds|seconde|secondes}..."
+  countdown-tick: "&e{seconds}..."
+  countdown-cancelled: "&cPas assez de joueurs, décompte annulé."
+  shop-phase: "&ePhase shop : prochain round dans {seconds}s."
+  winner: "&6{player|???} remporte le match !"
+
+round:
+  go: "&aGO!"
+  sneak-empty: "&cPlus de charge pour rester accroupi !"
+  first-blood: "&6Premier sang ! +{reward}$"
+  first-elimination: "&6Première élimination ! +{reward}$"
+  bet-target-payout: "&6{player|Ta cible} avait parié : tu récupères {payout}$ !"
+  eliminated: "&c{player|Un joueur} est éliminé !"
+  winner: "&6{player|???} remporte le round !"
+  bet-won: "&6Pari remporté : +{payout}$ !"
+
+combat:
+  hit: "&aTouché : {target}"
+  sneak-no-charge-hide: "&cTu n'as plus assez de charge pour te cacher."
+
+# ----------------------------------------------------------------------------
+#  Armes, HUD et interface
+# ----------------------------------------------------------------------------
+weapon:
+  ammo-text: "&f{weapon} &f- Munitions : &b{ammo}&f/&b{max}{hint}"
+  reload-hint: " &7(clic droit maintenu pour recharger)"
+
+# Texte de l'action bar. Le caractère ° est un espace fin (police personnalisée).
+hud:
+  ammo: "Muni:°{ammo}°/°{max}"
+  need-ammo: "Utilisez {ammo} Muni avant de recharger"
+
+ui:
+  slot-label:
+    weapon: "Arme"
+    upgrade: "Atout"
+    skill: "Aptitude"
+    archetype: "Profil"
+  # Catégories de consommables affichées dans l'inventaire
+  category:
+    defense: "DEFENSE"
+    offense: "OFFENSE"
+    sabotage: "SABOTAGE"
+    weapon_ammo: "WEAPON_AMMO"
+    display: "DISPLAY"
+    mobility: "MOBILITY"
+    crowd_control: "CROWD_CONTROL"
+    stealth: "STEALTH"
+    economy: "ECONOMY"
+
+# Libellés des statistiques affichées dans les bulles d'info de la boutique
+# (one = singulier, other = pluriel)
+stat:
+  money_bonus: { one: "Argent Bonus", other: "Argent Bonus" }
+  shop_slot: { one: "Slot Shop", other: "Slot Shop" }
+  consumable_slot: { one: "Slot Consommable", other: "Slot Consommable" }
+  ammo_bonus: { one: "Muni Bonus", other: "Muni Bonus" }
+  free_shot: { one: "Tir Gratuit", other: "Tirs Gratuits" }
+  fire_rate: { one: "Cadence de Tir", other: "Cadence de Tir" }
+  hit_radius: { one: "Taille Faisceau", other: "Taille Faisceau" }
+  damage_blocked: { one: "Degat Annule", other: "Degats Annules" }
+  reload_speed: { one: "Rechargement", other: "Rechargement" }
+  ability_cooldown: { one: "de Cooldown", other: "de Cooldown" }
+  extra_life: { one: "Vie", other: "Vies" }
+  range: { one: "Portee", other: "Portee" }
+  max_ammo: { one: "Munition", other: "Munitions" }
+  damage_dealt: { one: "Degat Infligé", other: "Degats Infligés" }
+  critical_damage_dealt: { one: "Degat Critique", other: "Degats Critiques" }
+  damage_taken: { one: "Degat Subit", other: "Degats Subits" }
+  movement_speed: { one: "Vitesse", other: "Vitesse" }
+  crouch_time: { one: "Tps Accroupi", other: "Tps Accroupi" }
+  invisibility: { one: "Invisibilite", other: "Invisibilite" }
+  duration: { one: "Duree", other: "Duree" }
+  radius: { one: "Blocs de Distance", other: "Blocs de Distance" }
+  piercing_shot: { one: "Tir perforant", other: "Tirs Perforants" }
+  ammo_regen: { one: "Muni Regen", other: "Muni Regen" }
+
+# ----------------------------------------------------------------------------
+#  Consommables et compétences (utilisation)
+# ----------------------------------------------------------------------------
+consumable:
+  empty-slot: "&7Slot {slot} vide."
+  invalid: "&cObjet invalide (config manquante), retiré de ton inventaire."
+  effect-missing: "&cEffet introuvable pour {name}."
+
+skill:
+  none-equipped: "&7Aucune compétence équipée."
+  invalid: "&cCompétence invalide (config manquante)."
+  cooldown: "&cCompétence encore en recharge ({seconds}s)."
+  effect-missing: "&cEffet introuvable pour {name}."
+
+# Messages affichés à l'activation. Placeholders propres à chaque effet indiqués en commentaire.
+effect:
+  consumable:
+    aoe_next_shot:
+      activated: "&7Ton prochain tir réussi infligera aussi {damage} {damage|dégât|dégâts} aux joueurs proches de la cible."   # {damage}
+    bonus_damage_next_shot:
+      activated: "&7Ton prochain tir réussi infligera 1 dégât supplémentaire."
+    execute_next_shot:
+      activated: "&7Ton prochain tir qui amène un joueur à sa dernière vie l'éliminera directement."
+    free_shot:
+      activated: "&7Ton prochain tir ne consommera pas de munition."
+    damage_cap_next_hit:
+      activated: "&7Ton prochain coup reçu sera plafonné à 1 dégât."
+    reflect_next_hit:
+      activated: "&7Le prochain coup que tu reçois infligera aussi 1 dégât au tireur."
+    long_range_immune:
+      activated: "&7Le prochain coup reçu de plus de {distance} blocs sera ignoré."   # {distance}
+    detection_immune:
+      activated: "&7Tu es immunisé aux effets de détection adverses pour ce round."
+    invisibility_cancel_on_shot:
+      activated: "&7Invisible pendant {duration} (annulé si tu tires)."   # {duration}
+    instant_reload:
+      success: "&aArme rechargée instantanément !"
+      failure: "&cCette arme ne peut pas être rechargée."
+    reload_overflow:
+      activated: "&7Ton prochain rechargement restaurera {amount} {amount|munition bonus|munitions bonus} au-delà du max."   # {amount}
+    timed_passive_regen:
+      activated: "&7Régénère {amount} {amount|munition|munitions} toutes les {interval} pendant {duration}."   # {amount} {interval} {duration}
+    piercing_shots:
+      activated: "&7Tes {shots} prochains {shots|tir traversera|tirs traverseront} les joueurs touchés."   # {shots}
+    round_max_ammo_boost:
+      activated: "&7+{percent}% de munitions max pour le round."   # {percent}
+    round_range_boost:
+      activated: "&7+{percent}% de portée pour le round."   # {percent}
+    round_cooldown_reduction:
+      activated: "&7-{percent}% de cooldown entre deux tirs pour le round."   # {percent}
+    curse_troll_weapon:
+      activated: "&7Le prochain joueur touché aura une arme dégradée, jusqu'à son prochain tir ou coup reçu."
+    curse_double_cooldown:
+      activated: "&7Le prochain joueur touché aura son cooldown de tir doublé, jusqu'à son prochain tir ou coup reçu."
+    curse_ammo_loss:
+      activated: "&7Le prochain joueur touché perdra 40% de ses munitions max pour le round."
+    glow_nearby:
+      activated: "&7{count} {count|joueur mis|joueurs mis} en surbrillance pendant {duration}."   # {count} {duration}
+    glow_crouching:
+      activated: "&7{count} {count|joueur accroupi mis|joueurs accroupis mis} en surbrillance pendant {duration}."   # {count} {duration}
+    speed_boost:
+      activated: "&a+{percent}% de vitesse pendant {duration} !"   # {percent} {duration}
+    sneak_speed_unlock:
+      unavailable: "&cCet effet n'est pas disponible sur ce serveur."
+      activated: "&7Tu peux te déplacer à vitesse normale en étant accroupi pour ce round."
+    jump_boost_round:
+      activated: "&7Jump boost activé pour le reste du round."
+    freeze_cc:
+      activated: "&7{count} {count|joueur figé|joueurs figés} pendant {duration}."   # {count} {duration}
+    nausea_cc:
+      activated: "&7{count} {count|joueur pris|joueurs pris} de nausée pendant {duration}."   # {count} {duration}
+    slow_cc:
+      activated: "&7{count} {count|joueur ralenti|joueurs ralentis} pendant {duration}."   # {count} {duration}
+    smoke_bomb:
+      activated: "&7Bombe fumigène lancée."
+    fake_death:
+      unavailable: "&cImpossible d'utiliser ça maintenant."
+    bet_win_x4:
+      too-late: "&cTrop tard, une élimination a déjà eu lieu ce round."
+      announce: "&6{player} a parié sur sa victoire !"   # {player}
+    bet_double_earnings:
+      too-late: "&cTrop tard : une élimination a déjà eu lieu ce round."
+      activated: "&7Tes gains de kills sont retenus, doublés si tu remportes le round."
+  skill:
+    emergency_shield:
+      activated: "&bBouclier d'Urgence activé : le prochain coup sera totalement absorbé pendant {duration}."   # {duration}
+      expired: "&bVotre Bouclier d'Urgence s'est désactivé, {duration} ont passé."   # {duration}
+    grapple:
+      activated: "&bGrappin !"
+    speed_burst:
+      activated: "&bSprint explosif !"

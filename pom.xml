@@ -42,31 +42,31 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>run-autohotkey-script</id>
-                        <phase>package</phase> <!-- ou autre phase où tu veux exécuter -->
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>cmd</executable>
-                            <arguments>
-                                <argument>/c</argument>
-                                <argument>start</argument>
-                                <argument>""</argument>
-                                <argument>"C:\Program Files\AutoHotkey\AutoHotkeyU64.exe"</argument>
-                                <argument>"C:\Users\basti\OneDrive\Documents\Bastien\Plugin\PluginPlayGround\LaserGame\Server\minecraft_stop_restart.ahk"</argument>
-                                <argument>"LaserGame"</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>exec-maven-plugin</artifactId>-->
+<!--                <version>3.1.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>run-autohotkey-script</id>-->
+<!--                        <phase>package</phase> &lt;!&ndash; ou autre phase où tu veux exécuter &ndash;&gt;-->
+<!--                        <goals>-->
+<!--                            <goal>exec</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <executable>cmd</executable>-->
+<!--                            <arguments>-->
+<!--                                <argument>/c</argument>-->
+<!--                                <argument>start</argument>-->
+<!--                                <argument>""</argument>-->
+<!--                                <argument>"C:\Program Files\AutoHotkey\AutoHotkeyU64.exe"</argument>-->
+<!--                                <argument>"C:\Users\basti\OneDrive\Documents\Bastien\Plugin\PluginPlayGround\LaserGame\Server\minecraft_stop_restart.ahk"</argument>-->
+<!--                                <argument>"LaserGame"</argument>-->
+<!--                            </arguments>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
         <resources>
             <resource>
@@ -91,4 +91,47 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <file>
+                    <exists>C:\Program Files\AutoHotkey\AutoHotkeyU64.exe</exists>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>run-autohotkey-script</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>cmd</executable>
+                                    <arguments>
+                                        <argument>/c</argument>
+                                        <argument>start</argument>
+                                        <argument>""</argument>
+                                        <argument>"C:\Program Files\AutoHotkey\AutoHotkeyU64.exe"</argument>
+                                        <argument>"${ahk.script}"</argument>
+                                        <argument>"LaserGame"</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <properties>
+                <!-- À surcharger dans ~/.m2/settings.xml ou avec -Dahk.script=... -->
+                <ahk.script>minecraft_stop_restart.ahk</ahk.script>
+            </properties>
+        </profile>
+    </profiles>
 </project>

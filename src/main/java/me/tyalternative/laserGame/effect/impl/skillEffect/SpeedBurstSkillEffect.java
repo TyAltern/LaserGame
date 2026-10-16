@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.effect.impl.skillEffect;
 
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.SkillEffect;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -30,6 +31,6 @@ public class SpeedBurstSkillEffect implements SkillEffect{
             }
         }, DURATION_TICKS);
 
-        ctx.player.sendMessage("§bSprint explosif !");
+        Lang.send(ctx.player, "effect.skill.speed_burst.activated");
     }
 }

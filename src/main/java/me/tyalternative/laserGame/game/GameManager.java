@@ -13,6 +13,7 @@ import me.tyalternative.laserGame.upgrade.PermanentUpgradeManager;
 import me.tyalternative.laserGame.weapon.WeaponAbilityManager;
 import me.tyalternative.laserGame.weapon.WeaponAttributeKeys;
 import me.tyalternative.laserGame.weapon.WeaponManager;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -56,13 +57,13 @@ public class GameManager {
 
     public boolean joinGame(Player player, String arenaName) {
         if (matchByPlayer.containsKey(player.getUniqueId())) {
-            player.sendMessage("§cTu es déjà dans une partie. Utilise /laser leave d'abord.");
+            Lang.send(player, "game.already-in-game");
             return false;
         }
 
         Optional<Arena> arenaOpt = arenaManager.getArena(arenaName);
         if (arenaOpt.isEmpty()) {
-            player.sendMessage("§cArène inconnue : " + arenaName);
+            Lang.send(player, "game.unknown-arena", "arena", arenaName);
             return false;
         }
         Arena arena = arenaOpt.get();
@@ -74,12 +75,12 @@ public class GameManager {
         }
 
         if (match.getState() != MatchState.WAITING && match.getState() != MatchState.STARTING) {
-            player.sendMessage("§cCe match a déjà commencé.");
+            Lang.send(player, "game.already-started");
             return false;
         }
 
         if (match.isFull()) {
-            player.sendMessage("§cCette arène est pleine.");
+            Lang.send(player, "game.arena-full");
             return false;
         }
 
@@ -93,7 +94,7 @@ public class GameManager {
     public boolean leaveGame(Player player) {
         Match match = matchByPlayer.remove(player.getUniqueId());
         if (match == null) {
-            player.sendMessage("§cTu n'es dans aucune partie.");
+            Lang.send(player, "general.not-in-game");
             return false;
         }
         match.removePlayer(player);

@@ -8,6 +8,7 @@ import me.tyalternative.laserGame.game.Match;
 import me.tyalternative.laserGame.shop.ItemHint.StatHint;
 import me.tyalternative.laserGame.shop.ItemHint.StatTag;
 import me.tyalternative.laserGame.shop.Rarity;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -144,25 +145,25 @@ public class SkillManager {
     public boolean activate(GamePlayer gp, Player player, Match match) {
         String skillId = gp.getEquippedSkillId();
         if (skillId == null) {
-            player.sendMessage("§7Aucune compétence équipée.");
+            Lang.send(player, "skill.none-equipped");
             return false;
         }
 
         SkillDefinition def = definitions.get(skillId);
         if (def == null) {
-            player.sendMessage("§cCompétence invalide (config manquante).");
+            Lang.send(player, "skill.invalid");
             return false;
         }
 
         if (!gp.isSkillReady()) {
             long remainingSeconds = (gp.getSkillCooldownRemainingTicks() + 19) / 20; // arrondi au supérieur
-            player.sendMessage("§cCompétence encore en recharge (" + remainingSeconds + "s).");
+            Lang.send(player, "skill.cooldown", "seconds", remainingSeconds);
             return false;
         }
 
         SkillEffect effect = effectRegistry.get(def.effectId());
         if (effect == null) {
-            player.sendMessage("§cEffet introuvable pour " + def.displayName() + ".");
+            Lang.send(player, "skill.effect-missing", "name", Lang.color(def.displayName()));
             return false;
         }
 

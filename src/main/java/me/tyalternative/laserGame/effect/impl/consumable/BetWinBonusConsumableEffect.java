@@ -4,6 +4,7 @@ import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Round;
+import me.tyalternative.laserGame.lang.Lang;
 
 /**
  * Pari : annonce publiquement l'utilisation. Si tu remportes le round, tu gagnes 4x le prix d'achat.
@@ -16,12 +17,12 @@ public class BetWinBonusConsumableEffect implements ConsumableEffect {
     public boolean activate(ActivationContext ctx) {
         Round round = ctx.match.getCurrentRound();
         if (round == null || round.hasFirstEliminationOccurred()) {
-            ctx.player.sendMessage("§cTrop tard, une élimination a déjà eu lieu ce round.");
+            Lang.send(ctx.player, "effect.consumable.bet_win_x4.too-late");
             return false;
         }
 
         ctx.gp.placeBet(GamePlayer.BetType.WIN_X4, ctx.price);
-        ctx.match.broadcastToAll("§6" + ctx.player.getName() + " a parié sur sa victoire !");
+        ctx.match.broadcastToAll(Lang.get("effect.consumable.bet_win_x4.announce", "player", ctx.player.getName()));
         return true;
     }
 }

@@ -6,6 +6,7 @@ import me.tyalternative.laserGame.effect.impl.consumable.*;
 import me.tyalternative.laserGame.effect.impl.effect.CurseNextTargetEffect;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
+import me.tyalternative.laserGame.lang.Lang;
 import me.tyalternative.laserGame.shop.ItemHint.StatHint;
 import me.tyalternative.laserGame.shop.ItemHint.StatTag;
 import org.bukkit.Material;
@@ -208,20 +209,20 @@ public class ConsumableManager {
     public boolean activate(GamePlayer gp, Player player, Match match, int slot) {
         Optional<String> idOpt = gp.getConsumables().get(slot);
         if (idOpt.isEmpty()) {
-            player.sendMessage("§7Slot " + (slot + 1) + " vide.");
+            Lang.send(player, "consumable.empty-slot", "slot", slot + 1);
             return false;
         }
 
         ConsumableDefinition def = definitions.get(idOpt.get());
         if (def == null) {
-            player.sendMessage("§cObjet invalide (config manquante), retiré de ton inventaire.");
+            Lang.send(player, "consumable.invalid");
             gp.getConsumables().clear(slot);
             return false;
         }
 
         ConsumableEffect effect = effectRegistry.get(def.effectId());
         if (effect == null) {
-            player.sendMessage("§cEffet introuvable pour " + def.displayName() + ".");
+            Lang.send(player, "consumable.effect-missing", "name", Lang.color(def.displayName()));
             return false;
         }
 

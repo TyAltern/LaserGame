@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -28,7 +29,7 @@ public class SpeedBoostConsumableEffect implements ConsumableEffect {
             if (attr != null) attr.removeModifier(key);
         }, DURATION_TICKS);
 
-        ctx.player.sendMessage("§a+10% de vitesse pendant 1 minute !");
+        Lang.send(ctx.player, "effect.consumable.speed_boost.activated", "percent", (int) Math.round(AMOUNT * 100), "duration", Lang.duration(DURATION_TICKS / 20));
         return true;
     }
 }

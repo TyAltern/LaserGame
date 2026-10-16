@@ -7,6 +7,7 @@ import me.tyalternative.laserGame.game.MatchState;
 import me.tyalternative.laserGame.weapon.EffectiveWeaponStats;
 import me.tyalternative.laserGame.weapon.ShotTrailRenderer;
 import me.tyalternative.laserGame.weapon.WeaponManager;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -151,7 +152,7 @@ public class PlayerAttackListener implements Listener {
 
         Player shooterPlayer = shooter.getPlayer();
         if (shooterPlayer != null) {
-            shooterPlayer.sendMessage("§aTouché : " + target.getName());
+            Lang.send(shooterPlayer, "combat.hit", "target", target.getName());
             shooterPlayer.playSound(shooterPlayer.getLocation(),
                     org.bukkit.Sound.ENTITY_ARROW_HIT_PLAYER, 1f, 1.5f);
         }

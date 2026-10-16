@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -14,7 +15,7 @@ public class JumpBoostRoundConsumableEffect implements ConsumableEffect {
     public boolean activate(ActivationContext ctx) {
         ctx.player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, (int) DURATION_TICKS, 1, false, false));
         ctx.gp.addRoundScopedCleanup(() -> ctx.player.removePotionEffect(PotionEffectType.JUMP_BOOST));
-        ctx.player.sendMessage("§7Jump boost activé pour le reste du round.");
+        Lang.send(ctx.player, "effect.consumable.jump_boost_round.activated");
         return true;
     }
 }

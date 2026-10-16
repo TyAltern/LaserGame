@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.game.GamePlayer;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -26,7 +27,7 @@ public class GlowCrouchingConsumableEffect implements ConsumableEffect {
             otherPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, (int) DURATION_TICKS, 0, false, false));
             affected++;
         }
-        ctx.player.sendMessage("§7" + affected + " joueur(s) accroupi(s) mis en surbrillance pendant 25 secondes.");
+        Lang.send(ctx.player, "effect.consumable.glow_crouching.activated", "count", affected, "duration", Lang.duration(DURATION_TICKS / 20));
         return true;
     }
 }

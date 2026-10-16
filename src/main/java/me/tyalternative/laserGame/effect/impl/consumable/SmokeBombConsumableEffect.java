@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.game.GamePlayer;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -33,7 +34,7 @@ public class SmokeBombConsumableEffect implements ConsumableEffect {
                 ? result.getHitPosition().toLocation(ctx.player.getWorld())
                 : eye.clone().add(direction.multiply(THROW_RANGE));
 
-        ctx.player.sendMessage("§7Bombe fumigène lancée.");
+        Lang.send(ctx.player, "effect.consumable.smoke_bomb.activated");
 
         double radiusSqr = RADIUS * RADIUS;
         long totalTicks = DURATION_TICKS;

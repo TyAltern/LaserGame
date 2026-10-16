@@ -10,6 +10,7 @@ import me.tyalternative.laserGame.skill.SkillDefinition;
 import me.tyalternative.laserGame.utils.Font;
 import me.tyalternative.laserGame.utils.TextUtil;
 import me.tyalternative.laserGame.weapon.WeaponType;
+import me.tyalternative.laserGame.lang.Lang;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -143,7 +144,8 @@ public class ActionBarManager {
         int maxAmmo = gp.getWeapon().getMaxAmmo();
         int decimal = (int) Math.floor(Math.log10(maxAmmo)) + 1;
         int ammo = match.getState() == MatchState.SHOP ? maxAmmo: gp.getWeapon().getAmmo();
-        String text = "Muni:°" + String.format("%0" + decimal + "d", ammo)  + "°/°" + maxAmmo;
+//        String text = "Muni:°" + String.format("%0" + decimal + "d", ammo)  + "°/°" + maxAmmo;
+        String text = Lang.get("hud.ammo", "ammo", String.format("%0" + decimal + "d", ammo), "max", maxAmmo);
 //        int length = TextUtil.getStringLength(text);
         int offset = (3-decimal) * 4;
         if (offset == 0) return TextUtil.buildTextComponent(1, 0,text, Font.HUD_TEXT_HIGH).append(TextUtil.buildOffset(145, 0));
@@ -156,7 +158,8 @@ public class ActionBarManager {
         if (gp.doesSeeAmmoNotUsedEnoughMessage()) {
             int requiredAmmo = gp.getWeapon().getAmmo() - (int) Math.ceil((1- gp.getEffectiveStats().getMinAmmoUsedFractionToReload()) * gp.getWeapon().getMaxAmmo());
             if (requiredAmmo > 0) {
-                String text = "Utilisez " + requiredAmmo + " Muni avant de recharger";
+//                String text = "Utilisez " + requiredAmmo + " Muni avant de recharger";
+                String text = Lang.get("hud.need-ammo", "ammo", requiredAmmo);
                 int length = TextUtil.getStringLength(text);
                 int offset = (132 - length) / 2 - 1;
                 return component.append(

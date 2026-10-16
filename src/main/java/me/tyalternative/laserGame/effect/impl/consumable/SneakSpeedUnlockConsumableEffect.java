@@ -2,6 +2,7 @@ package me.tyalternative.laserGame.effect.impl.consumable;
 
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -17,7 +18,7 @@ public class SneakSpeedUnlockConsumableEffect implements ConsumableEffect {
     public boolean activate(ActivationContext ctx) {
         AttributeInstance sneakAttr = ctx.player.getAttribute(Attribute.SNEAKING_SPEED);
         if (sneakAttr == null) {
-            ctx.player.sendMessage("§cCet effet n'est pas disponible sur ce serveur.");
+            Lang.send(ctx.player, "effect.consumable.sneak_speed_unlock.unavailable");
             return false;
         }
 
@@ -39,7 +40,7 @@ public class SneakSpeedUnlockConsumableEffect implements ConsumableEffect {
 //            if (attr != null) attr.removeModifier(key);
 //        });
 
-        ctx.player.sendMessage("§7Tu peux te déplacer à vitesse normale en étant accroupi pour ce round.");
+        Lang.send(ctx.player, "effect.consumable.sneak_speed_unlock.activated");
         return true;
     }
 }
