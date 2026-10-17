@@ -19,6 +19,7 @@ public class DamageCapNextHitEffect implements PendingEffect {
     @Override
     public boolean onDamageTaken(HitResolutionContext ctx) {
         ctx.livesToRemove = Math.min(ctx.livesToRemove, cap);
+        if (ctx.livesToRemove <= 0) ctx.absorbed = true;
         return true;
     }
 }

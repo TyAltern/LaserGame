@@ -126,7 +126,7 @@ public class ActionBarManager {
 
         } else {
 
-            long maxSneakTick = LaserGame.getInstance().getConfigManager().getMaxSneakChargeTicks();
+            long maxSneakTick = gp.getMaxSneakChargeTicks();
             long sneakTick = match.getState() == MatchState.SHOP ? maxSneakTick: gp.getSneakChargeTicks();
             int sneakBars = Math.toIntExact(Math.ceilDiv(sneakTick * 13, Math.max(1, maxSneakTick)));
             for (int i = 1; i < 14; i++) {
@@ -144,7 +144,7 @@ public class ActionBarManager {
         int maxAmmo = gp.getWeapon().getMaxAmmo();
         int decimal = (int) Math.floor(Math.log10(maxAmmo)) + 1;
         int ammo = match.getState() == MatchState.SHOP ? maxAmmo: gp.getWeapon().getAmmo();
-//        String text = "Muni:°" + String.format("%0" + decimal + "d", ammo)  + "°/°" + maxAmmo;
+
         String text = Lang.get("hud.ammo", "ammo", String.format("%0" + decimal + "d", ammo), "max", maxAmmo);
 //        int length = TextUtil.getStringLength(text);
         int offset = (3-decimal) * 4;
@@ -158,10 +158,10 @@ public class ActionBarManager {
         if (gp.doesSeeAmmoNotUsedEnoughMessage()) {
             int requiredAmmo = gp.getWeapon().getAmmo() - (int) Math.ceil((1- gp.getEffectiveStats().getMinAmmoUsedFractionToReload()) * gp.getWeapon().getMaxAmmo());
             if (requiredAmmo > 0) {
-//                String text = "Utilisez " + requiredAmmo + " Muni avant de recharger";
+
                 String text = Lang.get("hud.need-ammo", "ammo", requiredAmmo);
                 int length = TextUtil.getStringLength(text);
-                int offset = (132 - length) / 2 - 1;
+                int offset = (132 - length) / 2 + 3;
                 return component.append(
                         TextUtil.buildTextComponent("\uF033", Font.HUD),
                         TextUtil.buildTextComponent(133, offset, text, Font.HUD_TEXT_RELOAD),
@@ -169,7 +169,7 @@ public class ActionBarManager {
                 );
             }
         }
-         if (gp.getWeapon().isReloading()) component = component.append(TextUtil.buildTextComponent("\uF032", Font.HUD));
+        if (gp.getWeapon().isReloading()) component = component.append(TextUtil.buildTextComponent("\uF032", Font.HUD));
         else if (!gp.canSeeRadar()) component = component.append(TextUtil.buildTextComponent("\uF031", Font.HUD));
         else component = component.append(TextUtil.buildTextComponent("\uF030", Font.HUD));
 

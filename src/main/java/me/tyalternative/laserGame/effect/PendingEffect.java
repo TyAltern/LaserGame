@@ -10,4 +10,5 @@ public interface PendingEffect {
     default boolean onReloadCompleted() { return false; }
     default boolean onRoundStart() { return false; }
     default boolean onRespawn() { return false; }
+    default boolean onLifeLost() { return false; }
 }

@@ -1,14 +1,12 @@
 package me.tyalternative.laserGame.shop;
 
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ShopSession {
 
     private List<String> consumableSlotIds = new ArrayList<>();
     private int consumableRerollCount = 0;
+    private final Set<Integer> freeConsumablesSlots = new HashSet<>();
 
     private final Map<SpecialSlotType, String> specialSlotsIds = new EnumMap<>(SpecialSlotType.class);
     private SpecialSlotType excludedSpecialType;
@@ -19,6 +17,19 @@ public class ShopSession {
 
     public void setConsumableSlotIds(List<String> ids) {
         this.consumableSlotIds = ids;
+    }
+
+    public boolean isConsumablesSlotFree(int slotIndex) {
+        return freeConsumablesSlots.contains(slotIndex);
+    }
+
+    public void markAlConsumableSlotsFree() {
+        freeConsumablesSlots.clear();
+        for (int i = 0; i < consumableSlotIds.size(); i++) freeConsumablesSlots.add(i);
+    }
+
+    public void clearFreeConsumablesSlots() {
+        freeConsumablesSlots.clear();
     }
 
     public int getConsumableRerollCount() {

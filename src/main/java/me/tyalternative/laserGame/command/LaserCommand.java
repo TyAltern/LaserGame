@@ -294,7 +294,8 @@ public class LaserCommand implements CommandExecutor {
             if (defOpt.isPresent()) {
                 ConsumableDefinition def = defOpt.get();
                 Lang.send(player, "command.shop.consumable-line", "slot", i + 1,
-                        "name", Lang.color(def.displayName()), "rarity", def.rarity(), "price", def.price());
+                        "name", Lang.color(def.displayName()), "rarity", def.rarity(),
+                        "price", shopManager.getConsumablePrice(gpOpt.get(), session, i, def));
             } else {
                 Lang.send(player, "command.shop.consumable-empty", "slot", i + 1);
             }
@@ -467,7 +468,7 @@ public class LaserCommand implements CommandExecutor {
                     Lang.send(sender, "command.give.upgrade-unknown", "id", id);
                     return;
                 }
-                PermanentUpgradeEffect effect = upgradeManager.getEffect(defOpt.get().effectId()).orElse(null);
+                PermanentUpgradeEffect effect = upgradeManager.getEffect(defOpt.get()).orElse(null);
                 boolean added = gp.addPermanentUpgrade(defOpt.get().id(), effect);
                 Lang.send(sender, added ? "command.give.upgrade-unlocked" : "command.give.upgrade-already-owned",
                         "id", id, "player", target.getName());

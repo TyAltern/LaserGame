@@ -217,7 +217,7 @@ public class Match {
                 return;
             }
             if (countdownRemaining <= 5 || countdownRemaining % 10 == 0) {
-                broadcastToAll(Lang.get("match.countdown-start", "seconds", countdownRemaining));
+                broadcastToAll(Lang.get("match.countdown-tick", "seconds", countdownRemaining));
             }
         },20L,20L);
     }
@@ -261,9 +261,22 @@ public class Match {
     }
 
     private void onRoundEnded(GamePlayer winner) {
+        for (GamePlayer gp : players.values()) {
+            gp.setWonLastRound(gp == winner);
+        }
+
         if (winner != null) {
             winner.incrementRoundWins();
             winner.addCurrency(config.getRoundWinReward(), CurrencySource.ROUND_WIN);
+
+            int flawlessBonus = winner.getFlawlessBonusWins();
+            if (flawlessBonus > 0 && !winner.hasLostLifeThisRound()) {
+                winner.addRoundWins(flawlessBonus);
+                Player winnerPlayer = winner.getPlayer();
+                if (winnerPlayer != null) {
+                    Lang.send(winnerPlayer, "effect.upgrtade.flawless_bonus.activated","points", flawlessBonus);
+                }
+            }
         }
 
         if (winner != null && winner.getRoundWins() >= config.getRoundsToWin()) {

@@ -97,7 +97,7 @@ public class ShopScreenMenu {
 
             slot.setText(SLOT_AVAILABLE);
             slot.setHoverText(SLOT_AVAILABLE_HOVER);
-            priceTag.setText(formatPrice(def.price()));
+            priceTag.setText(formatPrice(shopContext.shopManager().getConsumablePrice(gamePlayer, session, i , def)));
             icon.setText(def.glyph() == null ? "" : def.glyph());
             hintPanel.setHint(slot.getId(), def.displayName(), def.description(), def.statModification());
         }
@@ -163,13 +163,13 @@ public class ShopScreenMenu {
     private Optional<SpecialItemView> resolveSpecialItem(SpecialSlotType type, String id) {
         return switch (type) {
             case WEAPON -> shopContext.weaponManager().getWeapon(id)
-                    .map(w -> new SpecialItemView(w.displayName(), w.rarity(), w.price(), w.glyph(), w.description(), w.statModification()));
+                    .map(w -> new SpecialItemView(w.displayName(), w.rarity(), shopContext.shopManager().getEffectivePrice(gamePlayer, w.price()), w.glyph(), w.description(), w.statModification()));
             case UPGRADE -> shopContext.upgradeManager().getDefinition(id)
-                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph(), d.description(), d.statModification()));
+                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), shopContext.shopManager().getEffectivePrice(gamePlayer, d.price()), d.glyph(), d.description(), d.statModification()));
             case SKILL -> shopContext.skillManager().getDefinition(id)
-                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph(), d.description(), d.statModification()));
+                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), shopContext.shopManager().getEffectivePrice(gamePlayer, d.price()), d.glyph(), d.description(), d.statModification()));
             case ARCHETYPE -> shopContext.archetypeManager().getDefinition(id)
-                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), d.price(), d.glyph(), d.description(), d.statModification()));
+                    .map(d -> new SpecialItemView(d.displayName(), d.rarity(), shopContext.shopManager().getEffectivePrice(gamePlayer, d.price()), d.glyph(), d.description(), d.statModification()));
         };
     }
 

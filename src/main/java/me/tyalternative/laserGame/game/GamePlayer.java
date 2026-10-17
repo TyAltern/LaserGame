@@ -1,5 +1,8 @@
 package me.tyalternative.laserGame.game;
 
+import me.tyalternative.laserGame.weapon.WeaponAttributeKeys;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.Attribute;
 import me.tyalternative.laserGame.archetype.ArchetypeEffect;
 import me.tyalternative.laserGame.config.ConfigManager;
 import me.tyalternative.laserGame.economy.CurrencySource;
@@ -168,8 +171,11 @@ public class GamePlayer {
     public int getRoundWins() { return roundWins; }
     public void incrementRoundWins() { roundWins++; }
 
+    public void addRoundWins(int amount) { roundWins += amount; }
+
     public void resetForNewRound(int startingLives) {
-        this.lives = startingLives;
+        this.lives = startingLives + bonusStartingLives;
+        this.lostLifeThisRound = false;
         this.spectator = false;
         this.detectionImmune = false;
         clearBet();
@@ -221,8 +227,6 @@ public class GamePlayer {
     public int getCurrency() { return currency; }
 
     public void addCurrency(int amount, CurrencySource source) {
-        // TODO : Point d'accroche futur pour les modificateurs type "+15% d'argent sur les kills" :
-        //  remplacer par currency += modifiers.applyCurrencyBonus(amount, source);
         if ((source == CurrencySource.SHOT_HIT || source == CurrencySource.ELIMINATION)
                 && effectiveStats != null && effectiveStats.getCombatCurrencyMultiplier() != 1.0) {
             amount = (int) Math.round(amount * effectiveStats.getCombatCurrencyMultiplier());
@@ -272,7 +276,7 @@ public class GamePlayer {
         String incoming = consumableStorage.remove(storageIndex);
         String outgoing = consumables.get(equippedSlotIndex).orElse(null);
         consumables.set(equippedSlotIndex, incoming);
-        if (outgoing != null) consumableStorage.add(outgoing); // TODO: test and see if it is ok or if I need to replace to the incoming slot
+        if (outgoing != null) consumableStorage.add(outgoing);
         return true;
     }
 
@@ -396,7 +400,7 @@ public class GamePlayer {
 
     public boolean addPermanentUpgrade(String upgradeId, PermanentUpgradeEffect effect) {
         if (ownedUpgradeIds.contains(upgradeId)) {
-            return false; // TODO : VOIR POUR AJOUTER UNE AMELIORATION QUI PERMET DE STACK LES AMELIORATIONS.
+            return false;
         }
         ownedUpgradeIds.add(upgradeId);
 
@@ -441,6 +445,98 @@ public class GamePlayer {
 
     public int getBonusShopSlots() { return bonusShopSlots; }
     public void addBonusShopSlot(int amount) { bonusShopSlots += amount; }
+
+    // BONUS DES AMELIORATIONS
+
+    private double skillCooldownReduction = 0.0;
+
+    public void raiseSkillCooldownReduction(double reduction) {
+        skillCooldownReduction = Math.clamp(reduction, skillCooldownReduction, 0.95);
+    }
+
+    public double getSkillCooldownMultiplier() { return 1.0 - skillCooldownReduction; }
+
+    private int eliminationRewardBonus = 0;
+    private int hitRewardBonus = 0;
+    private int firstBloodRewardBonus = 0;
+
+    public int getEliminationRewardBonus() { return eliminationRewardBonus; }
+    public void addEliminationRewardBonus(int amount) { eliminationRewardBonus += amount; }
+    public int getHitRewardBonus() { return hitRewardBonus; }
+    public void addHitRewardBonus(int amount) { hitRewardBonus += amount; }
+    public int getFirstBloodRewardBonus() { return firstBloodRewardBonus; }
+    public void addFirstBloodRewardBonus(int amount) { firstBloodRewardBonus += amount; }
+
+    private long radarDelayReductionTicks = 0;
+
+    public void raiseRadarDelayReduction(long ticks) {
+        radarDelayReductionTicks = Math.max(radarDelayReductionTicks, ticks);
+    }
+
+    public long getRadarDelayTicks(long baseTicks) {
+        return Math.max(0L, baseTicks - radarDelayReductionTicks);
+    }
+
+    // Boutique
+    private boolean allowDuplicateConsumables = false;
+    private double shopDiscount = 0.0;
+    private boolean freeFirstRollAfterWin = false;
+    private boolean wonLastRound = false;
+
+    public boolean allowsDuplicateConsumables() { return allowDuplicateConsumables; }
+    public void setAllowDuplicateConsumables(boolean allow) { this.allowDuplicateConsumables = allow; }
+
+    public double getShopDiscount() { return shopDiscount; }
+    public void raiseShopDiscount(double discount) { shopDiscount = Math.max(shopDiscount, Math.min(1.0, discount)); }
+
+    public boolean hasFreeFirstRollAfterWin() { return freeFirstRollAfterWin; }
+    public void setFreeFirstRollAfterWin(boolean value) { this.freeFirstRollAfterWin = value; }
+    public boolean hasWonLastRound() { return wonLastRound; }
+    public void setWonLastRound(boolean wonLastRound) { this.wonLastRound = wonLastRound; }
+
+    // Vies et points de victoire
+    private int bonusStartingLives = 0;
+    private int flawlessBonusWins = 0;
+    private boolean lostLifeThisRound = false;
+
+    public void addBonusStartingLives(int amount) {
+        bonusStartingLives += amount;
+        lives += amount;
+    }
+
+    public int getFlawlessBonusWins() { return flawlessBonusWins; }
+    public void addFlawlessBonusWins(int amount) { flawlessBonusWins += amount; }
+    public boolean hasLostLifeThisRound() { return lostLifeThisRound; }
+    public void markLifeLost() { this.lostLifeThisRound = true; }
+
+    // Accroupi
+    private double sneakChargeBonus = 0.0;
+    private long sneakStartTick = -1;
+
+    public void raiseSneakChargeBonus(double bonus) { sneakChargeBonus = Math.max(sneakChargeBonus, bonus); }
+
+    public long getMaxSneakChargeTicks() {
+        return Math.round(config.getMaxSneakChargeTicks() * (1.0 + sneakChargeBonus));
+    }
+
+    /** Tick serveur où le joueur s'est accroupi (-1 s'il ne l'est pas). */
+    public long getSneakStartTick() { return sneakStartTick; }
+    public void setSneakStartTick(long tick) { this.sneakStartTick = tick; }
+
+    /** Réapplique la vitesse de déplacement issue des stats (utile quand un effet la modifie en cours de round). */
+    public void refreshMovementSpeed() {
+        Player online = getPlayer();
+        if (online == null || spectator || effectiveStats == null) return;
+        AttributeInstance speedAttr = online.getAttribute(Attribute.MOVEMENT_SPEED);
+        if (speedAttr == null) return;
+
+        NamespacedKey key = WeaponAttributeKeys.speedModifier(plugin);
+        speedAttr.removeModifier(key);
+        double modifier = effectiveStats.getMovementSpeedModifier();
+        if (modifier != 0.0) {
+            speedAttr.addModifier(new AttributeModifier(key, modifier, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
+        }
+    }
 
     // READY (phase shop)
 

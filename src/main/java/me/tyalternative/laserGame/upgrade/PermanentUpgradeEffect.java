@@ -16,6 +16,10 @@ public interface PermanentUpgradeEffect {
         return Optional.empty();
     }
 
+    default Optional<PendingEffect> getPersistentEffect(GamePlayer owner) {
+        return getPersistentEffect();
+    }
+
     default void onPurchase(GamePlayer gp) {
     }
 }

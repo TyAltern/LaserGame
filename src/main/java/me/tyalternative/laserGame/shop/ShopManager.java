@@ -44,23 +44,29 @@ public class ShopManager {
     public ShopSession createSession(GamePlayer gp) {
         ShopSession session = new ShopSession();
         rollConsumableSlots(gp, session,0);
-        rollSpecialSlots(session);
+        if (gp.hasFreeFirstRollAfterWin() && gp.hasWonLastRound()) {
+            session.markAlConsumableSlotsFree();
+        }
+        rollSpecialSlots(gp, session);
         return session;
     }
 
     private void rollConsumableSlots(GamePlayer gp, ShopSession session, int pityLevel) {
         int slotCount = Math.min(MAX_CONSUMABLE_SLOTS, config.getShopConsumableSlots() + gp.getBonusShopSlots());
 
-        List<ConsumableDefinition> pool = consumableManager.getAllDefinitions();
+        boolean allowDuplicates = gp.allowsDuplicateConsumables();
+        List<ConsumableDefinition> pool = new ArrayList<>(consumableManager.getAllDefinitions());
         List<String> ids = new ArrayList<>();
         for (int i = 0; i < slotCount; i++) {
-            RarityPool.draw(pool, config.getRarityWeights(), pityLevel, config.getPityWeightShiftPerReroll())
-                    .ifPresent(def -> ids.add(def.id()));
+            Optional<ConsumableDefinition> drawn = RarityPool.draw(pool, config.getRarityWeights(), pityLevel, config.getPityWeightShiftPerReroll());
+            if (drawn.isEmpty()) continue;
+            ids.add(drawn.get().id());
+            if (!allowDuplicates) pool.remove(drawn.get()); // FIX: TODO Seams o need a while instead of a fori.
         }
         session.setConsumableSlotIds(ids);
     }
 
-    private void rollSpecialSlots(ShopSession session) {
+    private void rollSpecialSlots(GamePlayer gp, ShopSession session) {
         List<SpecialSlotType> remaining = new ArrayList<>(List.of(SpecialSlotType.values()));
         SpecialSlotType excluded = remaining.remove(ThreadLocalRandom.current().nextInt(remaining.size()));
         session.setExcludedSpecialType(excluded);
@@ -68,24 +74,35 @@ public class ShopManager {
         Collections.shuffle(remaining);
 
         for (SpecialSlotType type : remaining) {
-            String id = rollSpecialSlotId(type);
+            String id = rollSpecialSlotId(gp, type);
             if (id != null) {
                 session.getSpecialSlotIds().put(type, id);
             }
         }
     }
 
-    private String rollSpecialSlotId(SpecialSlotType type) {
+    private String rollSpecialSlotId(GamePlayer gp, SpecialSlotType type) {
         return switch (type) {
             case WEAPON -> RarityPool.draw(weaponManager.getAllBuyableWeapons(), config.getRarityWeights(), 0, 0)
                     .map(WeaponType::id).orElse(null);
-            case UPGRADE -> RarityPool.draw(upgradeManager.getAllDefinitions(), config.getRarityWeights(), 0, 0)
+            case UPGRADE -> RarityPool.draw(upgradeManager.getAvailableFor(gp), config.getRarityWeights(), 0, 0)
                     .map(PermanentUpgradeDefinition::id).orElse(null);
             case SKILL -> RarityPool.draw(skillManager.getAllDefinitions(), config.getRarityWeights(), 0, 0)
                     .map(SkillDefinition::id).orElse(null);
             case ARCHETYPE -> RarityPool.draw(archetypeManager.getAllDefinitions(), config.getRarityWeights(), 0, 0)
                     .map(ArchetypeDefinition::id).orElse(null);
         };
+    }
+
+    public int getEffectivePrice(GamePlayer gp, int basePrice) {
+        double discount = gp.getShopDiscount();
+        if (discount <= 0.0) return basePrice;
+        return Math.max(0, (int) Math.round(basePrice * (1.0 - discount)));
+    }
+
+    public int getConsumablePrice(GamePlayer gp, ShopSession session, int slotIndex, ConsumableDefinition def) {
+        if (session != null && session.isConsumablesSlotFree(slotIndex)) return 0;
+        return getEffectivePrice(gp, def.price());
     }
 
     public int getConsumableRerollCost(ShopSession session) {
@@ -98,6 +115,7 @@ public class ShopManager {
             return false;
         }
         session.incrementConsumableRerollCount();
+        session.clearFreeConsumablesSlots();
         rollConsumableSlots(gp, session, session.getConsumableRerollCount());
         return true;
     }
@@ -112,11 +130,12 @@ public class ShopManager {
         if (defOpt.isEmpty()) return false;
         ConsumableDefinition def = defOpt.get();
 
-        if (config.getShopDuplicatePolicy() == DuplicatePolicy.BLOCK_PURCHASE && gp.ownsConsumable(def.id())) return false;
+        if (config.getShopDuplicatePolicy() == DuplicatePolicy.BLOCK_PURCHASE
+                && !gp.allowsDuplicateConsumables()
+                && gp.ownsConsumable(def.id())) return false;
 
-        if (!gp.spendCurrency(def.price())) return false;
+        if (!gp.spendCurrency(getConsumablePrice(gp, session, slotIndex, def))) return false;
 
-        // TODO : MODIFY FOR DUPLICATE UPGRADE
         gp.learnConsumable(def.id());
         ids.set(slotIndex, null);
         return true;
@@ -157,10 +176,11 @@ public class ShopManager {
         Optional<PermanentUpgradeDefinition> defOpt = upgradeManager.getDefinition(id);
         if (defOpt.isEmpty()) return false;
         PermanentUpgradeDefinition def = defOpt.get();
-        if (gp.ownsUpgrade(def.id())) return false; // Check si item deja possédé -> TODO : A modifier plus tard pour stack amélioration
+        if (gp.ownsUpgrade(def.id())) return false;
+        if (!upgradeManager.isUnlocked(gp, def)) return false;
 
         if (!gp.spendCurrency(def.price())) return false;
-        PermanentUpgradeEffect effect = upgradeManager.getEffect(def.effectId()).orElse(null);
+        PermanentUpgradeEffect effect = upgradeManager.getEffect(def).orElse(null);
         gp.addPermanentUpgrade(def.id(), effect);
         return true;
     }

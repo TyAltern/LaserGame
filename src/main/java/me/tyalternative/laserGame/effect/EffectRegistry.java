@@ -81,6 +81,14 @@ public class EffectRegistry {
         }
     }
 
+    public void fireLifeLost() {
+        for (PendingEffect effect : effects) {
+            if (effect.onLifeLost() && !permanent.contains(effect)) {
+                effects.remove(effect);
+            }
+        }
+    }
+
     public List<PendingEffect> getActive() {
         return effects;
     }

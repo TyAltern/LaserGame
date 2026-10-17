@@ -20,6 +20,7 @@ public class IgnoreLongRangeHitEffect implements PendingEffect {
     public boolean onDamageTaken(HitResolutionContext ctx) {
         if (ctx.distance > minDistance) {
             ctx.livesToRemove = 0;
+            ctx.absorbed = true;
         }
         return true;
     }

@@ -13,6 +13,7 @@ public class IgnoreDamageWhileReloadingEffect implements PendingEffect {
     public boolean onDamageTaken(HitResolutionContext ctx) {
         if (ctx.target.getWeapon().isReloading()) {
             ctx.livesToRemove = 0;
+            ctx.absorbed = true;
         }
         return false;
     }

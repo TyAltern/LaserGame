@@ -5,7 +5,7 @@ import me.tyalternative.laserGame.lang.Lang;
 public enum StatTag {
     MONEY_BONUS("Argent Bonus"),                                        // Argent Bonus
     SHOP_SLOT("Slot Shop"),                                             // Slot Shop
-    CONSUMABLE_SLOT("Slot Consomable"),                                 // Slot Consommable
+    CONSUMABLE_SLOT("Slot Consommable"),                                 // Slot Consommable
     AMMO_BONUS("Muni Bonus"),                                           // Muni Bonus
     FREE_SHOT("Tir Gratuit","Tirs Gratuits"),            // Tir Gratuit
     FIRE_RATE("Cadence de Tir"),                                        // Cadence de tir
@@ -18,15 +18,20 @@ public enum StatTag {
     MAX_AMMO("Munition", "Munitions"),                   // Munitions
     DAMAGE_DEALT("Degat Infligé", "Degats Infligés"),                     // Degats
     CRITICAL_DAMAGE_DEALT("Degat Critique", "Degats Critiques"),                     // Degats
-    DAMAGE_TAKEN("Degat Subit", "Degats SUbits"),        // Degat Subit
+    DAMAGE_TAKEN("Degat Subit", "Degats Subits"),        // Degat Subit
     MOVEMENT_SPEED("Vitesse"),                                          // Vitesse
     CROUCH_TIME("Tps Accroupi"),                                        // Tps Accroupis
     INVISIBILITY("Invisibilite"),                                        // Tps Accroupis
     DURATION("Duree"),                                                  // Tps Accroupis
     RADIUS("Blocs de Distance"),                                                  // Tps Accroupis
     PIERCING_SHOT("Tir perforant", "Tirs Perforants"),  // Tire Perforant                                      // Tps Accroupis
-    AMMO_REGEN("Muni Regen")                                            // Muni Regen
-;
+    AMMO_REGEN("Muni Regen"),                                           // Muni Regen
+    RADAR("Radar"),
+    DUPLICATE_ITEM("Doublon", "Doublons"),
+    SHOP_DISCOUNT("Reduction Shop"),
+    FREE_ITEM("Item Gratuit", "Items Gratuits"),
+    VICTORY_POINT("Point de Victoire", "Points de Victoire")
+    ;
     final String displayName;
     final String displayNamePlural;
     StatTag(String displayName) {

@@ -38,7 +38,7 @@ public class Round {
     private boolean firstEliminationClaimed = false;
     private boolean ended = false;
     private org.bukkit.scheduler.BukkitTask sneakChargeTask;
-    private org.bukkit.scheduler.BukkitTask radarCooldownTask;
+    private List<org.bukkit.scheduler.BukkitTask> radarTasks = new ArrayList<>();
 
     public interface RoundEndCallback {
         void onRoundEnded(GamePlayer winner);
@@ -70,11 +70,15 @@ public class Round {
         }
         broadcast(Lang.get("round.go"));
 
-        radarCooldownTask = Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            for (GamePlayer gamePlayer : players.values()) {
+        radarTasks.clear();
+        for (GamePlayer gamePlayer : players.values()) {
+            long delay = gamePlayer.getRadarDelayTicks(config.getRadarStartingCooldownTicks());
+            if (delay <= 0) {
                 gamePlayer.setCanSeeRadar(true);
+            } else {
+                radarTasks.add(Bukkit.getScheduler().runTaskLater(plugin, () -> gamePlayer.setCanSeeRadar(true), delay));
             }
-        }, config.getRadarStartingCooldownTicks());
+        }
         sneakChargeTask = Bukkit.getScheduler().runTaskTimer(plugin, this::tickSneakCharges, config.getSneakRegenIntervalTicks(), config.getSneakRegenIntervalTicks());
     }
 
@@ -99,10 +103,10 @@ public class Round {
             sneakChargeTask.cancel();
             sneakChargeTask = null;
         }
-        if (radarCooldownTask != null) {
-            radarCooldownTask.cancel();
-            radarCooldownTask = null;
+        for (BukkitTask radarTask : radarTasks) {
+            radarTask.cancel();
         }
+        radarTasks.clear();
 
         for (GamePlayer gp : players.values()) {
             revokeSneakLockLogic(gp);
@@ -126,7 +130,7 @@ public class Round {
         player.teleport(allocateRandomSpawn(gp.getUuid()));
 
         applyLivesToHealthBar(player, gp.getLives());
-        applyWeaponSpeedModifier(player, gp);
+        applyWeaponSpeedModifier(gp);
         applySneakLockLogic(gp);
         gp.getWeapon().start();
     }
@@ -156,7 +160,7 @@ public class Round {
     }
 
     private void applySneakLockLogic(GamePlayer gp) {
-        gp.setSneakChargeTicks(config.getMaxSneakChargeTicks());
+        gp.setSneakChargeTicks(gp.getMaxSneakChargeTicks());
         AttributeModifier modifier = gp.getSneakSpeedModifier();
 
         if (modifier == null) {
@@ -188,18 +192,8 @@ public class Round {
         gp.setSneakTimed(false);
     }
 
-    private void applyWeaponSpeedModifier(Player player, GamePlayer gp) {
-        AttributeInstance speedAttr = player.getAttribute(Attribute.MOVEMENT_SPEED);
-        if (speedAttr == null) return;
-
-        NamespacedKey key = WeaponAttributeKeys.speedModifier(plugin);
-        speedAttr.removeModifier(key);
-
-        double modifier = gp.getEffectiveStats().getMovementSpeedModifier();
-        if (modifier != 0.0) {
-            speedAttr.addModifier(new AttributeModifier(
-                    key, modifier, AttributeModifier.Operation.MULTIPLY_SCALAR_1));
-        }
+    private void applyWeaponSpeedModifier( GamePlayer gp) {
+        gp.refreshMovementSpeed();
     }
 
     public boolean hasFirstEliminationOccurred() { return firstEliminationClaimed; }
@@ -211,23 +205,33 @@ public class Round {
         ctx.wouldBeFirstElimination = !firstEliminationClaimed && target.getLives() - ctx.livesToRemove <= 0;
         target.getEffects().fireDamageTaken(ctx);
 
+        if (ctx.absorbed) return;
+
         shooter.incrementKills();
 
         if (!firstBloodClaimed) {
             firstBloodClaimed = true;
-            shooter.addCurrency(config.getFirstBloodReward(), CurrencySource.FIRST_BLOOD);
+            int firstBloodReward = config.getFirstBloodReward() + shooter.getFirstBloodRewardBonus();
+            shooter.addCurrency(firstBloodReward, CurrencySource.FIRST_BLOOD);
             Player shooterPlayer = shooter.getPlayer();
             if (shooterPlayer != null) {
-                Lang.send(shooterPlayer, "round.first-blood", "reward", config.getFirstBloodReward());
+                Lang.send(shooterPlayer, "round.first-blood", "reward", firstBloodReward);
             }
         }
 
         boolean eliminated = target.removeLife(ctx.livesToRemove);
         Player targetPlayer = target.getPlayer();
 
-        shooter.addCurrency(
-                eliminated ? config.getEliminationReward() : config.getShotHitReward(),
-                eliminated ? CurrencySource.ELIMINATION : CurrencySource.SHOT_HIT);
+        if (ctx.livesToRemove > 0) {
+            target.markLifeLost();
+            target.getEffects().fireLifeLost();
+        }
+
+        int reward = (eliminated
+                ? config.getEliminationReward() + shooter.getEliminationRewardBonus()
+                : config.getShotHitReward())
+                + shooter.getHitRewardBonus();
+        shooter.addCurrency( reward, eliminated ? CurrencySource.ELIMINATION : CurrencySource.SHOT_HIT);
 
         if (eliminated) {
             onPlayerElimination(shooter, target, shotDistance);

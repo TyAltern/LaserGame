@@ -112,7 +112,7 @@ public final class LaserGame extends JavaPlugin {
     }
 
     private static final List<String> DATA_FOLDERS =
-            List.of("arenas/", "weapons/", "consumables/", "skills/", "archetypes/", "upgrades/");
+            List.of("lang/", "arenas/", "weapons/", "consumables/", "skills/", "archetypes/", "upgrades/");
 
     private void saveDefaultResources() {
         try (JarFile jar = new JarFile(getFile())) {

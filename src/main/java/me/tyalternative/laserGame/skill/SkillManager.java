@@ -167,7 +167,7 @@ public class SkillManager {
             return false;
         }
 
-        gp.startSkillCooldown(def.cooldownTicks());
+        gp.startSkillCooldown(Math.max(1L, Math.round(def.cooldownTicks() * gp.getSkillCooldownMultiplier())));
         effect.activate(new ActivationContext(gp, player, match, plugin, def.price()));
         return true;
     }

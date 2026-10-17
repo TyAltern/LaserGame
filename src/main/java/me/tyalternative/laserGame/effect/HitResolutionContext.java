@@ -9,6 +9,7 @@ public class HitResolutionContext {
     public int livesToRemove;
     public final double distance;
     public boolean wouldBeFirstElimination = false;
+    public boolean absorbed = false;
 
     public HitResolutionContext(GamePlayer shooter, GamePlayer target, int baseLivesToRemove, double distance) {
         this.shooter = shooter;
