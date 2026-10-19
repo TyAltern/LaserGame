@@ -1,5 +1,7 @@
 package me.tyalternative.laserGame.effect;
 
+import me.tyalternative.laserGame.game.GamePlayer;
+
 import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -44,6 +46,27 @@ public class EffectRegistry {
     public void fireShotHit(HitResolutionContext ctx) {
         for (PendingEffect effect : effects) {
             if (effect.onShotHit(ctx) && !permanent.contains(effect)) {
+                effects.remove(effect);
+            }
+        }
+        for (PendingEffect effect : effects) {
+            if (effect.onShotHitFinal(ctx) && !permanent.contains(effect)) {
+                effects.remove(effect);
+            }
+        }
+    }
+
+    public void fireEliminationMade(GamePlayer victim) {
+        for (PendingEffect effect : effects) {
+            if (effect.onEliminationMade(victim) && !permanent.contains(effect)) {
+                effects.remove(effect);
+            }
+        }
+    }
+
+    public void fireLivesChanged() {
+        for (PendingEffect effect : effects) {
+            if (effect.onLivesChanged() && !permanent.contains(effect)) {
                 effects.remove(effect);
             }
         }

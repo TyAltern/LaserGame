@@ -1,0 +1,15 @@
+id: money_rain
+display-name: "Pluie d'Argent"
+category: ECONOMY
+rarity: UNIQUE
+price: 40
+effect-id: money_rain
+params:
+  amount: 5
+
+icon-material: GOLD_NUGGET
+description: "Gagne 5$ a chaque touche jusqu'a la fin du round."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "+5$/touche"
+glyph: "\uA02D"

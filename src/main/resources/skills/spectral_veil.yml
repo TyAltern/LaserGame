@@ -1,0 +1,18 @@
+id: spectral_veil
+display-name: "Voile Spectral"
+rarity: RARE
+price: 40
+cooldown-ticks: 1200
+effect-id: spectral_veil
+params:
+  invisible-seconds: 20
+  lock-after-seconds: 3
+
+icon-material: GHAST_TEAR
+description: "Invisible pendant 20 secondes, sans pouvoir tirer (ni 3 secondes apres). S'accroupir ou etre touche retire l'invisibilite."
+stat-hints:
+  - tag: INVISIBILITY
+    value: "20s"
+  - tag: ABILITY_COOLDOWN
+    value: "1min"
+glyph: "\uA02B"

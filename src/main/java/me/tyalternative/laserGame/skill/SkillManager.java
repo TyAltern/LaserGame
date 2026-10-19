@@ -1,5 +1,9 @@
 package me.tyalternative.laserGame.skill;
 
+import me.tyalternative.laserGame.effect.ConditionalSkillEffect;
+import org.bukkit.configuration.ConfigurationSection;
+import java.util.function.Function;
+import me.tyalternative.laserGame.shop.ItemSettings;
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.SkillEffect;
 import me.tyalternative.laserGame.effect.impl.skillEffect.*;
@@ -27,6 +31,8 @@ public class SkillManager {
     private final Plugin plugin;
     private final Map<String, SkillDefinition> definitions = new LinkedHashMap<>();
     private final Map<String, SkillEffect> effectRegistry = new HashMap<>();
+    private final Map<String, Function<ItemSettings, SkillEffect>> effectFactories = new HashMap<>();
+    private final Map<String, SkillEffect> effectInstances = new HashMap<>();
 
     public SkillManager(Plugin plugin) {
         this.plugin = plugin;
@@ -37,10 +43,27 @@ public class SkillManager {
         effectRegistry.put("grapple", new GrappleSkillEffect());
         effectRegistry.put("emergency_shield", new EmergencyShieldSkillEffect());
         effectRegistry.put("speed_burst", new SpeedBurstSkillEffect());
+
+        effectFactories.put("infinite_magazine", s -> new InfiniteMagazineSkillEffect(s.getLong("seconds", 5), s.getDouble("fire-rate-bonus", 0.50)));
+        effectFactories.put("spectral_veil", s -> new SpectralVeilSkillEffect(s.getLong("invisible-seconds", 20), s.getLong("lock-after-seconds", 3)));
+        effectFactories.put("spring_box", s -> new SpringBoxSkillEffect(s.getDouble("power", 1.1)));
+        effectFactories.put("emergency_reload", s -> new EmergencyReloadSkillEffect());
+        effectFactories.put("position_swap", s -> new PositionSwapSkillEffect());
+        effectFactories.put("repeat_consumable", s -> new RepeatConsumableSkillEffect(s.getString("excluded", "")));
+        effectFactories.put("sonar", s -> new SonarSkillEffect(s.getLong("seconds", 3)));
+        effectFactories.put("mirror", s -> new MirrorSkillEffect(s.getLong("seconds", 3), s.getInt("damage", 1)));
+        effectFactories.put("second_wind", s -> new SecondWindSkillEffect());
+        effectFactories.put("pickpocket", s -> new PickpocketSkillEffect(s.getLong("window-seconds", 10), s.getInt("amount", 10)));
+    }
+
+    private SkillEffect resolveEffect(SkillDefinition def) {
+        SkillEffect configured = effectInstances.get(def.id());
+        return configured != null ? configured : effectRegistry.get(def.effectId());
     }
 
     public void loadAll() {
         definitions.clear();
+        effectInstances.clear();
 
         File folder = new File(plugin.getDataFolder(), "skills");
         if (!folder.exists()) {
@@ -61,7 +84,7 @@ public class SkillManager {
                     plugin.getLogger().warning("Compétence '" + file.getName() + "' invalide - ignorée.");
                     continue;
                 }
-                if (!effectRegistry.containsKey(def.effectId())) {
+                if (!effectRegistry.containsKey(def.effectId()) && !effectFactories.containsKey(def.effectId())) {
                     plugin.getLogger().warning("Compétence '" + def.id() + "' référence un effect-id inconnu ('"
                             + def.effectId() + "') - ignorée.");
                     continue;
@@ -74,6 +97,13 @@ public class SkillManager {
                 plugin.getLogger().info("Compétence chargée : " + def.id() + " (" + def.displayName() + ")");
             } catch (Exception e) {
                 plugin.getLogger().severe("Erreur lors du chargement de " + file.getName() + " : " + e.getMessage());
+            }
+        }
+
+        for (SkillDefinition def : definitions.values()) {
+            Function<ItemSettings, SkillEffect> factory = effectFactories.get(def.effectId());
+            if (factory != null) {
+                effectInstances.put(def.id(), factory.apply(new ItemSettings(def.id(), def.params())));
             }
         }
     }
@@ -120,6 +150,12 @@ public class SkillManager {
         }
 
 
+        Map<String, Object> params = new HashMap<>();
+        ConfigurationSection paramsSection = yaml.getConfigurationSection("params");
+        if (paramsSection != null) {
+            params.putAll(paramsSection.getValues(false));
+        }
+
         return new SkillDefinition(
                 id,
                 yaml.getString("display-name", id),
@@ -130,7 +166,8 @@ public class SkillManager {
                 yaml.getString("glyph", ""),
                 material,
                 yaml.getString("description", ""),
-                hints
+                hints,
+                params
         );
     }
 
@@ -164,6 +201,11 @@ public class SkillManager {
         SkillEffect effect = effectRegistry.get(def.effectId());
         if (effect == null) {
             Lang.send(player, "skill.effect-missing", "name", Lang.color(def.displayName()));
+            return false;
+        }
+
+        ActivationContext context = new ActivationContext(gp, player, match, plugin, def.price());
+        if (effect instanceof ConditionalSkillEffect conditional && !conditional.canActivate(context)) {
             return false;
         }
 

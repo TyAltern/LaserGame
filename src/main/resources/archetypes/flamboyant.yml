@@ -1,0 +1,17 @@
+id: flamboyant
+display-name: "Flamboyant"
+rarity: UNIQUE
+price: 30
+effect-id: flamboyant
+params:
+  bonus-damage: 1
+  life-modifier: 1
+
+icon-material: LAVA_BUCKET
+description: "+1 degat et +1 vie, mais tu es toujours en surbrillance."
+stat-hints:
+  - tag: DAMAGE_DEALT
+    value: "+1"
+  - tag: EXTRA_LIFE
+    value: "+1"
+glyph: "\uA02F"

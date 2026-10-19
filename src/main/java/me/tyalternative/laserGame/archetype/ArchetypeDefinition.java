@@ -6,6 +6,7 @@ import me.tyalternative.laserGame.shop.HasRarity;
 import me.tyalternative.laserGame.shop.Rarity;
 
 import java.util.List;
+import java.util.Map;
 
 public record ArchetypeDefinition (
         String id,
@@ -15,7 +16,8 @@ public record ArchetypeDefinition (
         String effectId,
         String glyph,
         String description,
-        List<String> statModification
+        List<String> statModification,
+        Map<String, Object> params
 ) implements HasRarity, HasGlyph, HasDescription {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;

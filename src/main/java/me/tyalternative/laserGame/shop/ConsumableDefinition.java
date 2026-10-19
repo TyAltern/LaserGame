@@ -3,6 +3,7 @@ package me.tyalternative.laserGame.shop;
 import org.bukkit.Material;
 
 import java.util.List;
+import java.util.Map;
 
 public record ConsumableDefinition(
         String id,
@@ -14,7 +15,8 @@ public record ConsumableDefinition(
         String effectId,
         String glyph,
         String description,
-        List<String> statModification
+        List<String> statModification,
+        Map<String, Object> params
 ) implements HasRarity, HasGlyph, HasDescription {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;

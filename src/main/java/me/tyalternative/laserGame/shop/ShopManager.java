@@ -230,7 +230,7 @@ public class ShopManager {
 
         Optional<ArchetypeDefinition> defOpt = archetypeManager.getDefinition(archetypeId);
         if (defOpt.isEmpty()) return false;
-        ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get().effectId()).orElse(null);
+        ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get()).orElse(null);
         gp.setArchetype(defOpt.get().id(), effect);
         return true;
     }

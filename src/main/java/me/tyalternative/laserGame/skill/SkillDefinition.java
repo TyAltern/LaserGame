@@ -7,6 +7,7 @@ import me.tyalternative.laserGame.shop.Rarity;
 import org.bukkit.Material;
 
 import java.util.List;
+import java.util.Map;
 
 public record SkillDefinition(
         String id,
@@ -18,7 +19,8 @@ public record SkillDefinition(
         String glyph,
         Material material,
         String description,
-        List<String> statModification
+        List<String> statModification,
+        Map<String, Object> params
 ) implements HasRarity, HasGlyph, HasDescription {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;

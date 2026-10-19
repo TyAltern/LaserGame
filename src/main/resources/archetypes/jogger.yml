@@ -1,0 +1,17 @@
+id: jogger
+display-name: "Jogger"
+rarity: COMMON
+price: 20
+effect-id: jogger
+params:
+  speed-bonus: 0.15
+  range-penalty: 0.2
+
+icon-material: GOLDEN_BOOTS
+description: "+15% de vitesse, mais -20% de portee."
+stat-hints:
+  - tag: MOVEMENT_SPEED
+    value: "+15%"
+  - tag: RANGE
+    value: "-20%"
+glyph: "\uA030"

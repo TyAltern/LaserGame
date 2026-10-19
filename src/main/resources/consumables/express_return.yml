@@ -1,0 +1,13 @@
+id: express_return
+display-name: "Retour Express"
+category: MOBILITY
+rarity: COMMON
+price: 15
+effect-id: express_return
+
+icon-material: ENDER_PEARL
+description: "Te teleporte sur un point de depart de l'arene, pratique pour fuir."
+stat-hints:
+  - tag: DURATION
+    value: "Immediat"
+glyph: "\uA014"

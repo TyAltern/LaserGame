@@ -1,0 +1,16 @@
+id: lightning_rod
+display-name: "Paratonnerre"
+rarity: COMMON
+price: 20
+effect-id: lightning_rod
+params:
+  life-modifier: -1
+
+icon-material: LIGHTNING_ROD
+description: "Le premier coup recu de chaque round est annule, mais tu as 1 vie de moins."
+stat-hints:
+  - tag: DAMAGE_BLOCKED
+    value: "1er coup"
+  - tag: EXTRA_LIFE
+    value: "-1"
+glyph: "\uA031"

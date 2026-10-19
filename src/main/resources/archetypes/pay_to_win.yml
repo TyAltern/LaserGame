@@ -1,0 +1,16 @@
+id: pay_to_win
+display-name: "Pay to Win"
+rarity: RARE
+price: 35
+effect-id: pay_to_win
+params:
+  full-reload-cost: 5
+
+icon-material: DIAMOND
+description: "Le rechargement est instantane, mais coute de l'argent (5$ pour un rechargement complet, proportionnel aux munitions manquantes)."
+stat-hints:
+  - tag: RELOAD_SPEED
+    value: "Instantane"
+  - tag: MONEY_BONUS
+    value: "-5$/rechargement"
+glyph: "\uA031"

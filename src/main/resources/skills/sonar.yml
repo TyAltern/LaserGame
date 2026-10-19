@@ -1,0 +1,17 @@
+id: sonar
+display-name: "Sonar"
+rarity: UNIQUE
+price: 30
+cooldown-ticks: 1800
+effect-id: sonar
+params:
+  seconds: 3
+
+icon-material: SCULK_SENSOR
+description: "Tous les adversaires sont en surbrillance pendant 3 secondes."
+stat-hints:
+  - tag: DURATION
+    value: "3s"
+  - tag: ABILITY_COOLDOWN
+    value: "90s"
+glyph: "\uA032"

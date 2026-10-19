@@ -7,6 +7,6 @@ params:
   amount: 10
 description: "Gagne 10$ au debut de chaque round."
 stat-hints:
-  - tag: MONEY_BONUS
+  - tag: EMPTY
     value: "+10$/round"
 glyph: "\uA034"

@@ -2,7 +2,7 @@
 #  LaserGame - Textes (français)
 # ----------------------------------------------------------------------------
 #  Pour créer une autre langue : copie ce fichier en lang/<code>.yml
-#  (ex : en_US.yml), traduis-le, puis mets langage : en_US dans config.yml
+#  (ex : en_US.yml), traduis-le, puis mets  language: en_US  dans config.yml
 #  et fais /laser reload. Les clés absentes reprennent la valeur de fr_FR.
 #
 #  COULEURS      &a &c &l ...  et couleurs hexa  &#RRGGBB
@@ -191,6 +191,11 @@ stat:
   radius: { one: "Blocs de Distance", other: "Blocs de Distance" }
   piercing_shot: { one: "Tir perforant", other: "Tirs Perforants" }
   ammo_regen: { one: "Muni Regen", other: "Muni Regen" }
+  radar: { one: "Radar", other: "Radar" }
+  duplicate_item: { one: "Doublon", other: "Doublons" }
+  shop_discount: { one: "Reduction Shop", other: "Reduction Shop" }
+  free_item: { one: "Item Gratuit", other: "Items Gratuits" }
+  victory_point: { one: "Point de Victoire", other: "Points de Victoire" }
 
 # ----------------------------------------------------------------------------
 #  Consommables et compétences (utilisation)
@@ -269,16 +274,65 @@ effect:
       activated: "&7Bombe fumigène lancée."
     fake_death:
       unavailable: "&cImpossible d'utiliser ça maintenant."
+    lotto_ticket:
+      activated: "&6Ticket gagnant ! +{gain}$"   # {gain}
+    bandage:
+      activated: "&aTu récupères {healed} {healed|vie|vies}."   # {healed}
+      full: "&cTu as déjà toutes tes vies."
+    pocket_radar:
+      activated: "&7Radar activé."
+      already: "&cTon radar est déjà actif."
+    marked_target:
+      activated: "&7Le prochain joueur que tu touches sera en surbrillance pendant {duration}."   # {duration}
+    money_rain:
+      activated: "&7+{amount}$ à chaque touche jusqu'à la fin du round."   # {amount}
+    surprise_package:
+      activated: "&7Tu reçois {count} {count|consommable|consommables} !"   # {count}
+      full: "&cTon inventaire de consommables est plein."
+    express_return:
+      activated: "&7Retour au point de départ."
+      unavailable: "&cImpossible de l'utiliser maintenant."
     bet_win_x4:
       too-late: "&cTrop tard, une élimination a déjà eu lieu ce round."
       announce: "&6{player} a parié sur sa victoire !"   # {player}
     bet_double_earnings:
       too-late: "&cTrop tard : une élimination a déjà eu lieu ce round."
       activated: "&7Tes gains de kills sont retenus, doublés si tu remportes le round."
+  upgrade:
+    respawn_immunity:
+      activated: "&bImmunité pendant {duration} !"   # {duration}
+    flawless_bonus:
+      activated: "&6Sans Faute ! +{points} {points|point|points} de victoire."   # {points} (points en plus de la victoire normale)
   skill:
     emergency_shield:
       activated: "&bBouclier d'Urgence activé : le prochain coup sera totalement absorbé pendant {duration}."   # {duration}
       expired: "&bVotre Bouclier d'Urgence s'est désactivé, {duration} ont passé."   # {duration}
+    infinite_magazine:
+      activated: "&bChargeur infini pendant {duration} !"   # {duration}
+    spectral_veil:
+      activated: "&bInvisible pendant {duration}. Tu ne peux pas tirer, ni pendant {lock} après la fin."   # {duration} {lock}
+    spring_box:
+      activated: "&bBoing !"
+    emergency_reload:
+      activated: "&bArme rechargée instantanément !"
+      unavailable: "&cTon arme n'a pas besoin d'être rechargée."
+    position_swap:
+      activated: "&bTu échanges ta place avec {player} !"   # {player}
+      swapped: "&c{player} a échangé sa place avec la tienne !"   # {player}
+      unavailable: "&cAucun joueur avec qui échanger."
+    repeat_consumable:
+      activated: "&bBis Repetita : {name}&b réactivé !"   # {name}
+      unavailable: "&cAucun consommable à répéter."
+    sonar:
+      activated: "&b{count} {count|joueur révélé|joueurs révélés} pendant {duration}."   # {count} {duration}
+    mirror:
+      activated: "&bMiroir actif pendant {duration} : les coups reçus sont renvoyés."   # {duration}
+    second_wind:
+      activated: "&bSecond vent : ta jauge d'accroupissement est pleine."
+    pickpocket:
+      activated: "&bTon prochain tir réussi dans les {duration} volera {amount}$."   # {duration} {amount}
+      stolen: "&6Tu voles {amount}$ à {player} !"   # {amount} {player}
+      victim: "&c{player} t'a volé {amount}$ !"   # {amount} {player}
     grapple:
       activated: "&bGrappin !"
     speed_burst:

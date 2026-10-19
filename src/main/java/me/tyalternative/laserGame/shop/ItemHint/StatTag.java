@@ -30,7 +30,8 @@ public enum StatTag {
     DUPLICATE_ITEM("Doublon", "Doublons"),
     SHOP_DISCOUNT("Reduction Shop"),
     FREE_ITEM("Item Gratuit", "Items Gratuits"),
-    VICTORY_POINT("Point de Victoire", "Points de Victoire")
+    VICTORY_POINT("Point de Victoire", "Points de Victoire"),
+    EMPTY("")
     ;
     final String displayName;
     final String displayNamePlural;

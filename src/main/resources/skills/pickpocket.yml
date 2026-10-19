@@ -1,0 +1,18 @@
+id: pickpocket
+display-name: "Pickpocket"
+rarity: UNIQUE
+price: 30
+cooldown-ticks: 1800
+effect-id: pickpocket
+params:
+  window-seconds: 10
+  amount: 10
+
+icon-material: LEAD
+description: "Ton prochain tir reussi dans les 10 secondes vole 10$ a la cible."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "+10$ vole"
+  - tag: ABILITY_COOLDOWN
+    value: "90s"
+glyph: "\uA032"

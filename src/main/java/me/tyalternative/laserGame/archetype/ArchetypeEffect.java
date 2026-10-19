@@ -1,5 +1,6 @@
 package me.tyalternative.laserGame.archetype;
 
+import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.effect.PendingEffect;
 import me.tyalternative.laserGame.weapon.StatModifier;
 
@@ -14,4 +15,15 @@ public interface ArchetypeEffect {
     default Optional<PendingEffect> getPersistentEffect() {
         return Optional.empty();
     }
+
+    default Optional<StatModifier> getStatModifier(GamePlayer owner) {
+        return getStatModifier();
+    }
+
+    default Optional<PendingEffect> getPersistentEffect(GamePlayer owner) {
+        return getPersistentEffect();
+    }
+
+    default void onEquip(GamePlayer owner) {}
+    default void onUnequip(GamePlayer owner) {}
 }

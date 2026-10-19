@@ -4,6 +4,7 @@ import java.util.function.Function;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.shop.ItemHint.StatHint;
 import me.tyalternative.laserGame.shop.ItemHint.StatTag;
+import me.tyalternative.laserGame.shop.ItemSettings;
 import me.tyalternative.laserGame.shop.Rarity;
 import me.tyalternative.laserGame.upgrade.impl.*;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,7 +25,7 @@ public class PermanentUpgradeManager {
 
     private final Plugin plugin;
     private final Map<String, PermanentUpgradeDefinition> definitions = new LinkedHashMap<>();
-    private final Map<String, Function<UpgradeSettings, PermanentUpgradeEffect>> effectFactories = new HashMap<>();
+    private final Map<String, Function<ItemSettings, PermanentUpgradeEffect>> effectFactories = new HashMap<>();
     private final Map<String, PermanentUpgradeEffect> effectByUpgradeId = new HashMap<>();
 
     public PermanentUpgradeManager(Plugin plugin) {
@@ -86,7 +87,7 @@ public class PermanentUpgradeManager {
                     plugin.getLogger().warning("Amélioration '" + file.getName() + "' invalide -> ignorée.");
                     continue;
                 }
-                if (!effectByUpgradeId.containsKey(def.effectId())) {
+                if (!effectFactories .containsKey(def.effectId())) {
                     plugin.getLogger().warning("Amélioration '" + def.id() + "' référence un effect-id inconnu ('"
                             + def.effectId() + "') -> ignorée.");
                     continue;
@@ -106,7 +107,7 @@ public class PermanentUpgradeManager {
 
         for (PermanentUpgradeDefinition def : definitions.values()) {
             effectByUpgradeId.put(def.id(),
-                    effectFactories.get(def.effectId()).apply(new UpgradeSettings(def.id(), def.params())));
+                    effectFactories.get(def.effectId()).apply(new ItemSettings(def.id(), def.params())));
         }
     }
 

@@ -1,0 +1,15 @@
+id: emergency_reload
+display-name: "Chargeur de Secours"
+rarity: COMMON
+price: 25
+cooldown-ticks: 3600
+effect-id: emergency_reload
+
+icon-material: GUNPOWDER
+description: "Recharge ton arme instantanement."
+stat-hints:
+  - tag: RELOAD_SPEED
+    value: "Instantane"
+  - tag: ABILITY_COOLDOWN
+    value: "3min"
+glyph: "\uA033"

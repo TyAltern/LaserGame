@@ -1,0 +1,13 @@
+id: position_swap
+display-name: "Chasse-Croise"
+rarity: UNIQUE
+price: 30
+cooldown-ticks: 2400
+effect-id: position_swap
+
+icon-material: CHORUS_FRUIT
+description: "Echange ta position avec un joueur aleatoire encore en vie."
+stat-hints:
+  - tag: ABILITY_COOLDOWN
+    value: "2min"
+glyph: "\uA032"

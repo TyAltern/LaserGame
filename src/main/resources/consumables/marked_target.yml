@@ -1,0 +1,15 @@
+id: marked_target
+display-name: "Cible Marquee"
+category: DISPLAY
+rarity: UNIQUE
+price: 25
+effect-id: marked_target
+params:
+  seconds: 15
+
+icon-material: TARGET
+description: "Le prochain joueur que tu touches reste en surbrillance pendant 15 secondes."
+stat-hints:
+  - tag: DURATION
+    value: "15s"
+glyph: "\uA023"

@@ -1,0 +1,17 @@
+id: prowler
+display-name: "Rodeur"
+rarity: COMMON
+price: 20
+effect-id: prowler
+params:
+  crouch-time-bonus: 0.5
+  fire-delay-penalty: 0.15
+
+icon-material: LEATHER_HELMET
+description: "+50% de temps accroupi, mais +15% de delai entre deux tirs."
+stat-hints:
+  - tag: CROUCH_TIME
+    value: "+50%"
+  - tag: FIRE_RATE
+    value: "-15%"
+glyph: "\uA030"

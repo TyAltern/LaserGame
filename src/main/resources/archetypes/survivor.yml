@@ -1,0 +1,17 @@
+id: survivor
+display-name: "Survivant"
+rarity: UNIQUE
+price: 30
+effect-id: survivor
+params:
+  heal: 1
+  life-modifier: -1
+
+icon-material: COOKED_BEEF
+description: "Recupere 1 vie a chaque elimination, mais tu demarres avec 1 vie de moins."
+stat-hints:
+  - tag: EXTRA_LIFE
+    value: "+1/elimination"
+  - tag: EXTRA_LIFE
+    value: "-1 au depart"
+glyph: "\uA031"

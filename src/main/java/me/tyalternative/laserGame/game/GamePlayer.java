@@ -1,5 +1,7 @@
 package me.tyalternative.laserGame.game;
 
+import me.tyalternative.laserGame.effect.ConsumableEffect;
+import me.tyalternative.laserGame.shop.ConsumableDefinition;
 import me.tyalternative.laserGame.weapon.WeaponAttributeKeys;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.Attribute;
@@ -22,13 +24,11 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class GamePlayer {
 
@@ -124,7 +124,7 @@ public class GamePlayer {
         });
     }
 
-    private void recalculateStats() {
+    public void recalculateStats() {
         if (effectiveStats != null) {
             effectiveStats.recalculate(activeModifiers);
         }
@@ -174,8 +174,9 @@ public class GamePlayer {
     public void addRoundWins(int amount) { roundWins += amount; }
 
     public void resetForNewRound(int startingLives) {
-        this.lives = startingLives + bonusStartingLives;
+        this.lives = computeStartingLives(startingLives);
         this.lostLifeThisRound = false;
+        cancelStealth();
         this.spectator = false;
         this.detectionImmune = false;
         clearBet();
@@ -354,6 +355,7 @@ public class GamePlayer {
     private String equippedArchetypeId;
     private StatModifier currentArchetypeStatModifier;
     private PendingEffect currentArchetypePersistantEffect;
+    private ArchetypeEffect currentArchetypeEffect;
 
     public String getEquippedArchetypeId() {return equippedArchetypeId; }
 
@@ -365,19 +367,32 @@ public class GamePlayer {
         this.equippedArchetypeId = archetypeId;
 
         if (effect != null) {
-            effect.getStatModifier().ifPresent(mod -> {
+            currentArchetypeEffect = effect;
+            effect.getStatModifier(this).ifPresent(mod -> {
                 currentArchetypeStatModifier = mod;
                 activeModifiers.add(mod);
             });
-            effect.getPersistentEffect().ifPresent(eff -> {
+            effect.getPersistentEffect(this).ifPresent(eff -> {
                 currentArchetypePersistantEffect = eff;
                 effects.addPermanent(eff);
             });
+            effect.onEquip(this);
         }
         recalculateStats();
     }
 
     private void  detachCurrentArchetype() {
+        if (currentArchetypeEffect != null) {
+            currentArchetypeEffect.onUnequip(this);
+            currentArchetypeEffect = null;
+        }
+
+        archetypeLifeModifier = 0;
+        archetypeFixedLives = null;
+        archetypeSneakChargeBonus = 0.0;
+        reloadPaymentFullCost = 0;
+        lives = computeStartingLives(config.getStartingLives());
+
         if (currentArchetypeStatModifier != null) {
             activeModifiers.remove(currentArchetypeStatModifier);
             currentArchetypeStatModifier = null;
@@ -445,6 +460,118 @@ public class GamePlayer {
 
     public int getBonusShopSlots() { return bonusShopSlots; }
     public void addBonusShopSlot(int amount) { bonusShopSlots += amount; }
+
+    //  VIES, SOINS, ARCHETYPES
+
+    private int archetypeLifeModifier = 0;
+    private Integer archetypeFixedLives = null;
+    private double archetypeSneakChargeBonus = 0.0;
+    private int reloadPaymentFullCost = 0;
+
+    public int computeStartingLives(int configStartingLives) {
+        int base = archetypeFixedLives != null ? archetypeFixedLives : configStartingLives + archetypeLifeModifier;
+        return Math.clamp(base + bonusStartingLives, 1, 10);
+    }
+
+    public int getMaxLives() {
+        return computeStartingLives(config.getStartingLives());
+//        return archetypeFixedLives != null ? archetypeFixedLives + bonusStartingLives : 10;
+    }
+
+    public void setArchetypeLives(int modifier, Integer fixedLives) {
+        this.archetypeLifeModifier = modifier;
+        this.archetypeFixedLives = fixedLives;
+        this.lives = getMaxLives();
+    }
+
+    public int heal(int amount) {
+        int before = lives;
+        lives = Math.min(getMaxLives(), lives + amount); // TODO : FIX THIS MAGIC NUMBER AND ALLOWED A PLAYER TO GO UP TO 10 HP MAX BUT NOT IF RESTRAIN BY A ARCHETYPE
+        return lives - before;
+    }
+
+    public void setArchetypeSneakChargeBonus(double bonus) { this.archetypeSneakChargeBonus = bonus; }
+
+    public int getReloadPaymentFullCOst() { return reloadPaymentFullCost; }
+    public void setReloadPaymentFullCost(int cost) { this.reloadPaymentFullCost = cost; }
+
+    private Collection<GamePlayer> alivePlayersView = List.of();
+
+    public Collection<GamePlayer> getAlivePlayers() { return alivePlayersView; }
+    public void setAlivePlayersView(Collection<GamePlayer> alivePlayers) { this.alivePlayersView = alivePlayers; }
+
+    public int takeCurrency(int max) {
+        int taken = Math.clamp(currency, 0, max);
+        currency -= taken;
+        return taken;
+    }
+
+    //  DERNIER CONSOMMABLE (Bis Repetita)
+
+    private ConsumableDefinition lastConsumableDefinition;
+    private ConsumableEffect lastConsumableEffect;
+    private boolean lastConsumableRepeated = false;
+
+    public void setLastConsumable(ConsumableDefinition def, ConsumableEffect effect) {
+        this.lastConsumableDefinition = def;
+        this.lastConsumableEffect = effect;
+        this.lastConsumableRepeated = false;
+    }
+
+    public ConsumableDefinition getLastConsumableDefinition() { return lastConsumableDefinition; }
+    public ConsumableEffect getLastConsumableEffect() { return lastConsumableEffect; }
+    public boolean isLastConsumableRepeated() { return lastConsumableRepeated; }
+    public void markLastConsumableRepeated() { this.lastConsumableRepeated = true; }
+
+    // FURTIVITE (Voile Spectral)
+
+    private boolean stealthActive = false;
+    private long stealthLockAfterTicks = 0;
+    private long shootBlockedUntilTick = 0;
+    private BukkitTask stealthTask;
+
+    public boolean isShootingBlocked() {
+        return stealthActive || Bukkit.getCurrentTick() < shootBlockedUntilTick;
+    }
+
+    public boolean isStealthActive() { return stealthActive; }
+
+    public void startStealth(long durationTicks, long lockAfterTicks) {
+        cancelStealth();
+        Player online = getPlayer();
+        if (online == null) return;
+        stealthActive = true;
+        stealthLockAfterTicks = lockAfterTicks;
+        online.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,
+                (int) durationTicks + 20, 0, false, false));
+        stealthTask = Bukkit.getScheduler().runTaskLater(plugin, this::endStealth, durationTicks);
+    }
+
+    public void endStealth() {
+        if (!stealthActive) return;
+        stealthActive = false;
+        if (stealthTask != null) {
+            stealthTask.cancel();
+            stealthTask = null;
+        }
+        Player online = getPlayer();
+        if (online != null) online.removePotionEffect(PotionEffectType.INVISIBILITY);
+        shootBlockedUntilTick = Bukkit.getCurrentTick() + stealthLockAfterTicks;
+    }
+
+    public void cancelStealth() {
+        boolean wasActive = stealthActive;
+        stealthActive = false;
+        if (stealthTask != null) {
+            stealthTask.cancel();
+            stealthTask = null;
+        }
+        shootBlockedUntilTick = 0;
+        if (wasActive) {
+            Player online = getPlayer();
+            if (online != null) online.removePotionEffect(PotionEffectType.INVISIBILITY);
+        }
+    }
 
     // BONUS DES AMELIORATIONS
 
@@ -516,7 +643,7 @@ public class GamePlayer {
     public void raiseSneakChargeBonus(double bonus) { sneakChargeBonus = Math.max(sneakChargeBonus, bonus); }
 
     public long getMaxSneakChargeTicks() {
-        return Math.round(config.getMaxSneakChargeTicks() * (1.0 + sneakChargeBonus));
+        return Math.round(config.getMaxSneakChargeTicks() * (1.0 + sneakChargeBonus + archetypeSneakChargeBonus));
     }
 
     /** Tick serveur où le joueur s'est accroupi (-1 s'il ne l'est pas). */
@@ -570,13 +697,13 @@ public class GamePlayer {
             sneakRegenAccumulatorTicks = 0;
             return;
         }
-        if (sneakChargeTicks >= config.getMaxSneakChargeTicks()) {
+        if (sneakChargeTicks >= getMaxSneakChargeTicks()) {
             sneakRegenAccumulatorTicks = 0;
             return;
         }
         sneakRegenAccumulatorTicks += elapsedTicks;
-        while (sneakRegenAccumulatorTicks >= config.getSneakRegenIntervalTicks() && sneakChargeTicks < config.getMaxSneakChargeTicks()) {
-            sneakChargeTicks = Math.min(config.getMaxSneakChargeTicks(), sneakChargeTicks + config.getSneakRegenAmountTicks());
+        while (sneakRegenAccumulatorTicks >= config.getSneakRegenIntervalTicks() && sneakChargeTicks < getMaxSneakChargeTicks()) {
+            sneakChargeTicks = Math.min(getMaxSneakChargeTicks(), sneakChargeTicks + config.getSneakRegenAmountTicks());
             sneakRegenAccumulatorTicks -= config.getSneakRegenIntervalTicks();
         }
     }

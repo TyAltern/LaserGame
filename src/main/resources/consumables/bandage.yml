@@ -1,0 +1,15 @@
+id: bandage
+display-name: "Pansement"
+category: DEFENSE
+rarity: COMMON
+price: 15
+effect-id: bandage
+params:
+  amount: 1
+
+icon-material: GLISTERING_MELON_SLICE
+description: "Rend 1 vie perdue ce round, sans depasser ton maximum."
+stat-hints:
+  - tag: EXTRA_LIFE
+    value: "+1"
+glyph: "\uA011"

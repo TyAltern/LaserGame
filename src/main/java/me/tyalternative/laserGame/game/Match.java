@@ -25,6 +25,7 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -121,6 +122,8 @@ public class Match {
 
     private void cleanupPlayerState(Player player, GamePlayer gp) {
         nameTagHideTeam.removeEntity(player);
+        gp.cancelStealth();
+        player.removePotionEffect(PotionEffectType.GLOWING);
 
         AttributeModifier sneakModifier = gp.getSneakSpeedModifier();
         AttributeInstance sneakAttr = player.getAttribute(Attribute.SNEAKING_SPEED);
@@ -170,7 +173,7 @@ public class Match {
             return false;
         }
 
-        ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get().effectId()).orElse(null);
+        ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get()).orElse(null);
         gp.setArchetype(defOpt.get().id(), effect);
         Lang.send(player, "match.archetype-equipped", "name", Lang.color(defOpt.get().displayName()));
         return true;
@@ -274,7 +277,7 @@ public class Match {
                 winner.addRoundWins(flawlessBonus);
                 Player winnerPlayer = winner.getPlayer();
                 if (winnerPlayer != null) {
-                    Lang.send(winnerPlayer, "effect.upgrtade.flawless_bonus.activated","points", flawlessBonus);
+                    Lang.send(winnerPlayer, "effect.upgrade.flawless_bonus.activated","points", flawlessBonus);
                 }
             }
         }
@@ -372,7 +375,7 @@ public class Match {
             Player gpPlayer = gp.getPlayer();
             if (gpPlayer != null) {
                 closeShopMenu(gpPlayer);
-                this.nameTagHideTeam.removeEntity(gpPlayer);
+                cleanupPlayerState(gpPlayer, gp);
             }
         }
         openShopMenus.clear();

@@ -1,0 +1,15 @@
+id: spring_box
+display-name: "Boite a Ressort"
+rarity: COMMON
+price: 25
+cooldown-ticks: 160
+effect-id: spring_box
+params:
+  power: 1.0
+
+icon-material: PISTON
+description: "Te propulse en l'air."
+stat-hints:
+  - tag: ABILITY_COOLDOWN
+    value: "8s"
+glyph: "\uA032"

@@ -1,0 +1,13 @@
+id: pocket_radar
+display-name: "Radar de Poche"
+category: DISPLAY
+rarity: UNIQUE
+price: 25
+effect-id: pocket_radar
+
+icon-material: COMPASS
+description: "Active ton radar immediatement."
+stat-hints:
+  - tag: RADAR
+    value: "Immediat"
+glyph: "\uA013"

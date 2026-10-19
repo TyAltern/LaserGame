@@ -1,0 +1,15 @@
+id: lotto_ticket
+display-name: "Ticket de Loto"
+category: ECONOMY
+rarity: UNIQUE
+price: 15
+effect-id: lotto_ticket
+params:
+  gain: 30
+
+icon-material: PAPER
+description: "Gagne 30$ immediatement."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "+30$"
+glyph: "\uA02C"

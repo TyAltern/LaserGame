@@ -1,0 +1,15 @@
+id: second_wind
+display-name: "Second Vent"
+rarity: COMMON
+price: 25
+cooldown-ticks: 1500
+effect-id: second_wind
+
+icon-material: WIND_CHARGE
+description: "Remplit ta jauge d'accroupissement."
+stat-hints:
+  - tag: CROUCH_TIME
+    value: "Plein"
+  - tag: ABILITY_COOLDOWN
+    value: "75s"
+glyph: "\uA033"

@@ -1,0 +1,17 @@
+id: plunderer
+display-name: "Pilleur"
+rarity: UNIQUE
+price: 30
+effect-id: plunderer
+params:
+  money-bonus: 0.5
+  ammo-penalty: 0.2
+
+icon-material: RAW_GOLD
+description: "+50% d'argent de combat, mais -20% de munitions max."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "+50%"
+  - tag: MAX_AMMO
+    value: "-20%"
+glyph: "\uA02F"

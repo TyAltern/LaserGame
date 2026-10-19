@@ -68,6 +68,10 @@ public class Round {
                 enterRound(gp, player);
             }
         }
+        for (GamePlayer gp : players.values()) {
+            gp.setAlivePlayersView(alivePlayers);
+        }
+        notifyLivesChanged();
         broadcast(Lang.get("round.go"));
 
         radarTasks.clear();
@@ -205,6 +209,8 @@ public class Round {
         ctx.wouldBeFirstElimination = !firstEliminationClaimed && target.getLives() - ctx.livesToRemove <= 0;
         target.getEffects().fireDamageTaken(ctx);
 
+        if (target.isStealthActive()) target.endStealth();
+
         if (ctx.absorbed) return;
 
         shooter.incrementKills();
@@ -225,6 +231,7 @@ public class Round {
         if (ctx.livesToRemove > 0) {
             target.markLifeLost();
             target.getEffects().fireLifeLost();
+            notifyLivesChanged();
         }
 
         int reward = (eliminated
@@ -241,6 +248,30 @@ public class Round {
             }
             scheduleRespawn(target);
         }
+    }
+
+    private void notifyLivesChanged() {
+        for (GamePlayer gp : players.values()) {
+            gp.getEffects().fireLivesChanged();
+        }
+    }
+
+    public int healPlayer(GamePlayer gp, int amount) {
+        if (gp.isSpectator() || amount <= 0) return 0;
+        int healed = gp.heal(amount);
+        if (healed > 0) {
+            Player player = gp.getPlayer();
+            if (player != null) applyLivesToHealthBar(player, gp.getLives());
+            notifyLivesChanged();
+        }
+        return healed;
+    }
+
+    public void teleportToRandomSpawn(GamePlayer gp) {
+        Player player = gp.getPlayer();
+        if (player == null || gp.isSpectator()) return;
+        occupiedSpawns.remove(gp.getUuid());
+        player.teleport(allocateRandomSpawn(gp.getUuid()));
     }
 
     public void onPlayerElimination(GamePlayer shooter, GamePlayer target, double shotDistance) {
@@ -265,6 +296,7 @@ public class Round {
                         "player", targetPlayer != null ? targetPlayer.getName() : null, "payout", payout);
             }
         }
+        shooter.getEffects().fireEliminationMade(target);
         eliminate(target);
     }
 
@@ -281,6 +313,8 @@ public class Round {
 
         BukkitTask pendingRespawn = respawnTask.remove(target.getUuid());
         if (pendingRespawn != null) pendingRespawn.cancel();
+        target.cancelStealth();
+        notifyLivesChanged();
 
         if (targetPlayer != null) {
             targetPlayer.setGameMode(GameMode.SPECTATOR);
@@ -295,6 +329,9 @@ public class Round {
         if (amount <= 0 || target.isSpectator()) return;
 
         boolean eliminated = target.removeLife(amount); // TODO: add item protection from it (ex: damage_cap)
+        target.markLifeLost();
+        target.getEffects().fireLifeLost();
+        if(target.isStealthActive()) target.endStealth();
         Player targetPlayer = target.getPlayer();
 
         if (eliminated) {

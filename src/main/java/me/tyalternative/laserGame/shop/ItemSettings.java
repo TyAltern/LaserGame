@@ -1,18 +1,18 @@
-package me.tyalternative.laserGame.upgrade;
+package me.tyalternative.laserGame.shop;
 
 import java.util.Map;
 
-public final class UpgradeSettings {
+public final class ItemSettings {
 
-    private final String upgradeId;
+    private final String itemId;
     private final Map<String, Object> params;
 
-    public UpgradeSettings(String upgradeId, Map<String, Object> params) {
-        this.upgradeId = upgradeId;
+    public ItemSettings(String itemId, Map<String, Object> params) {
+        this.itemId = itemId;
         this.params = params == null ? Map.of() : params;
     }
 
-    public String upgradeId() { return upgradeId; }
+    public String itemId() { return itemId; }
 
     public double getDouble(String key, double def) {
         Object value = params.get(key);

@@ -1,0 +1,20 @@
+id: infinite_magazine
+display-name: "Chargeur Infini"
+rarity: RARE
+price: 40
+cooldown-ticks: 2400
+effect-id: infinite_magazine
+params:
+  seconds: 5
+  fire-rate-bonus: 0.5
+
+icon-material: BREEZE_ROD
+description: "Pendant 5 secondes, tes tirs ne consomment pas de munition et ta cadence de tir augmente de 50%."
+stat-hints:
+  - tag: FIRE_RATE
+    value: "+50%"
+  - tag: DURATION
+    value: "5s"
+  - tag: ABILITY_COOLDOWN
+    value: "2min"
+glyph: "\uA033"

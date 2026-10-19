@@ -57,6 +57,7 @@ public class PlayerAttackListener implements Listener {
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (shooter.consumeSuppressedSwingTick(swingTick)) return; // faux swing (touche Q), pas un vrai tir
 
+            if (shooter.isShootingBlocked()) return;
             if (!shooter.getWeapon().tryShoot()) return;
             shooter.incrementShotsFired();
             if (shooter.isPiercingActive()) {

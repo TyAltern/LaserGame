@@ -9,7 +9,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Optional;
 
@@ -30,6 +29,7 @@ public class SneakChargeListener implements Listener {
 
         GamePlayer gp = gpOpt.get();
         gp.setSneakStartTick(event.isSneaking() ? Bukkit.getCurrentTick() : -1);
+        if (event.isSneaking() && gp.isStealthActive()) gp.endStealth();
         if (!event.isSneaking()) return;
 
         if (gp.getMatch().getState() == MatchState.SHOP) return;

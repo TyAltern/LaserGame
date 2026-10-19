@@ -94,6 +94,17 @@ public class LaserWeapon {
 //            sendActionBar(player, "§cIl faut avoir utilisé au moins " + requiredPercent + "% du chargeur pour recharger.");
             return false;
         }
+
+        int fullCost = gp.getReloadPaymentFullCOst();
+        if (fullCost > 0 && stats.getMaxAmmo() > 0) {
+            int missing = stats.getMaxAmmo() - ammo;
+            int cost = (int) Math.round((double) missing / stats.getMaxAmmo() * fullCost);
+            if (gp.spendCurrency(cost)) {
+                return instantRefill();
+            }
+            // pas assez d'argent : rechargement normal
+        }
+
         reloading = true;
         reloadProgressTicks = 0;
         return true;

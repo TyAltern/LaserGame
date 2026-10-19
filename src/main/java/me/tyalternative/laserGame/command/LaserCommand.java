@@ -458,7 +458,7 @@ public class LaserCommand implements CommandExecutor {
                     Lang.send(sender, "command.give.archetype-unknown", "id", id);
                     return;
                 }
-                ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get().effectId()).orElse(null);
+                ArchetypeEffect effect = archetypeManager.getEffect(defOpt.get()).orElse(null);
                 gp.setArchetype(defOpt.get().id(), effect);
                 Lang.send(sender, "command.give.archetype-equipped", "id", id, "player", target.getName());
             }

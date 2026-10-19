@@ -1,14 +1,18 @@
 package me.tyalternative.laserGame.shop;
 
+import java.util.Set;
+import org.bukkit.configuration.ConfigurationSection;
+import java.util.function.Function;
+import me.tyalternative.laserGame.shop.ItemSettings;
 import me.tyalternative.laserGame.effect.ActivationContext;
 import me.tyalternative.laserGame.effect.ConsumableEffect;
 import me.tyalternative.laserGame.effect.impl.consumable.*;
 import me.tyalternative.laserGame.effect.impl.effect.CurseNextTargetEffect;
 import me.tyalternative.laserGame.game.GamePlayer;
 import me.tyalternative.laserGame.game.Match;
-import me.tyalternative.laserGame.lang.Lang;
 import me.tyalternative.laserGame.shop.ItemHint.StatHint;
 import me.tyalternative.laserGame.shop.ItemHint.StatTag;
+import me.tyalternative.laserGame.lang.Lang;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -28,6 +32,8 @@ public class ConsumableManager {
     private final Plugin plugin;
     private final Map<String, ConsumableDefinition> definitions = new LinkedHashMap<>();
     private final Map<String, ConsumableEffect> effectRegistry = new HashMap<>();
+    private final Map<String, Function<ItemSettings, ConsumableEffect>> effectFactories = new HashMap<>();
+    private final Map<String, ConsumableEffect> effectInstances = new HashMap<>();
 
     public ConsumableManager(Plugin plugin) {
         this.plugin = plugin;
@@ -49,21 +55,21 @@ public class ConsumableManager {
 
         // Malédictions (prochain joueur touché)
         effectRegistry.put("curse_troll_weapon", new CurseConsumableEffect(CurseNextTargetEffect.Kind.TROLL_WEAPON,
-                "§7Le prochain joueur touché aura une arme dégradée, jusqu'à son prochain tir ou coup reçu."));
+                "effect.consumable.curse_troll_weapon.activated"));
         effectRegistry.put("curse_double_cooldown", new CurseConsumableEffect(CurseNextTargetEffect.Kind.DOUBLE_COOLDOWN,
-                "§7Le prochain joueur touché aura son cooldown de tir doublé, jusqu'à son prochain tir ou coup reçu."));
+                "effect.consumable.curse_double_cooldown.activated"));
         effectRegistry.put("curse_ammo_loss", new CurseConsumableEffect(CurseNextTargetEffect.Kind.AMMO_LOSS,
-                "§7Le prochain joueur touché perdra 40% de ses munitions max pour le round."));
+                "effect.consumable.curse_ammo_loss.activated"));
 
         // Armes et munitions
         effectRegistry.put("instant_reload", new InstantReloadConsumableEffect());
         effectRegistry.put("reload_overflow", new ReloadOverflowConsumableEffect());
         effectRegistry.put("round_max_ammo_boost", new RoundWeaponBoostConsumableEffect(
-                RoundWeaponBoostConsumableEffect.Kind.MAX_AMMO, 0.20, "§7+20% de munitions max pour le round."));
+                RoundWeaponBoostConsumableEffect.Kind.MAX_AMMO, 0.20, "effect.consumable.round_max_ammo_boost.activated"));
         effectRegistry.put("round_range_boost", new RoundWeaponBoostConsumableEffect(
-                RoundWeaponBoostConsumableEffect.Kind.RANGE, 0.30, "§7+30% de portée pour le round."));
+                RoundWeaponBoostConsumableEffect.Kind.RANGE, 0.30, "effect.consumable.round_range_boost.activated"));
         effectRegistry.put("round_cooldown_reduction", new RoundWeaponBoostConsumableEffect(
-                RoundWeaponBoostConsumableEffect.Kind.COOLDOWN, -0.20, "§7-20% de cooldown entre deux tirs pour le round."));
+                RoundWeaponBoostConsumableEffect.Kind.COOLDOWN, -0.20, "effect.consumable.round_cooldown_reduction.activated"));
         effectRegistry.put("timed_passive_regen", new TimedPassiveRegenConsumableEffect());
 
         // Affichage
@@ -77,11 +83,11 @@ public class ConsumableManager {
 
         // CC
         effectRegistry.put("freeze_cc", new AreaPotionConsumableEffect(
-                PotionEffectType.SLOWNESS, 250, 20.0, 100, "§7{count} joueur(s) figé(s) pendant 5 secondes."));
+                PotionEffectType.SLOWNESS, 250, 20.0, 100, "effect.consumable.freeze_cc.activated"));
         effectRegistry.put("nausea_cc", new AreaPotionConsumableEffect(
-                PotionEffectType.NAUSEA, 0, 25.0, 200, "§7{count} joueur(s) pris de nausée pendant 10 secondes."));
+                PotionEffectType.NAUSEA, 0, 25.0, 200, "effect.consumable.nausea_cc.activated"));
         effectRegistry.put("slow_cc", new AreaPotionConsumableEffect(
-                PotionEffectType.SLOWNESS, 1, 30.0, 300, "§7{count} joueur(s) ralenti(s) pendant 15 secondes."));
+                PotionEffectType.SLOWNESS, 1, 30.0, 300, "effect.consumable.slow_cc.activated"));
         effectRegistry.put("smoke_bomb", new SmokeBombConsumableEffect());
 
         // Autres
@@ -94,10 +100,25 @@ public class ConsumableManager {
         effectRegistry.put("bet_double_earnings", new BetDoubleEarningsConsumableEffect());
 
         effectRegistry.put("piercing_shots", new PiercingShotsConsumableEffect());
+
+        // Nouveaux consommables configurables (params dans le YAML)
+        effectFactories.put("lotto_ticket", s -> new LottoTicketConsumableEffect(s.getInt("gain", 30)));
+        effectFactories.put("bandage", s -> new BandageConsumableEffect(s.getInt("amount", 1)));
+        effectFactories.put("pocket_radar", s -> new PocketRadarConsumableEffect());
+        effectFactories.put("marked_target", s -> new MarkedTargetConsumableEffect(s.getLong("seconds", 15)));
+        effectFactories.put("money_rain", s -> new MoneyRainConsumableEffect(s.getInt("amount", 5)));
+        effectFactories.put("surprise_package", s -> new SurprisePackageConsumableEffect(s.getInt("count", 2)));
+        effectFactories.put("express_return", s -> new ExpressReturnConsumableEffect());
+    }
+
+    private ConsumableEffect resolveEffect(ConsumableDefinition def) {
+        ConsumableEffect configured = effectInstances.get(def.id());
+        return configured != null ? configured : effectRegistry.get(def.effectId());
     }
 
     public void loadAll() {
         definitions.clear();
+        effectInstances.clear();
 
         File folder = new File(plugin.getDataFolder(), "consumables");
         if (!folder.exists()) {
@@ -118,7 +139,7 @@ public class ConsumableManager {
                     plugin.getLogger().warning("Consommable '" + file.getName() + "' invalide - ignoré.");
                     continue;
                 }
-                if (!effectRegistry.containsKey(def.effectId())) {
+                if (!effectRegistry.containsKey(def.effectId()) && !effectFactories.containsKey(def.effectId())) {
                     plugin.getLogger().warning("Consommable '" + def.id() + "' référence un effect-id inconnu ('"
                             + def.effectId() + "') - ignoré.");
                     continue;
@@ -131,6 +152,13 @@ public class ConsumableManager {
                 plugin.getLogger().info("Consommable chargé : " + def.id() + " (" + def.displayName() + ")");
             } catch (Exception e) {
                 plugin.getLogger().severe("Erreur lors du chargement de " + file.getName() + " : " + e.getMessage());
+            }
+        }
+
+        for (ConsumableDefinition def : definitions.values()) {
+            Function<ItemSettings, ConsumableEffect> factory = effectFactories.get(def.effectId());
+            if (factory != null) {
+                effectInstances.put(def.id(), factory.apply(new ItemSettings(def.id(), def.params())));
             }
         }
     }
@@ -184,6 +212,12 @@ public class ConsumableManager {
             }
         }
 
+        Map<String, Object> params = new HashMap<>();
+        ConfigurationSection paramsSection = yaml.getConfigurationSection("params");
+        if (paramsSection != null) {
+            params.putAll(paramsSection.getValues(false));
+        }
+
         return new ConsumableDefinition(
                 id,
                 yaml.getString("display-name", id),
@@ -194,7 +228,8 @@ public class ConsumableManager {
                 yaml.getString("effect-id", ""),
                 yaml.getString("glyph", ""),
                 yaml.getString("description", ""),
-                hints
+                hints,
+                params
         );
     }
 
@@ -220,19 +255,42 @@ public class ConsumableManager {
             return false;
         }
 
-        ConsumableEffect effect = effectRegistry.get(def.effectId());
+        ConsumableEffect effect = resolveEffect(def);
         if (effect == null) {
             Lang.send(player, "consumable.effect-missing", "name", Lang.color(def.displayName()));
             return false;
         }
 
-        boolean success = effect.activate(new ActivationContext(gp, player, match, plugin, def.price()));
+        ActivationContext context = new ActivationContext(gp, player, match, plugin, def.price());
+        boolean success = effect.activate(context);
         if (!success) {
             return false;
         }
 
         gp.getConsumables().clear(slot);
         gp.incrementConsumablesUsed();
+        gp.setLastConsumable(def, effect);
+        effect.afterConsumed(context); // le slot est libéré : permet par ex. au Colis Surprise de s'y loger
         return true;
+    }
+
+    public boolean repeatLastConsumable(GamePlayer gp, Player player, Match match, Set<String> excludedIds) {
+        ConsumableDefinition def = gp.getLastConsumableDefinition();
+        ConsumableEffect effect = gp.getLastConsumableEffect();
+        if (def == null || effect == null || gp.isLastConsumableRepeated()) return false;
+        if (excludedIds.contains(def.id())) return false;
+
+        ActivationContext context = new ActivationContext(gp, player, match, plugin, def.price());
+        if (!effect.activate(context)) return false;
+
+        gp.markLastConsumableRepeated();
+        effect.afterConsumed(context);
+        return true;
+    }
+
+    public boolean canRepeatLastConsumable(GamePlayer gp, Set<String> excludedIds) {
+        ConsumableDefinition def = gp.getLastConsumableDefinition();
+        return def != null && gp.getLastConsumableEffect() != null && !gp.isLastConsumableRepeated()
+                && !excludedIds.contains(def.id());
     }
 }
