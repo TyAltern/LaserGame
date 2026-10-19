@@ -1,0 +1,14 @@
+id: hit_radius_boost
+requires: range_boost
+display-name: "Faisceau Elargi"
+rarity: UNIQUE
+price: 65
+effect-id: weapon_stat
+params:
+  stat: hit_radius
+  percent: 0.5
+description: "Augmente le rayon des tirs de 50%."
+stat-hints:
+  - tag: HIT_RADIUS
+    value: "+50%"
+glyph: "\uA036"

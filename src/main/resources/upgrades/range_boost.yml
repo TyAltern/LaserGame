@@ -1,0 +1,13 @@
+id: range_boost
+display-name: "Lunette de Visee"
+rarity: COMMON
+price: 40
+effect-id: weapon_stat
+params:
+  stat: range
+  percent: 0.2
+description: "Augmente la distance de tir de 20%."
+stat-hints:
+  - tag: RANGE
+    value: "+20%"
+glyph: "\uA036"

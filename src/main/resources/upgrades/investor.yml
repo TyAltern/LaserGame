@@ -1,0 +1,14 @@
+id: investor
+requires: pocket_money
+display-name: "Investisseur"
+rarity: RARE
+price: 90
+effect-id: round_start_money
+params:
+  percent: 0.1
+  cap: 25
+description: "Gagne 10% de ton argent a chaque debut de round (max 25$). S'ajoute a Argent de Poche."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "+10%"
+glyph: "\uA034"

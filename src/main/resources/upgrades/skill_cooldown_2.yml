@@ -1,0 +1,13 @@
+id: skill_cooldown_2
+requires: skill_cooldown_1
+display-name: "Maitrise Absolue"
+rarity: RARE
+price: 90
+effect-id: skill_cooldown
+params:
+  reduction: 0.25
+description: "Reduit de 25% le cooldown de ta competence (total, non cumule avec Sang-Froid)."
+stat-hints:
+  - tag: ABILITY_COOLDOWN
+    value: "-25%"
+glyph: "\uA036"

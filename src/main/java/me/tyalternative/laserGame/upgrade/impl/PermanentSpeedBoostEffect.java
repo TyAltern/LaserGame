@@ -7,8 +7,14 @@ import java.util.Optional;
 
 public class PermanentSpeedBoostEffect implements PermanentUpgradeEffect {
 
-    private final StatModifier modifier = stats ->
-            stats.setMovementSpeedModifier(stats.getMovementSpeedModifier() + 0.10);
+    private final double percent;
+    private final StatModifier modifier;
+
+    public PermanentSpeedBoostEffect(double percent) {
+        this.percent = percent;
+        this.modifier = stats ->
+                stats.setMovementSpeedModifier(stats.getMovementSpeedModifier() + percent);
+    }
 
     @Override
     public Optional<StatModifier> getStatModifier() {

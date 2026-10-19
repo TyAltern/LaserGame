@@ -1,0 +1,14 @@
+id: ammo_regen
+requires: ammo_capacity
+display-name: "Reserve Vivante"
+rarity: UNIQUE
+price: 65
+effect-id: ammo_regen
+params:
+  amount: 1
+  interval-seconds: 10
+description: "Regenere 1 munition toutes les 10 secondes."
+stat-hints:
+  - tag: AMMO_REGEN
+    value: "+1/10s"
+glyph: "\uA036"

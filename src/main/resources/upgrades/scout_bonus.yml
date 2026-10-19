@@ -1,0 +1,13 @@
+id: scout_bonus
+display-name: "Eclaireur"
+rarity: COMMON
+price: 40
+effect-id: combat_money
+params:
+  kind: first_blood
+  amount: 10
+description: "Gagne 10$ de plus sur le premier sang."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "+10$"
+glyph: "\uA034"

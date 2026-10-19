@@ -1,0 +1,14 @@
+id: revenge_all
+requires: revenge_last
+display-name: "Vindicatif"
+rarity: LEGENDARY
+price: 130
+effect-id: revenge
+params:
+  mode: all
+  bonus: 1
+description: "Inflige +1 degat a tous les joueurs qui t'ont touche ce round. Remplace Rancunier."
+stat-hints:
+  - tag: DAMAGE_DEALT
+    value: "+1"
+glyph: "\uA037"

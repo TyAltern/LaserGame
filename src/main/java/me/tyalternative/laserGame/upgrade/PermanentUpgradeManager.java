@@ -33,34 +33,34 @@ public class PermanentUpgradeManager {
     }
 
     private void registerEffects() {
-        effectFactories.put("speed_boost_permanent", s -> new PermanentSpeedBoostEffect());
-        effectFactories.put("fast_reload_permanent", s -> new FastReloadUpgradeEffect());
+        effectFactories.put("speed_boost_permanent", s -> new PermanentSpeedBoostEffect(s.getDouble("percent",0.1)));
+        effectFactories.put("fast_reload_permanent", s -> new FastReloadUpgradeEffect(s.getDouble("percent", 0.9)));
         effectFactories.put("extra_slot", s -> new ExtraSlotUpgradeEffect());
         effectFactories.put("extra_shop_slot", s -> new ExtraShopSlotUpgradeEffect());
         effectFactories.put("reload_shield", s -> new ReloadShieldUpgradeEffect());
 
         // Combat
-//        effectFactories.put("revenge", s -> new RevengeUpgradeEffect(
-//                "all".equalsIgnoreCase(s.getString("mode", "last")), s.getInt("bonus", 1), s.getString("overridden-by", "")));
-//        effectFactories.put("first_hit_bonus", s -> new FirstHitBonusUpgradeEffect(s.getInt("bonus", 1)));
-//        effectFactories.put("ambush", s -> new AmbushUpgradeEffect(s.getLong("seconds", 3), s.getInt("bonus", 1)));
-//        effectFactories.put("respawn_immunity", s -> new RespawnImmunityUpgradeEffect(s.getLong("seconds", 10)));
-//        effectFactories.put("bonus_life", s -> new BonusLifeUpgradeEffect(s.getInt("amount", 1)));
-//        effectFactories.put("speed_per_hit", s -> new SpeedPerHitUpgradeEffect(s.getDouble("per-hit", 0.05), s.getDouble("cap", 0.30)));
-//        effectFactories.put("skill_cooldown", s -> new SkillCooldownUpgradeEffect(s.getDouble("reduction", 0.10)));
-//        effectFactories.put("weapon_stat", s -> new WeaponStatUpgradeEffect(s.getString("stat", "range"), s.getDouble("percent", 0.20)));
-//        effectFactories.put("ammo_regen", s -> new AmmoRegenUpgradeEffect(s.getInt("amount", 1), s.getLong("interval-seconds", 10)));
-//        effectFactories.put("crouch_time", s -> new CrouchTimeUpgradeEffect(s.getDouble("percent", 0.25)));
-//        effectFactories.put("radar", s -> new RadarUpgradeEffect(s.getLong("reduction-seconds", 30), s.getBoolean("from-start", false)));
-//
-//        // Économie et boutique
-//        effectFactories.put("combat_money", s -> new CombatMoneyUpgradeEffect(s.getString("kind", "hit"), s.getInt("amount", 1)));
-//        effectFactories.put("round_start_money", s -> new RoundStartMoneyUpgradeEffect(
-//                s.getInt("amount", 0), s.getDouble("percent", 0.0), s.getInt("cap", Integer.MAX_VALUE)));
-//        effectFactories.put("shop_discount", s -> new ShopDiscountUpgradeEffect(s.getDouble("percent", 0.10)));
-//        effectFactories.put("duplicate_consumables", s -> new DuplicateConsumablesUpgradeEffect());
-//        effectFactories.put("free_first_roll", s -> new FreeFirstRollUpgradeEffect());
-//        effectFactories.put("flawless_bonus", s -> new FlawlessBonusUpgradeEffect(s.getInt("points", 1)));
+        effectFactories.put("revenge", s -> new RevengeUpgradeEffect(
+                "all".equalsIgnoreCase(s.getString("mode", "last")), s.getInt("bonus", 1), s.getString("overridden-by", "")));
+        effectFactories.put("first_hit_bonus", s -> new FirstHitBonusUpgradeEffect(s.getInt("bonus", 1)));
+        effectFactories.put("ambush", s -> new AmbushUpgradeEffect(s.getLong("seconds", 3), s.getInt("bonus", 1)));
+        effectFactories.put("respawn_immunity", s -> new RespawnImmunityUpgradeEffect(s.getLong("seconds", 10)));
+        effectFactories.put("bonus_life", s -> new BonusLifeUpgradeEffect(s.getInt("amount", 1)));
+        effectFactories.put("speed_per_hit", s -> new SpeedPerHitUpgradeEffect(s.getDouble("per-hit", 0.05), s.getDouble("cap", 0.30)));
+        effectFactories.put("skill_cooldown", s -> new SkillCooldownUpgradeEffect(s.getDouble("reduction", 0.10)));
+        effectFactories.put("weapon_stat", s -> new WeaponStatUpgradeEffect(s.getString("stat", "range"), s.getDouble("percent", 0.20)));
+        effectFactories.put("ammo_regen", s -> new AmmoRegenUpgradeEffect(s.getInt("amount", 1), s.getLong("interval-seconds", 10)));
+        effectFactories.put("crouch_time", s -> new CrouchTimeUpgradeEffect(s.getDouble("percent", 0.25)));
+        effectFactories.put("radar", s -> new RadarUpgradeEffect(s.getLong("reduction-seconds", 30), s.getBoolean("from-start", false)));
+
+        // Économie et boutique
+        effectFactories.put("combat_money", s -> new CombatMoneyUpgradeEffect(s.getString("kind", "hit"), s.getInt("amount", 1)));
+        effectFactories.put("round_start_money", s -> new RoundStartMoneyUpgradeEffect(
+                s.getInt("amount", 0), s.getDouble("percent", 0.0), s.getInt("cap", Integer.MAX_VALUE)));
+        effectFactories.put("shop_discount", s -> new ShopDiscountUpgradeEffect(s.getDouble("percent", 0.10)));
+        effectFactories.put("duplicate_consumables", s -> new DuplicateConsumablesUpgradeEffect());
+        effectFactories.put("free_first_roll", s -> new FreeFirstRollUpgradeEffect());
+        effectFactories.put("flawless_bonus", s -> new FlawlessBonusUpgradeEffect(s.getInt("points", 1)));
     }
 
     public void loadAll() {

@@ -1,0 +1,13 @@
+id: first_strike
+requires: scout_bonus
+display-name: "Premiere Frappe"
+rarity: UNIQUE
+price: 65
+effect-id: first_hit_bonus
+params:
+  bonus: 1
+description: "Le premier tir qui touche chaque round inflige +1 degat."
+stat-hints:
+  - tag: DAMAGE_DEALT
+    value: "+1"
+glyph: "\uA036"

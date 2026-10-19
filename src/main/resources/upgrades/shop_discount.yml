@@ -1,0 +1,13 @@
+id: shop_discount
+requires: extra_shop_slot
+display-name: "Client Satisfait"
+rarity: RARE
+price: 90
+effect-id: shop_discount
+params:
+  percent: 0.1
+description: "Reduit de 10% le prix des items du shop (pas du reroll)."
+stat-hints:
+  - tag: SHOP_DISCOUNT
+    value: "-10%"
+glyph: "\uA034"

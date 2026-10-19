@@ -1,0 +1,14 @@
+id: revenge_last
+display-name: "Rancunier"
+rarity: RARE
+price: 90
+effect-id: revenge
+params:
+  mode: last
+  bonus: 1
+  overridden-by: revenge_all
+description: "Inflige +1 degat au dernier joueur qui t'a touche."
+stat-hints:
+  - tag: DAMAGE_DEALT
+    value: "+1"
+glyph: "\uA037"

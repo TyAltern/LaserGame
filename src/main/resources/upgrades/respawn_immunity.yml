@@ -1,0 +1,12 @@
+id: respawn_immunity
+display-name: "Second Souffle"
+rarity: UNIQUE
+price: 65
+effect-id: respawn_immunity
+params:
+  seconds: 10
+description: "Immunite de 10 secondes apres avoir perdu une vie."
+stat-hints:
+  - tag: DURATION
+    value: "10s"
+glyph: "\uA037"

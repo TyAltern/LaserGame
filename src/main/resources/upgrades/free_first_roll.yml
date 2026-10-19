@@ -1,0 +1,10 @@
+id: free_first_roll
+display-name: "Tournee Generale"
+rarity: LEGENDARY
+price: 120
+effect-id: free_first_roll
+description: "Quand tu gagnes un round, tous les consommables du premier tirage sont gratuits."
+stat-hints:
+  - tag: FREE_ITEM
+    value: "1er tirage"
+glyph: "\uA034"

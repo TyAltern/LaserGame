@@ -1,6 +1,7 @@
 id: reload_shield
+requires: fast_reload_permanent
 display-name: "Blindage de Rechargement"
-rarity: RARE
+rarity: UNIQUE
 price: 75
 effect-id: reload_shield
 

@@ -1,0 +1,12 @@
+id: skill_cooldown_1
+display-name: "Sang-Froid"
+rarity: UNIQUE
+price: 65
+effect-id: skill_cooldown
+params:
+  reduction: 0.1
+description: "Reduit de 10% le cooldown de ta competence."
+stat-hints:
+  - tag: ABILITY_COOLDOWN
+    value: "-10%"
+glyph: "\uA036"

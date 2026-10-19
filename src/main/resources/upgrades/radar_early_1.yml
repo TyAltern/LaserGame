@@ -1,0 +1,12 @@
+id: radar_early_1
+display-name: "Jumelles"
+rarity: COMMON
+price: 40
+effect-id: radar
+params:
+  reduction-seconds: 30
+description: "Le radar s'active 30 secondes plus tot pour toi."
+stat-hints:
+  - tag: RADAR
+    value: "-30s"
+glyph: "\uA038"

@@ -1,0 +1,14 @@
+id: ambush
+requires: soft_steps
+display-name: "Embuscade"
+rarity: UNIQUE
+price: 65
+effect-id: ambush
+params:
+  seconds: 3
+  bonus: 1
+description: "Le premier tir apres 3 secondes accroupi inflige +1 degat."
+stat-hints:
+  - tag: DAMAGE_DEALT
+    value: "+1"
+glyph: "\uA038"

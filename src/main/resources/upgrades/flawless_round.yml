@@ -1,0 +1,13 @@
+id: flawless_round
+requires: free_first_roll
+display-name: "Paerfection"
+rarity: LEGENDARY
+price: 120
+effect-id: flawless_bonus
+params:
+  points: 1
+description: "Si tu gagnes un round sans perdre de vie, tu gagnes 2 points de victoire au lieu d'1."
+stat-hints:
+  - tag: VICTORY_POINT
+    value: "+1"
+glyph: "\uA037"

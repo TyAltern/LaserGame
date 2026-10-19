@@ -1,0 +1,14 @@
+id: marathon_runner
+requires: speed_boost_permanent
+display-name: "Marathonien"
+rarity: UNIQUE
+price: 65
+effect-id: speed_per_hit
+params:
+  per-hit: 0.05
+  cap: 0.3
+description: "Gagne 5% de vitesse par touche (max 30%), remis a zero quand tu perds une vie."
+stat-hints:
+  - tag: MOVEMENT_SPEED
+    value: "+5%/touche"
+glyph: "\uA038"

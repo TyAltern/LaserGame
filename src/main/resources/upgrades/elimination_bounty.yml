@@ -1,0 +1,13 @@
+id: elimination_bounty
+display-name: "Chasseur de Primes"
+rarity: COMMON
+price: 40
+effect-id: combat_money
+params:
+  kind: elimination
+  amount: 5
+description: "Gagne 5$ de plus par elimination."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "+5$"
+glyph: "\uA034"

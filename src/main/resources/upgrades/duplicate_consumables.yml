@@ -1,0 +1,11 @@
+id: duplicate_consumables
+requires: extra_slot
+display-name: "Grossiste"
+rarity: RARE
+price: 90
+effect-id: duplicate_consumables
+description: "Un meme consommable peut sortir plusieurs fois dans le shop et etre achete en double."
+stat-hints:
+  - tag: DUPLICATE_ITEM
+    value: "Oui"
+glyph: "\uA035"

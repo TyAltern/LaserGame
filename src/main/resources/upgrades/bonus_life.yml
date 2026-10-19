@@ -1,0 +1,13 @@
+id: bonus_life
+requires: respawn_immunity
+display-name: "Vitalite"
+rarity: RARE
+price: 100
+effect-id: bonus_life
+params:
+  amount: 1
+description: "Chaque debut de round, tu possedes une vie supplementaire."
+stat-hints:
+  - tag: EXTRA_LIFE
+    value: "+1"
+glyph: "\uA037"

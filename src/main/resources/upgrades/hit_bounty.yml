@@ -1,0 +1,14 @@
+id: hit_bounty
+requires: elimination_bounty
+display-name: "Mercenaire"
+rarity: UNIQUE
+price: 65
+effect-id: combat_money
+params:
+  kind: hit
+  amount: 3
+description: "Gagne 3$ de plus par touche."
+stat-hints:
+  - tag: MONEY_BONUS
+    value: "+3$"
+glyph: "\uA034"

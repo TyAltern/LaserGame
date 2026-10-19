@@ -3,6 +3,8 @@ display-name: "Mains Agiles"
 rarity: COMMON
 price: 40
 effect-id: fast_reload_permanent
+params:
+  percent: 0.9
 
 icon-material: HONEY_BOTTLE
 description: "Reduit durablement le temps de rechargement."

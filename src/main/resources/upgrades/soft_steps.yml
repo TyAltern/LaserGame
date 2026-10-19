@@ -1,0 +1,12 @@
+id: soft_steps
+display-name: "Pas de Velours"
+rarity: COMMON
+price: 40
+effect-id: crouch_time
+params:
+  percent: 0.25
+description: "Augmente de 25% ton temps accroupi."
+stat-hints:
+  - tag: CROUCH_TIME
+    value: "+25%"
+glyph: "\uA038"

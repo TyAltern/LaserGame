@@ -1,6 +1,6 @@
 id: extra_shop_slot
 display-name: "Client Habitue"
-rarity: RARE
+rarity: UNIQUE
 price: 65
 effect-id: extra_shop_slot
 icon-material: CHEST

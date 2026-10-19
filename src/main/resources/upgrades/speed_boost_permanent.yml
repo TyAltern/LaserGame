@@ -3,6 +3,8 @@ display-name: "Jambes d'Acier"
 rarity: COMMON
 price: 40
 effect-id: speed_boost_permanent
+params:
+  percent: 0.1
 
 icon-material: LEATHER_BOOTS
 description: "Augmente durablement ta vitesse de deplacement."

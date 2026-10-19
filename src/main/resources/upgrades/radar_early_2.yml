@@ -1,0 +1,13 @@
+id: radar_early_2
+requires: radar_early_1
+display-name: "Oeil Omniscient"
+rarity: UNIQUE
+price: 65
+effect-id: radar
+params:
+  from-start: true
+description: "Le radar est actif pour toi des le debut du round."
+stat-hints:
+  - tag: RADAR
+    value: "Debut du round"
+glyph: "\uA038"
