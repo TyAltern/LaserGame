@@ -4,7 +4,7 @@ rarity: RARE
 price: 60
 special-ability: revive_on_first_elimination
 
-material: IRON_DAGGER
+material: NETHERITE_SWORD
 max-ammo: 200
 shot-cooldown-ticks: 1
 reload-cooldown-ticks: 120
@@ -28,4 +28,3 @@ stat-hints:
     value: "4"
   - tag: MOVEMENT_SPEED
     value: "+35%"
-glyph: "\uA00C"

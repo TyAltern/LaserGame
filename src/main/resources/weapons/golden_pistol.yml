@@ -28,4 +28,3 @@ stat-hints:
     value: "15"
   - tag: MONEY_BONUS
     value: "+50%"
-glyph: "\uA000"

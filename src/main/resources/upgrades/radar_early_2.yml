@@ -6,8 +6,9 @@ price: 65
 effect-id: radar
 params:
   from-start: true
+
+icon-material: CONDUIT
 description: "Le radar est actif pour toi des le debut du round."
 stat-hints:
   - tag: RADAR
-    value: "Debut du round"
-glyph: "\uA038"
+    value: "Acces"

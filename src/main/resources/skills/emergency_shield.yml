@@ -2,7 +2,7 @@ id: emergency_shield
 display-name: "Bouclier d'urgence"
 rarity: RARE
 price: 40
-cooldown-ticks: 500
+cooldown-ticks: 1200
 effect-id: emergency_shield
 
 icon-material: TOTEM_OF_UNDYING
@@ -11,5 +11,4 @@ stat-hints:
   - tag: DAMAGE_BLOCKED
     value: "+1"
   - tag: ABILITY_COOLDOWN
-    value: "25s"
-glyph: "\uA02B"
+    value: "1min"

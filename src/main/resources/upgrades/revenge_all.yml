@@ -7,8 +7,9 @@ effect-id: revenge
 params:
   mode: all
   bonus: 1
+
+icon-material: IRON_AXE
 description: "Inflige +1 degat a tous les joueurs qui t'ont touche ce round. Remplace Rancunier."
 stat-hints:
   - tag: DAMAGE_DEALT
     value: "+1"
-glyph: "\uA037"

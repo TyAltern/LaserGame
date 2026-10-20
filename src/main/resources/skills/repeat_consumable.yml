@@ -2,7 +2,7 @@ id: repeat_consumable
 display-name: "Bis Repetita"
 rarity: LEGENDARY
 price: 55
-cooldown-ticks: 1200
+cooldown-ticks: 1800
 effect-id: repeat_consumable
 params:
   excluded: "bet_win_x4,bet_double_earnings,fake_death"
@@ -11,5 +11,4 @@ icon-material: REPEATER
 description: "Active de nouveau le dernier consommable utilise (une seule fois par utilisation)."
 stat-hints:
   - tag: ABILITY_COOLDOWN
-    value: "1min"
-glyph: "\uA02B"
+    value: "90s"

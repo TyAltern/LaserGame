@@ -226,7 +226,6 @@ public class ConsumableManager {
                 yaml.getInt("price", 0),
                 material,
                 yaml.getString("effect-id", ""),
-                yaml.getString("glyph", ""),
                 yaml.getString("description", ""),
                 hints,
                 params

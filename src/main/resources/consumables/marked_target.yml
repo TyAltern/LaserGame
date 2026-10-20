@@ -7,9 +7,8 @@ effect-id: marked_target
 params:
   seconds: 15
 
-icon-material: TARGET
+icon-material: DISC_FRAGMENT_5
 description: "Le prochain joueur que tu touches reste en surbrillance pendant 15 secondes."
 stat-hints:
   - tag: DURATION
     value: "15s"
-glyph: "\uA023"

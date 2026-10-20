@@ -26,4 +26,3 @@ stat-hints:
     value: "3.5s"
   - tag: RANGE
     value: "25"
-glyph: "\uA009"

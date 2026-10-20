@@ -5,14 +5,13 @@ price: 30
 cooldown-ticks: 1800
 effect-id: mirror
 params:
-  seconds: 3
+  seconds: 5
   damage: 1
 
-icon-material: SHIELD
-description: "Pendant 3 secondes, chaque coup recu inflige 1 degat au tireur."
+icon-material: FLOWER_BANNER_PATTERN
+description: "Pendant 5 secondes, chaque coup recu inflige 1 degat au tireur."
 stat-hints:
   - tag: DURATION
-    value: "3s"
+    value: "5s"
   - tag: ABILITY_COOLDOWN
     value: "90s"
-glyph: "\uA02B"

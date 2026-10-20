@@ -6,6 +6,7 @@ public enum StatTag {
     MONEY_BONUS("Argent Bonus"),                                        // Argent Bonus
     SHOP_SLOT("Slot Shop"),                                             // Slot Shop
     CONSUMABLE_SLOT("Slot Consommable"),                                 // Slot Consommable
+    CONSUMABLE("Consommable", "Consommables"),                                 // Slot Consommable
     AMMO_BONUS("Muni Bonus"),                                           // Muni Bonus
     FREE_SHOT("Tir Gratuit","Tirs Gratuits"),            // Tir Gratuit
     FIRE_RATE("Cadence de Tir"),                                        // Cadence de tir
@@ -21,7 +22,7 @@ public enum StatTag {
     DAMAGE_TAKEN("Degat Subit", "Degats Subits"),        // Degat Subit
     MOVEMENT_SPEED("Vitesse"),                                          // Vitesse
     CROUCH_TIME("Tps Accroupi"),                                        // Tps Accroupis
-    INVISIBILITY("Invisibilite"),                                        // Tps Accroupis
+    INVISIBILITY("d'Invisibilite"),                                        // Tps Accroupis
     DURATION("Duree"),                                                  // Tps Accroupis
     RADIUS("Blocs de Distance"),                                                  // Tps Accroupis
     PIERCING_SHOT("Tir perforant", "Tirs Perforants"),  // Tire Perforant                                      // Tps Accroupis
@@ -30,7 +31,7 @@ public enum StatTag {
     DUPLICATE_ITEM("Doublon", "Doublons"),
     SHOP_DISCOUNT("Reduction Shop"),
     FREE_ITEM("Item Gratuit", "Items Gratuits"),
-    VICTORY_POINT("Point de Victoire", "Points de Victoire"),
+    VICTORY_POINT("Pts de Victoire", "Pts de Victoire"),
     EMPTY("")
     ;
     final String displayName;

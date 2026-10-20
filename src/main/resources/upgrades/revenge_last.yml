@@ -7,8 +7,9 @@ params:
   mode: last
   bonus: 1
   overridden-by: revenge_all
+
+icon-material: FLINT_AND_STEEL
 description: "Inflige +1 degat au dernier joueur qui t'a touche."
 stat-hints:
   - tag: DAMAGE_DEALT
     value: "+1"
-glyph: "\uA037"

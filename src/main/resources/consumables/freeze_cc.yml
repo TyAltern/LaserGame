@@ -5,9 +5,8 @@ rarity: LEGENDARY
 price: 100
 effect-id: freeze_cc
 
-icon-material: BLUE_ICE
+icon-material: PRISMARINE_SHARD
 description: "Immobilise tous les joueurs proches pendant 5 secondes."
 stat-hints:
   - tag: MOVEMENT_SPEED
     value: "-100%"
-glyph: "\uA026"

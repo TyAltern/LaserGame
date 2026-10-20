@@ -10,4 +10,3 @@ description: "Tes gains de kills sont retenus tant que ce pari est actif, mais d
 stat-hints:
   - tag: MONEY_BONUS
     value: "*2"
-glyph: "\uA02D"

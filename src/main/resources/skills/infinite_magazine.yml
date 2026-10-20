@@ -17,4 +17,3 @@ stat-hints:
     value: "5s"
   - tag: ABILITY_COOLDOWN
     value: "2min"
-glyph: "\uA033"

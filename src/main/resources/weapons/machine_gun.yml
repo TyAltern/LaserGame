@@ -23,4 +23,3 @@ stat-hints:
     value: "3t"
   - tag: RANGE
     value: "25"
-glyph: "\uA003"

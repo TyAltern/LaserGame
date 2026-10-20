@@ -6,8 +6,9 @@ effect-id: weapon_stat
 params:
   stat: range
   percent: 0.2
+
+icon-material: AMETHYST_SHARD
 description: "Augmente la distance de tir de 20%."
 stat-hints:
   - tag: RANGE
     value: "+20%"
-glyph: "\uA036"

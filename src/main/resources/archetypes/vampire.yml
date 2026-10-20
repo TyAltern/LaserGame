@@ -1,14 +1,13 @@
 id: vampire
-display-name: "Vampire"
+display-name: "Vampirique"
 rarity: RARE
 price: 35
 effect-id: vampire
 
-icon-material: SPIDER_EYE
+icon-material: SNOUT_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "Chaque tir reussi restaure des munitions immediatement, au prix d'un rechargement bien plus lent."
 stat-hints: 
   - tag: RELOAD_SPEED
     value: "*3"
   - tag: AMMO_BONUS
     value: "+2"
-glyph: "\uA031"

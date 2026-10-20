@@ -9,4 +9,3 @@ description: "Le prochain coup recu est plafonne a 1 degat."
 stat-hints:
   - tag: DAMAGE_BLOCKED
     value: "+1"
-glyph: "\uA011"

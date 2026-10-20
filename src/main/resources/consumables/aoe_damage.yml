@@ -7,4 +7,3 @@ effect-id: aoe_next_shot
 
 icon-material: FIRE_CHARGE
 description: "Ton prochain tir reussi inflige aussi 1 degat aux joueurs proches de la cible."
-glyph: "\uA018"

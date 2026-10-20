@@ -171,6 +171,7 @@ stat:
   money_bonus: { one: "Argent Bonus", other: "Argent Bonus" }
   shop_slot: { one: "Slot Shop", other: "Slot Shop" }
   consumable_slot: { one: "Slot Consommable", other: "Slot Consommable" }
+  consumable: { one: "Consommable", other: "Consommables" }
   ammo_bonus: { one: "Muni Bonus", other: "Muni Bonus" }
   free_shot: { one: "Tir Gratuit", other: "Tirs Gratuits" }
   fire_rate: { one: "Cadence de Tir", other: "Cadence de Tir" }
@@ -195,7 +196,7 @@ stat:
   duplicate_item: { one: "Doublon", other: "Doublons" }
   shop_discount: { one: "Reduction Shop", other: "Reduction Shop" }
   free_item: { one: "Item Gratuit", other: "Items Gratuits" }
-  victory_point: { one: "Point de Victoire", other: "Points de Victoire" }
+  victory_point: { one: "Pt de Victoire", other: "Pts de Victoire" }
 
 # ----------------------------------------------------------------------------
 #  Consommables et compétences (utilisation)

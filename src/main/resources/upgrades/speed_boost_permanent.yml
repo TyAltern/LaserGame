@@ -6,7 +6,7 @@ effect-id: speed_boost_permanent
 params:
   percent: 0.1
 
-icon-material: LEATHER_BOOTS
+icon-material: IRON_LEGGINGS
 description: "Augmente durablement ta vitesse de deplacement."
 stat-hints: 
   - tag: MOVEMENT_SPEED

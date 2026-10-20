@@ -10,4 +10,3 @@ description: "Donne la nausee a tous les joueurs proches pendant 10 secondes."
 stat-hints:
   - tag: RADIUS
     value: "25"
-glyph: "\uA027"

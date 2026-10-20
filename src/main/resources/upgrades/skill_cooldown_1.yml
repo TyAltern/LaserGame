@@ -5,8 +5,9 @@ price: 65
 effect-id: skill_cooldown
 params:
   reduction: 0.1
+
+icon-material: GOLDEN_CARROT
 description: "Reduit de 10% le cooldown de ta competence."
 stat-hints:
   - tag: ABILITY_COOLDOWN
     value: "-10%"
-glyph: "\uA036"

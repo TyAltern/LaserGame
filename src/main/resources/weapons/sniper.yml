@@ -3,7 +3,7 @@ display-name: "Sniper"
 rarity: LEGENDARY
 price: 90
 
-material: STICK
+material: SPYGLASS
 max-ammo: 1
 shot-cooldown-ticks: 20
 reload-cooldown-ticks: 100
@@ -29,4 +29,3 @@ stat-hints:
     value: "100"
   - tag: DAMAGE_DEALT
     value: "2"
-glyph: "\uA008"

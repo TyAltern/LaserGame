@@ -7,11 +7,10 @@ params:
   speed-bonus: 0.15
   range-penalty: 0.2
 
-icon-material: GOLDEN_BOOTS
+icon-material: WAYFINDER_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "+15% de vitesse, mais -20% de portee."
 stat-hints:
   - tag: MOVEMENT_SPEED
     value: "+15%"
   - tag: RANGE
     value: "-20%"
-glyph: "\uA030"

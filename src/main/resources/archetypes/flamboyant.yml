@@ -7,11 +7,10 @@ params:
   bonus-damage: 1
   life-modifier: 1
 
-icon-material: LAVA_BUCKET
+icon-material: TIDE_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "+1 degat et +1 vie, mais tu es toujours en surbrillance."
 stat-hints:
   - tag: DAMAGE_DEALT
     value: "+1"
   - tag: EXTRA_LIFE
     value: "+1"
-glyph: "\uA02F"

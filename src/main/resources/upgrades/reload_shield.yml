@@ -10,4 +10,3 @@ description: "Ignore les degats recus pendant que tu recharges."
 stat-hints: 
   - tag: DAMAGE_BLOCKED
     value: "+1"
-glyph: "\uA037"

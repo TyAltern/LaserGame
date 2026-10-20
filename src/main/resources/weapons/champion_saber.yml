@@ -30,4 +30,3 @@ stat-hints:
     value: "3.5"
   - tag: MOVEMENT_SPEED
     value: "+30%"
-glyph: "\uA00D"

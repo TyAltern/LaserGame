@@ -10,4 +10,3 @@ description: "Augmente ta portee de tir pour le reste du round."
 stat-hints:
   - tag: RANGE
     value: "+30%"
-glyph: "\uA020"

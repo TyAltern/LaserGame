@@ -10,4 +10,3 @@ description: "Le prochain joueur touche perd une partie de ses munitions max pou
 stat-hints:
   - tag: MAX_AMMO
     value: "-40%"
-glyph: "\uA01D"

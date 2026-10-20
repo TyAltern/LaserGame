@@ -10,4 +10,3 @@ description: "Regenere automatiquement tes munitions pendant une minute."
 stat-modification:
   - tag: AMMO_REGEN
     value: "+12"
-glyph: "\uA022"

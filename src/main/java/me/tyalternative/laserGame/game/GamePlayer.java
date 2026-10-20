@@ -421,7 +421,7 @@ public class GamePlayer {
 
         if (effect != null) {
             effect.getStatModifier().ifPresent(activeModifiers::add);
-            effect.getPersistentEffect().ifPresent(effects::addPermanent);
+            effect.getPersistentEffect(this).ifPresent(effects::addPermanent);
             effect.onPurchase(this);
         }
         recalculateStats();

@@ -4,7 +4,7 @@ rarity: RARE
 price: 55
 special-ability: glow_self_on_miss
 
-material: CROSSBOW
+material: NETHERITE_AXE
 max-ammo: 10
 shot-cooldown-ticks: 11
 reload-cooldown-ticks: 65
@@ -15,7 +15,7 @@ lives-per-hit: 1
 
 movement-speed-modifier: 0.2
 
-icon-material: CROSSBOW
+icon-material: NETHERITE_AXE
 description: "Chaque tir manque vous fait briller un court instant."
 stat-hints:
   - tag: MAX_AMMO
@@ -28,4 +28,3 @@ stat-hints:
     value: "28"
   - tag: MOVEMENT_SPEED
     value: "+20%"
-glyph: "\uA00E"

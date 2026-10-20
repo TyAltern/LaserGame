@@ -8,9 +8,8 @@ params:
   other-shots-max-damage: 1
   first-shot-mode: shot
 
-icon-material: GOLDEN_SWORD
+icon-material: WARD_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "Le premier tir de chaque vie inflige +2 degats, mais tous les autres font toujours 1 degat."
 stat-hints:
   - tag: DAMAGE_DEALT
-    value: "+2 (1er tir)"
-glyph: "\uA030"
+    value: "+2"

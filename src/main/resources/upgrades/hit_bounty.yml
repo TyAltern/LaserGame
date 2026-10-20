@@ -7,8 +7,9 @@ effect-id: combat_money
 params:
   kind: hit
   amount: 3
+
+icon-material: COPPER_INGOT
 description: "Gagne 3$ de plus par touche."
 stat-hints:
   - tag: MONEY_BONUS
     value: "+3$"
-glyph: "\uA034"

@@ -5,9 +5,8 @@ rarity: COMMON
 price: 18
 effect-id: reload_overflow
 
-icon-material: BUNDLE
+icon-material: BOOK
 description: "Ton prochain rechargement restaure 5 munitions bonus au-dela du max."
 stat-hints:
   - tag: AMMO_BONUS
     value: "+5"
-glyph: "\uA01E"

@@ -10,4 +10,3 @@ description: "Annonce ton pari a tous. Si tu remportes le round, tu gagnes 4x le
 stat-hints:
   - tag: MONEY_BONUS
     value: "*4"
-glyph: "\uA02C"

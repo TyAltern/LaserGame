@@ -6,11 +6,10 @@ effect-id: pay_to_win
 params:
   full-reload-cost: 5
 
-icon-material: DIAMOND
+icon-material: DUNE_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "Le rechargement est instantane, mais coute de l'argent (5$ pour un rechargement complet, proportionnel aux munitions manquantes)."
 stat-hints:
   - tag: RELOAD_SPEED
-    value: "Instantane"
+    value: "Aucun"
   - tag: MONEY_BONUS
-    value: "-5$/rechargement"
-glyph: "\uA031"
+    value: "-5$"

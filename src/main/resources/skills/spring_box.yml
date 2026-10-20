@@ -7,9 +7,8 @@ effect-id: spring_box
 params:
   power: 1.0
 
-icon-material: PISTON
+icon-material: RABBIT_FOOT
 description: "Te propulse en l'air."
 stat-hints:
   - tag: ABILITY_COOLDOWN
     value: "8s"
-glyph: "\uA032"

@@ -6,8 +6,9 @@ price: 100
 effect-id: bonus_life
 params:
   amount: 1
+
+icon-material: HEART_OF_THE_SEA
 description: "Chaque debut de round, tu possedes une vie supplementaire."
 stat-hints:
   - tag: EXTRA_LIFE
     value: "+1"
-glyph: "\uA037"

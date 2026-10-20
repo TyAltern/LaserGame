@@ -10,11 +10,10 @@ params:
   slow-reload-factor: 2.0
   slow-ammo-factor: 0.5
 
-icon-material: ENCHANTED_GOLDEN_APPLE
+icon-material: SPIRE_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "+3 vies mais -1 degat. Si ton arme n'inflige que 1 degat : -25% de vitesse, tirs et rechargement 2 fois plus lents, moitie moins de munitions."
 stat-hints:
   - tag: EXTRA_LIFE
     value: "+3"
   - tag: DAMAGE_DEALT
     value: "-1"
-glyph: "\uA02F"

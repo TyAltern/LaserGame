@@ -1,7 +1,6 @@
 package me.tyalternative.laserGame.skill;
 
 import me.tyalternative.laserGame.shop.HasDescription;
-import me.tyalternative.laserGame.shop.HasGlyph;
 import me.tyalternative.laserGame.shop.HasRarity;
 import me.tyalternative.laserGame.shop.Rarity;
 import org.bukkit.Material;
@@ -16,12 +15,11 @@ public record SkillDefinition(
         int price,
         long cooldownTicks,
         String effectId,
-        String glyph,
         Material material,
         String description,
         List<String> statModification,
         Map<String, Object> params
-) implements HasRarity, HasGlyph, HasDescription {
+) implements HasRarity, HasDescription {
     public boolean isValid() {
         if (id == null || id.isBlank()) return false;
         if (rarity == null) return false;

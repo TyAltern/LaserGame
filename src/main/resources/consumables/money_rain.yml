@@ -8,8 +8,7 @@ params:
   amount: 5
 
 icon-material: GOLD_NUGGET
-description: "Gagne 5$ a chaque touche jusqu'a la fin du round."
+description: "Gagne 5$ a chaque kill jusqu'a la fin du round."
 stat-hints:
-  - tag: MONEY_BONUS
-    value: "+5$/touche"
-glyph: "\uA02D"
+  - tag: EMPTY
+    value: "+5$ / Kill"

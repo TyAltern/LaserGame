@@ -163,7 +163,6 @@ public class SkillManager {
                 yaml.getInt("price", 0),
                 yaml.getLong("cooldown-ticks", 100),
                 yaml.getString("effect-id", ""),
-                yaml.getString("glyph", ""),
                 material,
                 yaml.getString("description", ""),
                 hints,
@@ -198,7 +197,7 @@ public class SkillManager {
             return false;
         }
 
-        SkillEffect effect = effectRegistry.get(def.effectId());
+        SkillEffect effect = resolveEffect(def);
         if (effect == null) {
             Lang.send(player, "skill.effect-missing", "name", Lang.color(def.displayName()));
             return false;
@@ -210,7 +209,7 @@ public class SkillManager {
         }
 
         gp.startSkillCooldown(Math.max(1L, Math.round(def.cooldownTicks() * gp.getSkillCooldownMultiplier())));
-        effect.activate(new ActivationContext(gp, player, match, plugin, def.price()));
+        effect.activate(context);
         return true;
     }
 }

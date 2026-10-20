@@ -1,5 +1,5 @@
 id: glass_cannon
-display-name: "Glass Canon"
+display-name: "Glass Cannon"
 rarity: LEGENDARY
 price: 45
 effect-id: glass_cannon
@@ -8,13 +8,12 @@ params:
   bonus-damage: 2
   speed-bonus: 0.25
 
-icon-material: GLASS
+icon-material: COAST_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "1 seule vie, mais +2 degats et +25% de vitesse."
 stat-hints:
   - tag: EXTRA_LIFE
-    value: "1 seule"
+    value: "1 Seule"
   - tag: DAMAGE_DEALT
     value: "+2"
   - tag: MOVEMENT_SPEED
     value: "+25%"
-glyph: "\uA02F"

@@ -133,7 +133,7 @@ public class InventoryScreenMenu {
             slot.setHoverText(selected ? EQUIPPED_SELECTED_HOVER : IDLE_HOVER);
             if (defOpt.isPresent()) {
                 ConsumableDefinition def = defOpt.get();
-                icon.setText(def.glyph() == null ? "" : def.glyph());
+                icon.setText(Font.findItemGlyph(def.material(), false));
                 hintPanel.setHint(slot.getId(), def.displayName(), def.description(), def.statModification());
             } else {
                 icon.setText("");
@@ -145,7 +145,7 @@ public class InventoryScreenMenu {
         equippedWeaponSlot.setText(IDLE);
         equippedWeaponSlot.setHoverText(IDLE_HOVER);
         shopContext.weaponManager().getWeapon(weaponId).ifPresentOrElse(w -> {
-                    equippedWeaponIcon.setText(w.glyph() == null ? "" : w.glyph());
+                    equippedWeaponIcon.setText(Font.findItemGlyph(w.material(), false));
                     hintPanel.setHint(equippedWeaponSlot.getId(), w.displayName(), w.description(), w.statModification());
                 },
                 () -> {
@@ -162,7 +162,7 @@ public class InventoryScreenMenu {
             hintPanel.clearHint(equippedProfileSlot.getId());
         } else {
             shopContext.archetypeManager().getDefinition(archetypeId).ifPresentOrElse(d -> {
-                        equippedProfileIcon.setText(d.glyph() == null ? "" : d.glyph());
+                        equippedProfileIcon.setText(Font.findItemGlyph(d.material(), false));
                         hintPanel.setHint(equippedProfileSlot.getId(), d.displayName(), d.description(), d.statModification());
                     },
                     () -> {
@@ -180,7 +180,7 @@ public class InventoryScreenMenu {
             hintPanel.clearHint(equippedSkillSlot.getId());
         } else {
             shopContext.skillManager().getDefinition(skillId).ifPresentOrElse(d -> {
-                        equippedSkillIcon.setText(d.glyph() == null ? "" : d.glyph());
+                        equippedSkillIcon.setText(Font.findItemGlyph(d.material(), false));
                         hintPanel.setHint(equippedSkillSlot.getId(), d.displayName(), d.description(), d.statModification());
                     },
                     () -> {
@@ -206,7 +206,7 @@ public class InventoryScreenMenu {
             case CATEGORY_CONSUMABLES -> {
                 for (String id : gamePlayer.getConsumableStorage()) {
                     shopContext.consumableManager().getDefinition(id).ifPresent(def ->
-                            items.add(new StorageItem(id, def.displayName(), def.glyph(), categoryLabel(def.category().name()),
+                            items.add(new StorageItem(id, def.displayName(), Font.findItemGlyph(def.material(), false), categoryLabel(def.category().name()),
                                     def.rarity(), def.description(), def.statModification())));
                 }
             }
@@ -215,7 +215,7 @@ public class InventoryScreenMenu {
                 for (String id : gamePlayer.getOwnedWeaponIds()) {
                     if (id.equals(equippedId)) continue; // déjà équipée : ne pas la doubler dans le storage
                     shopContext.weaponManager().getWeapon(id).ifPresent(w ->
-                            items.add(new StorageItem(id, w.displayName(), w.glyph(), Lang.get("ui.slot-label.weapon"), w.rarity(),
+                            items.add(new StorageItem(id, w.displayName(), Font.findItemGlyph(w.material(), false), Lang.get("ui.slot-label.weapon"), w.rarity(),
                                     w.description(), w.statModification())));
                 }
             }
@@ -224,7 +224,7 @@ public class InventoryScreenMenu {
                 for (String id : gamePlayer.getOwnedArchetypeIds()) {
                     if (id.equals(equippedId)) continue;
                     shopContext.archetypeManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.glyph(), Lang.get("ui.slot-label.archetype"), d.rarity(),
+                            items.add(new StorageItem(id, d.displayName(), Font.findItemGlyph(d.material(), false), Lang.get("ui.slot-label.archetype"), d.rarity(),
                                     d.description(), d.statModification())));
                 }
             }
@@ -233,7 +233,7 @@ public class InventoryScreenMenu {
                 for (String id : gamePlayer.getOwnedSkillIds()) {
                     if (id.equals(equippedId)) continue;
                     shopContext.skillManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.glyph(), Lang.get("ui.slot-label.skill"), d.rarity(),
+                            items.add(new StorageItem(id, d.displayName(), Font.findItemGlyph(d.material(), false), Lang.get("ui.slot-label.skill"), d.rarity(),
                                     d.description(), d.statModification())));
                 }
             }
@@ -241,7 +241,7 @@ public class InventoryScreenMenu {
                 // Toutes les améliorations possédées sont actives simultanément : pas d'équipement, juste la liste.
                 for (String id : gamePlayer.getOwnedUpgradeIds()) {
                     shopContext.upgradeManager().getDefinition(id).ifPresent(d ->
-                            items.add(new StorageItem(id, d.displayName(), d.glyph(), Lang.get("ui.slot-label.upgrade"), d.rarity(),
+                            items.add(new StorageItem(id, d.displayName(), Font.findItemGlyph(d.material(), false), Lang.get("ui.slot-label.upgrade"), d.rarity(),
                                     d.description(), d.statModification())));
                 }
             }

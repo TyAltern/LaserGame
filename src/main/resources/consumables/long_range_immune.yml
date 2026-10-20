@@ -10,4 +10,3 @@ description: "Ignore le prochain coup recu s'il provient d'un tir de plus de 15 
 stat-hints:
   - tag: DAMAGE_BLOCKED
     value: "+1"
-glyph: "\uA017"

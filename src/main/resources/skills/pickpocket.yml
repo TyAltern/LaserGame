@@ -1,7 +1,7 @@
 id: pickpocket
 display-name: "Pickpocket"
 rarity: UNIQUE
-price: 30
+price: 35
 cooldown-ticks: 1800
 effect-id: pickpocket
 params:
@@ -15,4 +15,3 @@ stat-hints:
     value: "+10$ vole"
   - tag: ABILITY_COOLDOWN
     value: "90s"
-glyph: "\uA032"

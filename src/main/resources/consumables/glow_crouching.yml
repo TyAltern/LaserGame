@@ -7,4 +7,3 @@ effect-id: glow_crouching
 
 icon-material: GLOW_INK_SAC
 description: "Met en surbrillance tous les joueurs actuellement accroupis pendant 25 secondes."
-glyph: "\uA023"

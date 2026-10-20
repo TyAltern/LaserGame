@@ -6,8 +6,9 @@ effect-id: combat_money
 params:
   kind: elimination
   amount: 5
+
+icon-material: FIREWORK_STAR
 description: "Gagne 5$ de plus par elimination."
 stat-hints:
   - tag: MONEY_BONUS
     value: "+5$"
-glyph: "\uA034"

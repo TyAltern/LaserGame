@@ -7,6 +7,7 @@ import me.tyalternative.laserGame.shop.ItemHint.StatTag;
 import me.tyalternative.laserGame.shop.ItemSettings;
 import me.tyalternative.laserGame.shop.Rarity;
 import me.tyalternative.laserGame.upgrade.impl.*;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
@@ -152,6 +153,12 @@ public class PermanentUpgradeManager {
             return null;
         }
 
+        Material material = Material.matchMaterial(yaml.getString("icon-material", "BLAZE_ROD"));
+        if (material == null) {
+            plugin.getLogger().warning(file.getName() + " : matériau invalide - ignoré.");
+            return null;
+        }
+
         Rarity rarity;
         try {
             rarity = Rarity.valueOf(yaml.getString("rarity", "").toUpperCase());
@@ -188,7 +195,7 @@ public class PermanentUpgradeManager {
                 rarity,
                 yaml.getInt("price", 0),
                 yaml.getString("effect-id", ""),
-                yaml.getString("glyph", ""),
+                material,
                 yaml.getString("description", ""),
                 hints,
                 yaml.getString("requires"),

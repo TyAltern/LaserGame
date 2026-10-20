@@ -1,11 +1,11 @@
 id: extra_shop_slot
-display-name: "Client Habitue"
+display-name: "Clé de Boutique"
 rarity: UNIQUE
 price: 65
 effect-id: extra_shop_slot
-icon-material: CHEST
+
+icon-material: TRIAL_KEY
 description: "Ajoute un slot d'offre supplementaire en boutique."
 stat-hints: 
   - tag: SHOP_SLOT
     value: "+1"
-glyph: "\uA034"

@@ -10,4 +10,3 @@ description: "Augmente ta vitesse de deplacement pendant 60 secondes."
 stat-hints:
   - tag: MOVEMENT_SPEED
     value: "+10%"
-glyph: "\uA014"

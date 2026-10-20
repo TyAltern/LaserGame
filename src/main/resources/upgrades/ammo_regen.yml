@@ -7,8 +7,9 @@ effect-id: ammo_regen
 params:
   amount: 1
   interval-seconds: 10
+
+icon-material: HONEYCOMB
 description: "Regenere 1 munition toutes les 10 secondes."
 stat-hints:
   - tag: AMMO_REGEN
     value: "+1/10s"
-glyph: "\uA036"

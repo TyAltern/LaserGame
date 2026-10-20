@@ -10,4 +10,3 @@ description: "Te permet de te deplacer a vitesse normale en etant accroupi, pour
 stat-hints:
   - tag: MOVEMENT_SPEED
     value: "+100%"
-glyph: "\uA03A"

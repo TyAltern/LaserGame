@@ -10,4 +10,3 @@ description: "Ralentit tous les joueurs proches pendant 15 secondes."
 stat-hints:
   - tag: MOVEMENT_SPEED
     value: "-20%"
-glyph: "\uA028"

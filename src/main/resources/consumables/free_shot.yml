@@ -10,4 +10,3 @@ description: "Ton prochain tir ne consomme pas de munition."
 stat-hints:
   - tag: AMMO_BONUS
     value: "+1"
-glyph: "\uA01A"

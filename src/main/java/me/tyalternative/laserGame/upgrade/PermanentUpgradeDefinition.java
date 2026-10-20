@@ -1,9 +1,9 @@
 package me.tyalternative.laserGame.upgrade;
 
 import me.tyalternative.laserGame.shop.HasDescription;
-import me.tyalternative.laserGame.shop.HasGlyph;
 import me.tyalternative.laserGame.shop.HasRarity;
 import me.tyalternative.laserGame.shop.Rarity;
+import org.bukkit.Material;
 
 import java.util.List;
 import java.util.Map;
@@ -14,12 +14,12 @@ public record PermanentUpgradeDefinition(
         Rarity rarity,
         int price,
         String effectId,
-        String glyph,
+        Material material,
         String description,
         List<String> statModification,
         String requires,
         Map<String, Object> params
-) implements HasRarity, HasGlyph, HasDescription {
+) implements HasRarity, HasDescription {
 
     public boolean hasRequirement() {
         return requires != null && !requires.isBlank();

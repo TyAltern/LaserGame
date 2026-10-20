@@ -9,7 +9,6 @@ icon-material: WIND_CHARGE
 description: "Remplit ta jauge d'accroupissement."
 stat-hints:
   - tag: CROUCH_TIME
-    value: "Plein"
+    value: "Reset"
   - tag: ABILITY_COOLDOWN
     value: "75s"
-glyph: "\uA033"

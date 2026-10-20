@@ -4,7 +4,7 @@ price: 65
 special-ability: highlight_top_killer
 display-name: "Lance Roquette"
 
-material: TNT
+material: TNT_MINECART
 max-ammo: 2
 shot-cooldown-ticks: 40
 reload-cooldown-ticks: 200
@@ -15,7 +15,7 @@ lives-per-hit: 2
 
 movement-speed-modifier: 0
 
-icon-material: TNT
+icon-material: TNT_MINECART
 description: "Le joueur avec le plus de kills apparait en surbrillance."
 stat-hints:
   - tag: MAX_AMMO
@@ -30,4 +30,3 @@ stat-hints:
     value: "3"
   - tag: DAMAGE_DEALT
     value: "2"
-glyph: "\uA007"

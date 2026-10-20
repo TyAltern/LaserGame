@@ -9,7 +9,6 @@ icon-material: GUNPOWDER
 description: "Recharge ton arme instantanement."
 stat-hints:
   - tag: RELOAD_SPEED
-    value: "Instantane"
+    value: "Aucun"
   - tag: ABILITY_COOLDOWN
     value: "3min"
-glyph: "\uA033"

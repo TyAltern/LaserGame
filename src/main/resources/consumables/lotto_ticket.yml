@@ -10,6 +10,5 @@ params:
 icon-material: PAPER
 description: "Gagne 30$ immediatement."
 stat-hints:
-  - tag: MONEY_BONUS
-    value: "+30$"
-glyph: "\uA02C"
+  - tag: EMPTY
+    value: "+30$ Bonus"

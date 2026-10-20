@@ -4,8 +4,9 @@ display-name: "Grossiste"
 rarity: RARE
 price: 90
 effect-id: duplicate_consumables
+
+icon-material: CHEST_MINECART
 description: "Un meme consommable peut sortir plusieurs fois dans le shop et etre achete en double."
 stat-hints:
   - tag: DUPLICATE_ITEM
-    value: "Oui"
-glyph: "\uA035"
+    value: "Accepte"

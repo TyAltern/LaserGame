@@ -5,6 +5,5 @@ rarity: LEGENDARY
 price: 70
 effect-id: fake_death
 
-icon-material: TOTEM_OF_UNDYING
+icon-material: FERMENTED_SPIDER_EYE
 description: "Simule ta propre elimination aux yeux des autres, puis te renvoie en jeu sans perte de vie."
-glyph: "\uA02B"

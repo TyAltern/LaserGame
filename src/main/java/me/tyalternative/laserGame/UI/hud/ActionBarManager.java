@@ -88,7 +88,7 @@ public class ActionBarManager {
 
             component = component.append(
                     TextUtil.buildTextComponent(0, 5, TextUtil.parse("F02" + (consumable == null ? 2 : (selectedSlot == index ? 1 : 0))), Font.HUD),
-                    TextUtil.buildTextComponent(20, 0, (consumable != null? TextUtil.parse(Font.findItemGlyph(consumable.material(), true)): "\uFFFF"), Font.ITEMS)
+                    TextUtil.buildTextComponent(20, 0, (consumable != null? Font.findItemGlyph(consumable.material(), true): "\uFFFF"), Font.ITEMS)
             );
 
         }
@@ -222,7 +222,7 @@ public class ActionBarManager {
         WeaponType weapon = gp.getWeaponType();
 
         return TextUtil.buildTextComponent(0 , cooldownOffset, cooldownText, Font.HUD_TEXT_CARD).append(
-                TextUtil.buildTextComponent(0,Math.max(cooldownOffset-1, 0) + 10, TextUtil.parse(Font.findItemGlyph(weapon.material(), true)), Font.ITEMS),
+                TextUtil.buildTextComponent(0,Math.max(cooldownOffset-1, 0) + 10, Font.findItemGlyph(weapon.material(), true), Font.ITEMS),
                 TextUtil.buildTextComponent(0 , 10 + reloadOffset,reloadText, Font.HUD_TEXT_CARD),
                 TextUtil.buildOffset(0,Math.max(reloadOffset+1, 0) + 26)
         );
@@ -246,7 +246,7 @@ public class ActionBarManager {
         int offset = displayMinutes.length() == 1 ? 0 : 2;
 
         Component component = TextUtil.buildTextComponent(0, 0, TextUtil.parse("F02" + (skill == null ? 2: (ready ? 1 : 0))), Font.HUD).append(
-                TextUtil.buildTextComponent(20, 0, (skill != null? TextUtil.parse(Font.findItemGlyph(skill.material(), true)): "\uFFFF"), Font.ITEMS),
+                TextUtil.buildTextComponent(20, 0, (skill != null? Font.findItemGlyph(skill.material(), true): "\uFFFF"), Font.ITEMS),
                 TextUtil.buildTextComponent(0,15 + (skill == null? 1 : (ready ? 0 : offset+1)), (skill == null? "Vide" : (ready? "Pret" : timer)), Font.HUD_TEXT_ABILITY_COOLDOWN),
                 TextUtil.buildOffset(0, skill == null? 0 : (ready ? 0 : offset-1))
         );

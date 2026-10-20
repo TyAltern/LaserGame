@@ -10,4 +10,3 @@ description: "Reduit le temps entre deux tirs pour le reste du round."
 stat-hints:
   - tag: FIRE_RATE
     value: "-20%"
-glyph: "\uA021"

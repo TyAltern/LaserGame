@@ -5,13 +5,12 @@ price: 30
 cooldown-ticks: 1800
 effect-id: sonar
 params:
-  seconds: 3
+  seconds: 4
 
-icon-material: SCULK_SENSOR
-description: "Tous les adversaires sont en surbrillance pendant 3 secondes."
+icon-material: ECHO_SHARD
+description: "Tous les adversaires sont en surbrillance pendant 4 secondes."
 stat-hints:
   - tag: DURATION
-    value: "3s"
+    value: "4s"
   - tag: ABILITY_COOLDOWN
     value: "90s"
-glyph: "\uA032"

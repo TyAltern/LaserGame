@@ -9,5 +9,4 @@ icon-material: COMPASS
 description: "Active ton radar immediatement."
 stat-hints:
   - tag: RADAR
-    value: "Immediat"
-glyph: "\uA013"
+    value: "Acces"

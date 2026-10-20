@@ -6,8 +6,9 @@ price: 90
 effect-id: skill_cooldown
 params:
   reduction: 0.25
+
+icon-material: ENCHANTED_BOOK
 description: "Reduit de 25% le cooldown de ta competence (total, non cumule avec Sang-Froid)."
 stat-hints:
   - tag: ABILITY_COOLDOWN
     value: "-25%"
-glyph: "\uA036"

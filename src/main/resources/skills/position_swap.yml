@@ -10,4 +10,3 @@ description: "Echange ta position avec un joueur aleatoire encore en vie."
 stat-hints:
   - tag: ABILITY_COOLDOWN
     value: "2min"
-glyph: "\uA032"

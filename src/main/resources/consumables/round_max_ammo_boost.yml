@@ -10,4 +10,3 @@ description: "Augmente tes munitions maximal pour le reste du round."
 stat-hints:
   - tag: MAX_AMMO
     value: "+20%"
-glyph: "\uA01F"

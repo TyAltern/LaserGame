@@ -12,4 +12,3 @@ description: "Rend 1 vie perdue ce round, sans depasser ton maximum."
 stat-hints:
   - tag: EXTRA_LIFE
     value: "+1"
-glyph: "\uA011"

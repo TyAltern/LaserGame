@@ -7,11 +7,10 @@ params:
   bonus-damage: 1
   speed-penalty: 0.1
 
-icon-material: WOODEN_SWORD
+icon-material: SILENCE_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "+1 degat si tu es le joueur avec le moins de vies, sinon -10% de vitesse."
 stat-hints:
   - tag: DAMAGE_DEALT
-    value: "+1 (le - de vies)"
+    value: "+1"
   - tag: MOVEMENT_SPEED
     value: "-10%"
-glyph: "\uA030"

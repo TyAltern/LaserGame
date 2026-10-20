@@ -22,7 +22,7 @@ public class MarkNextTargetEffect implements PendingEffect {
     @Override
     public boolean onShotHit(HitResolutionContext ctx) {
         Player targetPlayer = ctx.target.getPlayer();
-        if (targetPlayer != null && ctx.target.isDetectionImmune()) {
+        if (targetPlayer != null && !ctx.target.isDetectionImmune()) {
             targetPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, durationTicks, 0, false, false));
         }
         return true;

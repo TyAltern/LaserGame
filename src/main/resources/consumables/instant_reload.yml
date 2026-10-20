@@ -10,4 +10,3 @@ description: "Recharge instantanement le chargeur."
 stat-hints:
   - tag: RELOAD_SPEED
     value: "-100%"
-glyph: "\uA012"

@@ -5,8 +5,9 @@ price: 40
 effect-id: radar
 params:
   reduction-seconds: 30
+
+icon-material: RECOVERY_COMPASS
 description: "Le radar s'active 30 secondes plus tot pour toi."
 stat-hints:
   - tag: RADAR
     value: "-30s"
-glyph: "\uA038"

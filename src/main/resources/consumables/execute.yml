@@ -10,4 +10,3 @@ description: "Ton prochain tir qui amene un joueur a sa derniere vie l'elimine d
 stat-hints:
   - tag: CRITICAL_DAMAGE_DEALT
     value: "+1"
-glyph: "\uA019"

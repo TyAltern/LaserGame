@@ -6,8 +6,9 @@ effect-id: weapon_stat
 params:
   stat: max_ammo
   percent: 0.2
+
+icon-material: QUARTZ
 description: "Augmente tes munitions max de 20%."
 stat-hints:
   - tag: MAX_AMMO
     value: "+20%"
-glyph: "\uA036"

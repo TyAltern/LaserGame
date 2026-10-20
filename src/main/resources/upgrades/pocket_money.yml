@@ -5,8 +5,9 @@ price: 40
 effect-id: round_start_money
 params:
   amount: 10
+
+icon-material: IRON_NUGGET
 description: "Gagne 10$ au debut de chaque round."
 stat-hints:
   - tag: EMPTY
     value: "+10$/round"
-glyph: "\uA034"

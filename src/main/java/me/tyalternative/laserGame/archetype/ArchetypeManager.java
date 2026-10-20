@@ -1,5 +1,6 @@
 package me.tyalternative.laserGame.archetype;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import java.util.function.Function;
 import me.tyalternative.laserGame.shop.ItemSettings;
@@ -107,6 +108,12 @@ public class ArchetypeManager {
             return null;
         }
 
+        Material material = Material.matchMaterial(yaml.getString("icon-material", "SENTRY_ARMOR_TRIM_SMITHING_TEMPLATE"));
+        if (material == null) {
+            plugin.getLogger().warning(file.getName() + " : matériau invalide - ignoré.");
+            return null;
+        }
+
         Rarity rarity;
         try {
             rarity = Rarity.valueOf(yaml.getString("rarity", "").toUpperCase());
@@ -143,7 +150,7 @@ public class ArchetypeManager {
                 rarity,
                 yaml.getInt("price", 0),
                 yaml.getString("effect-id", ""),
-                yaml.getString("glyph", ""),
+                material,
                 yaml.getString("description", ""),
                 hints,
                 params

@@ -11,4 +11,3 @@ description: "Reduit durablement le temps de rechargement."
 stat-hints: 
   - tag: RELOAD_SPEED
     value: "-10%"
-glyph: "\uA036"

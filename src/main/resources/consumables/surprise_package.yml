@@ -7,9 +7,8 @@ effect-id: surprise_package
 params:
   count: 2
 
-icon-material: BARREL
+icon-material: BUNDLE
 description: "Tu recois 2 consommables aleatoires Commun ou Unique, dans la limite de tes emplacements libres."
 stat-hints:
-  - tag: CONSUMABLE_SLOT
-    value: "x2"
-glyph: "\uA01E"
+  - tag: CONSUMABLE
+    value: "+2"

@@ -10,4 +10,3 @@ description: "Lance une bombe fumigene qui aveugle les joueurs restant dans son 
 stat-hints:
   - tag: DURATION
     value: "20s de"
-glyph: "\uA029"

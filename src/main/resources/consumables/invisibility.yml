@@ -10,4 +10,3 @@ description: "Te rend invisible, l'effet cesse des lors que tu tires."
 stat-hints:
   - tag: INVISIBILITY
     value: "+5s"
-glyph: "\uA015"

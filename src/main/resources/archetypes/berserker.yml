@@ -4,13 +4,10 @@ rarity: UNIQUE
 price: 30
 effect-id: berserker
 
-icon-material: DIAMOND_AXE
+icon-material: RIB_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "Inflige plus de degats, mais en subit aussi plus."
 stat-hints:  
   - tag: DAMAGE_DEALT
     value: "+1"
   - tag: DAMAGE_TAKEN
     value: "+1"
-
-
-glyph: "\uA02F"

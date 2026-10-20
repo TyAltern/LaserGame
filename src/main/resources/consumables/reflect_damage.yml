@@ -1,5 +1,5 @@
 id: reflect_damage
-display-name: "Riposte"
+display-name: "Epine"
 category: DEFENSE
 rarity: RARE
 price: 40
@@ -10,4 +10,3 @@ description: "Le prochain coup que tu recois inflige aussi 1 degat au tireur."
 stat-hints:
   - tag: DAMAGE_DEALT
     value: "+1"
-glyph: "\uA039"

@@ -4,11 +4,10 @@ rarity: COMMON
 price: 20
 effect-id: nervous_trigger
 
-icon-material: STRING
+icon-material: WILD_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "Rechargement rapide, au prix d'un chargeur reduit."
 stat-hints: 
   - tag: RELOAD_SPEED
-    value: "*2"
+    value: "-33%"
   - tag: MAX_AMMO
     value: "-33%"
-glyph: "\uA030"

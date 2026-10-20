@@ -4,7 +4,7 @@ price: 30
 special-ability: fire_rate_ramp_on_miss
 display-name: "Couteau de Cuisine"
 
-material: IRON_DAGGER
+material: IRON_SWORD
 max-ammo: 200
 shot-cooldown-ticks: 10
 reload-cooldown-ticks: 120
@@ -30,4 +30,3 @@ stat-hints:
     value: "4"
   - tag: MOVEMENT_SPEED
     value: "+35%"
-glyph: "\uA006"

@@ -7,11 +7,10 @@ params:
   heal: 1
   life-modifier: -1
 
-icon-material: COOKED_BEEF
+icon-material: FLOW_ARMOR_TRIM_SMITHING_TEMPLATE
 description: "Recupere 1 vie a chaque elimination, mais tu demarres avec 1 vie de moins."
 stat-hints:
+  - tag: EMPTY
+    value: "+1 Vie / Elim"
   - tag: EXTRA_LIFE
-    value: "+1/elimination"
-  - tag: EXTRA_LIFE
-    value: "-1 au depart"
-glyph: "\uA031"
+    value: "-1"

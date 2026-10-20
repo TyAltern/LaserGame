@@ -28,4 +28,3 @@ stat-hints:
     value: "9"
   - tag: AMMO_REGEN
     value: "+1"
-glyph: "\uA005"

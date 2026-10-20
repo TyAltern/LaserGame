@@ -10,4 +10,3 @@ description: "Tes prochains tirs traversent les joueurs touches au lieu de s'arr
 stat-hints:
   - tag: PIERCING_SHOT
     value: "+10"
-glyph: "\uA02E"
