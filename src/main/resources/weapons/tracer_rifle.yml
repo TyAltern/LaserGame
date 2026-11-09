@@ -4,7 +4,6 @@ rarity: RARE
 price: 55
 special-ability: glow_self_on_miss
 
-material: NETHERITE_AXE
 max-ammo: 10
 shot-cooldown-ticks: 11
 reload-cooldown-ticks: 65

@@ -4,7 +4,6 @@ price: 65
 special-ability: highlight_top_killer
 display-name: "Lance Roquette"
 
-material: TNT_MINECART
 max-ammo: 2
 shot-cooldown-ticks: 40
 reload-cooldown-ticks: 200
